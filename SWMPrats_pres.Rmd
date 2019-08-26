@@ -1,0 +1,59 @@
+---
+title: "Open Science tools for the National Estuarine Research Reserve System"
+author: "Dr. Marcus Beck"
+institute: "Southern California Coastal Water Research Project"
+date: "9/5/2019"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r, message = F, echo = F, warning = F}
+# library(here)
+```
+
+class: center, middle
+
+# The NERRS network
+
+28 reserves nationwide 
+
+```{r, echo = F, out.width = '90%'}
+knitr::include_graphics("figure/NERRS_locations.png")
+```
+
+---
+
+class: middle, center
+
+# The NERRS network
+
+\> 81 million records available as of this month
+
+```{r, echo = F, out.width = '90%'}
+knitr::include_graphics("figure/cdmo_front.png")
+```
+
+---
+
+# The need for open science at NERRS
+
+#### NERRS researchers, managers, technicians, and stakeholder need more quantitative tools for handling these data: 
+
+* Understand regional and national trends while retaining the ability to determine local trends
+
+* Train users
+
+* Maintain a versatile and evolving data analysis approach
+
+* Create a community of practice
+
+---
+
+# Genesis of SWMPrats
+
+
