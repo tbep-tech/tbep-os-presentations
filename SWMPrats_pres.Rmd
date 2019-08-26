@@ -274,6 +274,16 @@ knitr::include_graphics('figure/swmprats_forum.png')
 
 # Why should you care?
 
+Since I stopped working on SWMPrats... community development has continued!
+
+```{r, out.width = "70%"}
+knitr::include_graphics('figure/extension_tweet.PNG')
+```
+
+---
+
+# Why should you care?
+
 * These tools will be used! To date, SWMPr has had over __13k__ downloads!
 
 * Increased mileage of data - more users looking at more questions = more answers!
@@ -281,20 +291,6 @@ knitr::include_graphics('figure/swmprats_forum.png')
 * Develop a community of practice - shared workflows promote collaboration and encourage group learning!
 
 * More group learning means collective benefits for all - more efficient use of resources!
-
----
-
-# Why should you care?
-
-Since I stopped working on SWMPrats... community development has continued!
-
-```{r, out.width = "70%"}
-knitr::include_graphics('figure/extension_tweet.PNG')
-```
-
-
-
-
 
 
 
