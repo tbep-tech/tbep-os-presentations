@@ -4,8 +4,8 @@
     <title>Open Science tools for the National Estuarine Research Reserve System</title>
     <meta charset="utf-8" />
     <meta name="author" content="Dr. Marcus Beck" />
-    <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default.css" rel="stylesheet" />
+    <link href="libs/remark-css-0.0.1/default-fonts.css" rel="stylesheet" />
   </head>
   <body>
     <textarea id="source">
@@ -35,7 +35,7 @@ class: middle, center
 
 # The NERRS network
 
-\&gt; 81 million records available as of this month
+\&gt; 81 million records available as of this month, *S*ystem *W*ide *M*onitoring *P*rogram (*SWMP*)
 
 &lt;img src="figure/cdmo_front.png" width="90%" /&gt;
 
@@ -43,7 +43,7 @@ class: middle, center
 
 # The need for open science at NERRS
 
-#### NERRS researchers, managers, technicians, and stakeholder need more quantitative tools for handling these data: 
+#### NERRS researchers, managers, technicians, and stakeholders need more quantitative tools for handling these data: 
 
 * Understand regional and national trends while retaining the ability to determine local trends
 
@@ -56,6 +56,142 @@ class: middle, center
 ---
 
 # Genesis of SWMPrats
+
+&lt;img src="figure/bg_main.jpg" width="1276" /&gt;
+
+#### One-day training workshop at 2014 annual meeting
+
+* Attended by over 70 NERRS staff, representing 19 of 28 reserves
+
+* General focus on time series analysis, simple application with SWMP data
+
+* Pre/post workshop materials including An R package for SWMP
+
+---
+
+# Genesis of SWMPrats
+
+&lt;img src="figure/swmprats_logo.png" width="1273" /&gt;
+
+#### A working group was formed from this meeting
+
+## __S__ystem- __W__ide __M__onitoring __P__rogram __R__esources for the __A__nalysis of __T__ime __S__eries
+
+#### [SWMPrats.net](SWMPrats.net) is our base of operations...
+
+---
+
+class: center, top
+
+# SWMPrats.net
+
+A website with information and tools for SWMP data analysis
+
+&lt;img src="figure/swmprats_home.png" width="70%" /&gt;
+
+---
+
+# SWMPrats.net: The SWMPr package
+
+&lt;img src="figure/swmpr_logo.png" width="1827" /&gt;
+
+SWMPr is an open-source R package for working with SWMP data
+
+
+
+---
+
+# SWMPrats.net: The SWMPr package
+
+#### SWMPr addresses the unglamorous but necessary challenges of analyazing water quality monitoring data
+
+What are come challenges?
+
+* Dealing with "bad" data
+
+* Subsetting by date ranges, parameters
+
+* Comining data from different sites
+
+* Standardizing time steps
+
+* ...not to mention the analysis
+
+---
+
+# SWMPrats.net: The SWMPr package
+
+Example: fill missing data with `na.approx`
+
+&lt;img src="SWMPrats_pres_files/figure-html/unnamed-chunk-9-1.png" width="85%" /&gt;
+
+Example: smooth data with `smoother` 
+
+&lt;img src="SWMPrats_pres_files/figure-html/unnamed-chunk-10-1.png" width="85%" /&gt;
+
+---
+
+# SWMPrats.net: The SWMPr package
+
+Example: time series decomposition with `decomp_cj` (chl-a)
+
+&lt;img src="SWMPrats_pres_files/figure-html/unnamed-chunk-11-1.png" width="85%" /&gt;
+
+---
+
+# SWMPrats.net: The SWMPr package
+
+Example: estimate ecosystem metabolism with `ecometab`
+
+&lt;img src="SWMPrats_pres_files/figure-html/unnamed-chunk-13-1.png" width="95%" /&gt;
+&lt;img src="SWMPrats_pres_files/figure-html/unnamed-chunk-14-1.png" width="95%" /&gt;
+
+---
+
+# SWMPrats.net: Interactive web apps
+
+.pull-left[
+The most common question - what's happened at my site over time? 
+
+Three Shiny applications allow users to visualize trends in SWMP data, these apps allow *reactive* use of SWMPr functions
+
+&lt;br&gt;&lt;/br&gt;
+&lt;img src="figure/swmp_summary.png" width="70%" /&gt;
+]
+
+.pull-right[
+&lt;img src="figure/swmp_comp.png" width="80%" /&gt;
+&lt;br&gt;&lt;/br&gt;
+&lt;img src="figure/swmp_agg.png" width="80%" /&gt;
+]
+
+---
+
+# SWMPrats.net: Forum
+
+Last but not least, a discussion forum for all things SWMP
+
+&lt;img src="figure/swmprats_forum.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Why should you care?
+
+* These tools will be used! To date, SWMPr has had over __13k__ downloads!
+
+* Increased mileage of data - more users looking at more questions = more answers!
+
+* Develop a community of practice - shared workflows promote collaboration and encourage group learning!
+
+* More group learning means collective benefits for all - more efficient use of resources!
+
+---
+
+# Why should you care?
+
+Since I stopped working on SWMPrats... community development has continued!
+
+&lt;img src="figure/extension_tweet.PNG" width="70%" /&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
