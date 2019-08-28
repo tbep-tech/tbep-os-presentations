@@ -125,7 +125,7 @@ knitr::include_graphics("figure/open.png")
 
 <br></br>
 <br></br>
-.footnote[adapted from Hampton et al. 2015 Ecosphere 6(7):120]
+.footnote[Adapted from Hampton et al. 2015 Ecosphere 6(7):120]
 
 ---
 
@@ -215,4 +215,3 @@ class: middle, center, inverse
 
 # Open science is a process that goes beyond using freely available software
 
----
