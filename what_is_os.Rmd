@@ -14,6 +14,7 @@ output:
 
 ```{r, message = F, echo = F, warning = F}
 library(knitr)
+library(icon)
 
 # global knitr options
 opts_chunk$set(message = FALSE, dev.args = list(family = 'serif'), echo = F, warning = F)
@@ -24,7 +25,7 @@ knit_hooks$set(par = function(before, options, envir){
 })
 ```
 
-class: middle, center
+class: middle, center, inverse
 
 # The scientific process
 
@@ -33,28 +34,77 @@ class: middle, center
 class: middle, center
 
 ```{r, echo = F, out.width = '90%'}
-knitr::include_graphics("figure/closed.png")
+knitr::include_graphics("figure/scipro.png")
 ```
 
 ---
 
 class: middle, center
 
-# Sometimes applied science is really implied science
+```{r, echo = F, out.width = '90%'}
+knitr::include_graphics("figure/appscipro.png")
+```
 
 ---
 
-class: middle, center
+class: middle, center, inverse
 
 # Scientist: "My 500 page report will answer all their questions!"
 
 ---
 
-class: middle, center
+class: middle, center, inverse
 
-# Manager: "This 500 page report does not any of my questions!"
+# Manager: "This 500 page report does not answer any of my questions!"
 
 ---
+
+class: middle, center, inverse
+
+# Sometimes **applied** science is really **implied** science
+
+---
+
+class: middle, center
+
+## The research-management divide
+
+```{r, echo = F, out.width = '100%'}
+knitr::include_graphics("figure/divide.png")
+```
+
+---
+
+class: middle, center
+
+## The research-management divide
+
+```{r, echo = F, out.width = '100%'}
+knitr::include_graphics("figure/divide2.png")
+```
+
+---
+
+class: middle, center
+
+```{r, echo = F, out.width = "90%"}
+knitr::include_graphics('figure/michener.png')
+```
+
+.footnote[Michener et al. 1997 Ecol. App. 7(1):330-342.]
+
+---
+
+class: middle, center
+
+## Open sience can bridge this divide
+
+```{r, echo = F, out.width = '100%'}
+knitr::include_graphics("figure/bridge.png")
+```
+
+---
+
 class: middle, center
 
 # The open science workflow
@@ -65,8 +115,104 @@ knitr::include_graphics("figure/basicflow.png")
 
 ---
 
+class: middle, top
+
+# <center>The open science workflow</center>
+
+```{r, echo = F, out.width = '80%', fig.align = 'center'}
+knitr::include_graphics("figure/open.png")
+```
+
+<br></br>
+<br></br>
+.footnote[adapted from Hampton et al. 2015 Ecosphere 6(7):120]
+
+---
+
+class: middle, center, inverse
+
+# Key definitions and concepts
+
+---
+
+class: middle, center, inverse
+
+# Open
+
+---
+
 class: middle, center
 
-# The scientific process
+## Anyone can freely access, use, modify, and share for any purpose
 
+.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
 
+---
+
+class: middle, center, inverse
+
+# Open science
+
+---
+
+class: middle, center
+
+### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
+
+.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
+
+---
+
+class: middle, center, inverse
+
+# Principle 1
+
+---
+
+class: middle
+
+# `r fa('table')` Open data 
+
+## - Public availability of data
+## - Reusability and transparent workflows
+## - Data provenance and metadata
+
+---
+
+class: middle, center, inverse
+
+# Principle 2
+
+---
+
+class: middle
+
+# `r fa("cogs")` Open process
+
+## - Iterative methods using reproducible workflows
+## - Collaboration with colleagues using web-based tools
+## - Leveraging external, open-source applications
+
+---
+
+class: middle, center, inverse
+
+# Principle 3
+
+---
+
+class: middle
+
+# `r fa("book")` Open products
+
+## - Interactive web products for communication
+## - Dynamic documents with source code
+## - Integration with external networks for discoverability
+
+---
+
+class: middle, center, inverse
+
+# Open science is a process that goes beyond using freely available software
+
+---
