@@ -62,7 +62,7 @@ class: top, left
 
 ### - Open science tools can be difficult to learn
 
-### - Learning new skills takes time!
+### - Learning new skills takes time
 
 ### - Entrenched workflows are like cigarettes - they are habitual and hard to quit
 
@@ -72,7 +72,7 @@ class: top, left
 
 # Remedy
 
-### - Invest in your health: change is not easy but investments will have returns
+### - Invest in your health: change is not easy but investments will have returns, do it for your future-self
 
 --
 
@@ -126,7 +126,7 @@ class: top, left
 
 # For supervisors
 
-### - Start the conversation on open science!
+### - Start the conversation on open science
 
 ### - Give your employees time and space to learn
 
@@ -172,7 +172,7 @@ class: top, left
 
 ### - Create a private repository...
 
-### - But even better, embrace the mistakes!
+### - But even better, embrace the mistakes
 
 ### - Nobody writes flawless code, mistakes are the means to learning
 
@@ -194,9 +194,7 @@ class: top, left
 
 ### - Feedback is a natural part of the scientific process - internal/external peer-review, public presentations
 
-### - Open processes and open data can invite additional criticism
-
-### - But this is absolutely critical for applied science!
+### - Open processes and open data can invite additional criticism, but this is absolutely critical for applied science
 
 ### - Engage stakeholders that are users of end products
 
@@ -218,7 +216,7 @@ class: top, left
 
 # Remedy
 
-### - Anonymize the data! Tools in the `tidyverse` can help, e.g., generalize locations, randomize identifiers...
+### - Anonymize the data, tools in the `tidyverse` can help, e.g., generalize locations, randomize identifiers, etc.
 
 ### - Develop a code of conduct for data sharing, talk with data providers to agree on how to share
 
@@ -298,7 +296,7 @@ class: top, left
 
 ### - Demonstrate value that open science can have for institutional culture
 
-### - Weather the storm, change is coming!
+### - Weather the storm, change is coming
 
 ---
 
