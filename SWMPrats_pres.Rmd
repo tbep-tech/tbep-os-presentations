@@ -144,7 +144,7 @@ library(SWMPr)
 
 # SWMPrats.net: The SWMPr package
 
-#### SWMPr addresses the unglamorous but necessary challenges of analyazing water quality monitoring data
+#### SWMPr addresses the unglamorous but necessary challenges of analyzing water quality monitoring data
 
 What are come challenges?
 
@@ -152,7 +152,7 @@ What are come challenges?
 
 * Subsetting by date ranges, parameters
 
-* Comining data from different sites
+* Combining data from different sites
 
 * Standardizing time steps
 
@@ -164,7 +164,7 @@ What are come challenges?
 
 Example: fill missing data with `na.approx`
 
-```{r, fig.width = 8, fig.height = 2, out.width = "85%", echo = F}
+```{r, fig.width = 8, fig.height = 2.5, out.width = "80%", echo = F}
 par(mar = c(4, 4, 0.1, 0.1))
 # import, organize
 data(apadbwq)
@@ -180,7 +180,7 @@ plot(filled, col = 'red'); lines(dat, lwd = 2)
 
 Example: smooth data with `smoother` 
 
-```{r, fig.width = 8, fig.height = 2, echo = F, out.width = "85%"}
+```{r, fig.width = 8, fig.height = 2.5, echo = F, out.width = "80%"}
 par(mar = c(4, 4, 0.1, 0.1))
 # import, organize
 data(apadbwq)
@@ -286,9 +286,15 @@ knitr::include_graphics('figure/extension_tweet.PNG')
 
 * These tools will be used! To date, SWMPr has had over __13k__ downloads!
 
+--
+
 * Increased mileage of data - more users looking at more questions = more answers!
 
+--
+
 * Develop a community of practice - shared workflows promote collaboration and encourage group learning!
+
+--
 
 * More group learning means collective benefits for all - more efficient use of resources!
 

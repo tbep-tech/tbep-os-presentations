@@ -213,5 +213,5 @@ class: middle
 
 class: middle, center, inverse
 
-# Open science is a process that goes beyond using freely available software
+# Open science is a process and a philosophy that goes beyond using freely available software
 
