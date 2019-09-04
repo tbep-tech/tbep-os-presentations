@@ -50,22 +50,8 @@ class: center, middle
 
 # The NERRS network
 
-28 reserves nationwide 
-
-```{r, echo = F, out.width = '90%'}
+```{r, echo = F, out.width = '100%'}
 knitr::include_graphics("figure/NERRS_locations.png")
-```
-
----
-
-class: middle, center
-
-# The NERRS network
-
-\> 81 million records available as of this month, *S*ystem *W*ide *M*onitoring *P*rogram (*SWMP*)
-
-```{r, echo = F, out.width = '90%'}
-knitr::include_graphics("figure/cdmo_front.png")
 ```
 
 ---
@@ -120,7 +106,7 @@ class: center, top
 
 A website with information and tools for SWMP data analysis
 
-```{r, echo = F, out.width = '70%'}
+```{r, echo = F, out.width = '80%'}
 knitr::include_graphics('figure/swmprats_home.png')
 ```
 
@@ -140,13 +126,6 @@ install.packages('SWMPr')
 library(SWMPr)
 ```
 
----
-
-# SWMPrats.net: The SWMPr package
-
-#### SWMPr addresses the unglamorous but necessary challenges of analyzing water quality monitoring data
-
-What are come challenges?
 
 * Dealing with "bad" data
 
@@ -157,83 +136,6 @@ What are come challenges?
 * Standardizing time steps
 
 * ...not to mention the analysis
-
----
-
-# SWMPrats.net: The SWMPr package
-
-Example: fill missing data with `na.approx`
-
-```{r, fig.width = 8, fig.height = 2.5, out.width = "80%", echo = F}
-par(mar = c(4, 4, 0.1, 0.1))
-# import, organize
-data(apadbwq)
-dat <- qaqc(apadbwq)
-dat <- subset(dat, select = 'do_mgl', 
-  subset = c('2013-01-22 00:00', '2013-01-26 00:00')
-  )
-
-# interpolate, plot
-filled <- na.approx(dat, params = 'do_mgl', maxgap =100)
-plot(filled, col = 'red'); lines(dat, lwd = 2)
-```
-
-Example: smooth data with `smoother` 
-
-```{r, fig.width = 8, fig.height = 2.5, echo = F, out.width = "80%"}
-par(mar = c(4, 4, 0.1, 0.1))
-# import, organize
-data(apadbwq)
-dat <- qaqc(apadbwq)
-dat <- subset(dat, select = 'do_mgl', 
-  subset = c('2012-07-09 00:00', '2012-07-24 00:00')
-  )
-
-# smooth, plot
-dat_smooth <- smoother(dat, window = 50, params = 'do_mgl')
-plot(dat); lines(dat_smooth, col = 'red', lwd = 2)
-```
-
----
-
-# SWMPrats.net: The SWMPr package
-
-Example: time series decomposition with `decomp_cj` (chl-a)
-
-```{r, fig.height = 5.5, fig.width = 8, out.width = '85%'}
-# import, organize
-load(file = url('https://s3.amazonaws.com/swmpagg/cbmocnut.RData'))
-dat <- cbmocnut
-dat <- subset(dat, select = 'chla_n')
-dat$chla_n <- log(dat$chla_n)
-
-# additive decompision of chl
-out <- decomp_cj(dat, 'chla_n', type = 'add')
-out <- out + theme_mine()
-out
-```
-
----
-
-# SWMPrats.net: The SWMPr package
-
-Example: estimate ecosystem metabolism with `ecometab`
-```{r}
-## import water quality and weather data, combine
-data(apaebmet)
-data(apadbwq)
-met <- apaebmet
-wq <- apadbwq
-
-dat <- comb(wq, met)
-res <- ecometab(dat, metab_units = 'grams')
-```
-```{r, fig.width = 8, fig.height = 2.5, out.width = '95%', echo = F}
-plot_metab(res, by = 'months') + theme_mine() + scale_y_continuous('Monthly', limits = c(-10, 10)) + theme(axis.title.x = element_blank())
-```
-```{r, fig.width = 8, fig.height = 2.5, out.width = '95%', echo = F}
-plot_metab(res, by = 'quarters') + theme_mine() + scale_y_continuous('Quarterly', limits = c(-10, 10)) + theme(axis.title.x = element_blank())
-```
 
 ---
 
@@ -259,26 +161,6 @@ knitr::include_graphics('figure/swmp_comp.png')
 knitr::include_graphics('figure/swmp_agg.png')
 ```
 ]
-
----
-
-# SWMPrats.net: Forum
-
-Last but not least, a discussion forum for all things SWMP
-
-```{r, out.width = "80%", fig.align = 'center'}
-knitr::include_graphics('figure/swmprats_forum.png')
-```
-
----
-
-# Why should you care?
-
-Since I stopped working on SWMPrats... community development has continued!
-
-```{r, out.width = "70%"}
-knitr::include_graphics('figure/extension_tweet.PNG')
-```
 
 ---
 

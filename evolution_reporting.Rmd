@@ -87,12 +87,6 @@ class: middle, center, inverse
 
 ---
 
-class: middle, center, inverse
-
-# The internet opened many doors...
-
----
-
 class: middle, center
 
 ```{r, out.width = '90%'}

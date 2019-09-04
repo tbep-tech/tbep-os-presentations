@@ -137,20 +137,6 @@ class: middle, center, inverse
 
 class: middle, center, inverse
 
-# Open
-
----
-
-class: middle, center
-
-## Anyone can freely access, use, modify, and share for any purpose
-
-.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
-
----
-
-class: middle, center, inverse
-
 # Open science
 
 ---
