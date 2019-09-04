@@ -1,6 +1,6 @@
 ---
 title: "What is Open Science?"
-author: "Dr. Marcus Beck"
+author: "[Dr. Marcus Beck](mailto:marcusb@sccwrp.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
 institute: "Southern California Coastal Water Research Project"
 date: "9/5/2019"
 output:
