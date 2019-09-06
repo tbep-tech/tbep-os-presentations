@@ -321,3 +321,8 @@ knitr::include_graphics('figure/ab1755.PNG')
 class: center, middle, inverse
 
 # Ask not what open science can do for you, but what you can do with open science
+
+```{r, out.width = "90%"}
+knitr::include_graphics('figure/jfk.jpg')
+```
+
