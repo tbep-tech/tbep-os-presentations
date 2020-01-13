@@ -11,10 +11,10 @@ output:
 
 ```{r, message = F, echo = F, warning = F}
 library(knitr)
-# library(icon)
+library(icon)
 
 # global knitr options
-opts_chunk$set(message = FALSE, dev.args = list(family = 'serif'), echo = F, warning = F)
+opts_chunk$set(message = FALSE, dev.args = list(family = 'Lato Light'), echo = F, warning = F)
 
 # chunk hook for par
 knit_hooks$set(par = function(before, options, envir){
@@ -22,13 +22,299 @@ knit_hooks$set(par = function(before, options, envir){
 })
 ```
 
-class: middle, center, inverse
+class: middle, center
 
-# OPEN SCIENCE AT TBEP
+# OPEN SCIENCE PRIMER
 
 ---
 
 class: middle, center
+
+### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
+
+.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
+
+---
+
+class: middle, center
+
+# `r fa('table')` Open data 
+
+# `r fa("cogs")` Open process
+
+# `r fa("book")` Open products
+
+---
+
+class: middle, center
+
+## THE OPEN SCIENCE CAKE
+
+```{r, fig.align = 'center', out.width='100%'}
+knitr::include_graphics('figure/cake.png')
+```
+
+---
+
+class: middle, center
+
+# MY VISION FOR TBEP
+
+---
+
+class: top, left
+
+.center[
+## SHORT-TERM
+]
+
+* Automated reporting of CCMP indicators
+* Made available through TBEP website, keeping entire workflow __transparent__ and __accessible__
+
+--
+
+.center[
+## LONG-TERM
+]
+
+* Develop a community of practice to make better science in less time
+* Training workshops and online resources
+* Open science TAC subcomittee
+
+---
+
+class: top
+
+.center[
+## WE ARE WELL UNDERWAY
+]
+
+* Workshop September 2019
+* First day at TBEP Nov. 1, 2019
+* Initial open science products
+
+```{r, echo = F, out.width = "60%", fig.align = 'center'}
+knitr::include_graphics('figure/workshop.jpg')
+```
+
+---
+class: middle, center
+
+## THE LOW HANGING CCMP INDICATORS
+
+```{r, out.width = '30%'}
+knitr::include_graphics('figure/tree.png')
+```
+
+.pull-left[
+### WATER QUALITY REPORT CARD
+]
+
+.pull-right[
+### TIDAL CREEK ASSESSMENT
+]
+
+---
+class: middle, center
+
+# FOR EVERY INDICATOR, A NEW WORKFLOW
+
+---
+class: top, center
+
+## THE OLD WAY
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/badflow1.png')
+```
+
+---
+class: top, center
+
+## THE OLD WAY
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/badflow2.png')
+```
+
+---
+class: top, center
+
+## THE OLD WAY
+
+* Hefty license fees for software
+* Time consuming and prone to error
+* Opaque, disconnected, and undiscoverable workflow
+* No ability to engage the broader community
+
+---
+class: top, center
+
+## THE NEW WAY
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/flow1.png')
+```
+
+---
+class: top, center
+
+## THE NEW WAY
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/flow2.png')
+```
+
+---
+class: top, center
+
+## THE NEW WAY
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/flow3.png')
+```
+
+---
+class: top, center
+
+## THE NEW WAY
+
+* Transparent and reproducible methods
+* Discoverable products that can engage others
+* Automated data QAQC and integration with reporting
+* New front-facing web products, both static and interactive
+
+---
+class: middle, center
+
+# tbeptools
+
+---
+class: middle, center
+
+## tbeptools
+
+* An R package to import raw data, estimate indicators, and report outcomes
+* Foundational methods for indicator reporting
+* Freely available on GitHub for anyone to view source code, download for use, and make requests for additions
+
+---
+class: top, center
+
+## WEBSITE
+
+```{r, out.width = '100%'}
+knitr::include_graphics('figure/tbeptools.PNG')
+```
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## FUNCTION REFERENCES
+```{r, out.width = '100%'}
+knitr::include_graphics('figure/tbeptoolsref.PNG')
+```
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## DOCUMENTATION
+
+```{r, out.width = '100%'}
+knitr::include_graphics('figure/tbeptoolsdoc.PNG')
+```
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## VIGNETTES
+
+```{r, out.width = '100%'}
+knitr::include_graphics('figure/tbeptoolsvig.PNG')
+```
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## SOURCE CODE
+
+```{r, out.width = '100%'}
+knitr::include_graphics('figure/tbeptoolssrc.PNG')
+```
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+
+---
+class: middle, left
+
+## IT'S SUPER SIMPLE...
+
+```{r, echo = T, fig.height = 4, fig.width = 7, out.width = '80%', message = F, warning = F, fig.align = 'center'}
+library(tbeptools)
+xlsx <- 'data/2019_Results_updated.xls'
+ecpdata <- read_importwq(xlsx, download_latest_epchc = TRUE)
+show_thrplot(epcdata, bay_segment = "OTB", thr = "chla")
+```
+
+---
+class: top, center
+
+## TBEPTOOLS IS THE FOUNDATION
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/flow3.png')
+```
+
+---
+class: top, center
+
+## WATER QUALITY REPORT CARD
+
+.pull-left[
+```{r, out.width="100%"}
+knitr::include_graphics('figure/wqstatic1.PNG')
+```
+]
+
+.pull-right[
+```{r, out.width="100%"}
+knitr::include_graphics('figure/wqstatic2.PNG')
+```
+]
+
+---
+class: top, center
+
+## WATER QUALITY DASHBOARD
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/wqdash.PNG')
+```
+
+[https://shiny.tbeptech.org/wq-dash/](https://shiny.tbeptech.org/wq-dash/)
+
+---
+class: top, center
+
+## WATER QUALITY DASHBOARD
+
+<video width="100%" controls>
+<source src="media/wqdemo.mp4" type = "video/mp4" controls>
+</video>
+
+---
+class: middle, center
+
+## TIDAL CREEKS DASHBOARD
 
 <video width="100%" controls>
 <source src="media/tidaldemo.mp4" type = "video/mp4" controls>
@@ -36,7 +322,11 @@ class: middle, center
 
 ---
 
+---
 class: middle, center
 
+## HOW CAN THE TAC GUIDE THIS PROCESS
 
----
+* I cannot develop these indicators in isolation
+
+

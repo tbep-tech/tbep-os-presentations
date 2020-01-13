@@ -4,6 +4,7 @@
     <title>OPEN SCIENCE INDICATOR PRODUCTS: WATER QUALITY AND TIDAL TRIBUTARIES</title>
     <meta charset="utf-8" />
     <meta name="author" content="Dr. Marcus Beck \bullet @fawda123 \bullet #TampaBayOpensci" />
+    <link href="libs/font-awesome-5.3.1/css/fontawesome-all.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" type="text/css" />
   </head>
   <body>
@@ -20,13 +21,268 @@ class: center, middle, inverse, title-slide
 
 
 
-class: middle, center, inverse
+class: middle, center
 
-# OPEN SCIENCE AT TBEP
+# OPEN SCIENCE PRIMER
 
 ---
 
 class: middle, center
+
+### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
+
+.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
+
+---
+
+class: middle, center
+
+# <i class="fas  fa-table "></i> Open data 
+
+# <i class="fas  fa-cogs "></i> Open process
+
+# <i class="fas  fa-book "></i> Open products
+
+---
+
+class: middle, center
+
+## THE OPEN SCIENCE CAKE
+
+&lt;img src="figure/cake.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle, center
+
+# MY VISION FOR TBEP
+
+---
+
+class: top, left
+
+.center[
+## SHORT-TERM
+]
+
+* Automated reporting of CCMP indicators
+* Made available through TBEP website, keeping entire workflow __transparent__ and __accessible__
+
+--
+
+.center[
+## LONG-TERM
+]
+
+* Develop a community of practice to make better science in less time
+* Training workshops and online resources
+* Open science TAC subcomittee
+
+---
+
+class: top
+
+.center[
+## WE ARE WELL UNDERWAY
+]
+
+* Workshop September 2019
+* First day at TBEP Nov. 1, 2019
+* Initial open science products
+
+&lt;img src="figure/workshop.jpg" width="60%" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, center
+
+## THE LOW HANGING CCMP INDICATORS
+
+&lt;img src="figure/tree.png" width="30%" /&gt;
+
+.pull-left[
+### WATER QUALITY REPORT CARD
+]
+
+.pull-right[
+### TIDAL CREEK ASSESSMENT
+]
+
+---
+class: middle, center
+
+# FOR EVERY INDICATOR, A NEW WORKFLOW
+
+---
+class: top, center
+
+## THE OLD WAY
+
+&lt;img src="figure/badflow1.png" width="100%" /&gt;
+
+---
+class: top, center
+
+## THE OLD WAY
+
+&lt;img src="figure/badflow2.png" width="100%" /&gt;
+
+---
+class: top, center
+
+## THE OLD WAY
+
+* Hefty license fees for software
+* Time consuming and prone to error
+* Opaque, disconnected, and undiscoverable workflow
+* No ability to engage the broader community
+
+---
+class: top, center
+
+## THE NEW WAY
+
+&lt;img src="figure/flow1.png" width="100%" /&gt;
+
+---
+class: top, center
+
+## THE NEW WAY
+
+&lt;img src="figure/flow2.png" width="100%" /&gt;
+
+---
+class: top, center
+
+## THE NEW WAY
+
+&lt;img src="figure/flow3.png" width="100%" /&gt;
+
+---
+class: top, center
+
+## THE NEW WAY
+
+* Transparent and reproducible methods
+* Discoverable products that can engage others
+* Automated data QAQC and integration with reporting
+* New front-facing web products, both static and interactive
+
+---
+class: middle, center
+
+# tbeptools
+
+---
+class: middle, center
+
+## tbeptools
+
+* An R package to import raw data, estimate indicators, and report outcomes
+* Foundational methods for indicator reporting
+* Freely available on GitHub for anyone to view source code, download for use, and make requests for additions
+
+---
+class: top, center
+
+## WEBSITE
+
+&lt;img src="figure/tbeptools.PNG" width="100%" /&gt;
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## FUNCTION REFERENCES
+&lt;img src="figure/tbeptoolsref.PNG" width="100%" /&gt;
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## DOCUMENTATION
+
+&lt;img src="figure/tbeptoolsdoc.PNG" width="100%" /&gt;
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## VIGNETTES
+
+&lt;img src="figure/tbeptoolsvig.PNG" width="100%" /&gt;
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## SOURCE CODE
+
+&lt;img src="figure/tbeptoolssrc.PNG" width="100%" /&gt;
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+
+---
+class: middle, left
+
+## IT'S SUPER SIMPLE...
+
+
+```r
+library(tbeptools)
+xlsx &lt;- 'data/2019_Results_updated.xls'
+ecpdata &lt;- read_importwq(xlsx, download_latest_epchc = TRUE)
+show_thrplot(epcdata, bay_segment = "OTB", thr = "chla")
+```
+
+&lt;img src="opensci_products_files/figure-html/unnamed-chunk-15-1.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+---
+class: top, center
+
+## TBEPTOOLS IS THE FOUNDATION
+
+&lt;img src="figure/flow3.png" width="100%" /&gt;
+
+---
+class: top, center
+
+## WATER QUALITY REPORT CARD
+
+.pull-left[
+&lt;img src="figure/wqstatic1.PNG" width="100%" /&gt;
+]
+
+.pull-right[
+&lt;img src="figure/wqstatic2.PNG" width="100%" /&gt;
+]
+
+---
+class: top, center
+
+## WATER QUALITY DASHBOARD
+
+&lt;img src="figure/wqdash.PNG" width="100%" /&gt;
+
+[https://shiny.tbeptech.org/wq-dash/](https://shiny.tbeptech.org/wq-dash/)
+
+---
+class: top, center
+
+## WATER QUALITY DASHBOARD
+
+&lt;video width="100%" controls&gt;
+&lt;source src="media/wqdemo.mp4" type = "video/mp4" controls&gt;
+&lt;/video&gt;
+
+---
+class: middle, center
+
+## TIDAL CREEKS DASHBOARD
 
 &lt;video width="100%" controls&gt;
 &lt;source src="media/tidaldemo.mp4" type = "video/mp4" controls&gt;
@@ -34,13 +290,12 @@ class: middle, center
 
 ---
 
+---
 class: middle, center
 
-* Here's some text
+## HOW CAN THE TAC GUIDE THIS PROCESS
 
-Here's some text
-
----
+* I cannot develop these indicators in isolation
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
