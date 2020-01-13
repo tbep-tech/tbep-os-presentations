@@ -14,7 +14,7 @@ output:
 
 ```{r, message = F, echo = F, warning = F}
 library(knitr)
-library(icon)
+# library(icon)
 
 # global knitr options
 opts_chunk$set(message = FALSE, dev.args = list(family = 'serif'), echo = F, warning = F)
@@ -28,5 +28,13 @@ knit_hooks$set(par = function(before, options, envir){
 class: middle, center, inverse
 
 # Open Science at TBEP  
+
+---
+
+class: middle, center
+
+<video width="100%" controls>
+<source src="media/tidaldemo.mp4" type = "video/mp4" controls>
+</video>
 
 ---
