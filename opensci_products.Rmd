@@ -1,15 +1,12 @@
 ---
-title: "Open Science Indicator Products: Water Quality and Tidal Tributaries"
+title: "OPEN SCIENCE INDICATOR PRODUCTS: WATER QUALITY AND TIDAL TRIBUTARIES"
 author: "[Dr. Marcus Beck](mailto:mbeck@tbep.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
-institute: "Tampa Bay Estuary Program"
+institute: "TAMPA BAY ESTUARY PROGRAM"
 date: "1/15/2020"
 output:
   xaringan::moon_reader:
     lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+    css: styles.css
 ---
 
 ```{r, message = F, echo = F, warning = F}
@@ -27,7 +24,7 @@ knit_hooks$set(par = function(before, options, envir){
 
 class: middle, center, inverse
 
-# Open Science at TBEP  
+# OPEN SCIENCE AT TBEP
 
 ---
 
@@ -36,5 +33,10 @@ class: middle, center
 <video width="100%" controls>
 <source src="media/tidaldemo.mp4" type = "video/mp4" controls>
 </video>
+
+---
+
+class: middle, center
+
 
 ---

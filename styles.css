@@ -1,0 +1,47 @@
+/* Frutiger Light approximate */
+@import url("//fonts.googleapis.com/css?family=Lato&display=swap"); 
+
+/* DIN condensed approximate */
+@import url("//fonts.googleapis.com/css?family=Roboto+Condensed&display=swap");
+
+/* header styles */
+
+h1 {
+  font-family: 'Roboto Condensed';
+  font-weight: 700;
+  color: #5C4A42;
+}
+h2 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #00806E;
+}
+h3 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+  font-style: italic;
+}
+h4 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+  font-style: italic;
+}
+h5 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+  font-style: italic;
+}
+a {
+  font-family: 'Roboto Condensed';
+  font-weight: 400;
+  color: #00806E;
+}
+
+.inverse {
+  background-color: #FFFFFF;
+  color: #d6d6d6;
+  text-shadow: 0 0 2px #333;
+}
