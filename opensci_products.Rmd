@@ -14,7 +14,7 @@ library(knitr)
 library(icon)
 
 # global knitr options
-opts_chunk$set(message = FALSE, dev.args = list(family = 'Lato Light'), echo = F, warning = F)
+opts_chunk$set(message = FALSE, dev.args = list(family = 'Lato Light'), echo = F, warning = F, dpi = 300)
 
 # chunk hook for par
 knit_hooks$set(par = function(before, options, envir){
@@ -62,7 +62,7 @@ class: middle, center
 
 ---
 
-class: top, left
+class: top, center
 
 .center[
 ## SHORT-TERM
@@ -83,7 +83,7 @@ class: top, left
 
 ---
 
-class: top
+class: top, center
 
 .center[
 ## WE ARE WELL UNDERWAY
@@ -145,7 +145,7 @@ class: top, center
 * Hefty license fees for software
 * Time consuming and prone to error
 * Opaque, disconnected, and undiscoverable workflow
-* No ability to engage the broader community
+* Missed opportunities to engage the broader community
 
 ---
 class: top, center
@@ -190,11 +190,11 @@ class: middle, center
 # tbeptools
 
 ---
-class: middle, center
+class: top, center
 
-## tbeptools
+## tbeptools R package
 
-* An R package to import raw data, estimate indicators, and report outcomes
+* Import raw data, estimate indicators, and report outcomes
 * Foundational methods for indicator reporting
 * Freely available on GitHub for anyone to view source code, download for use, and make requests for additions
 
@@ -217,8 +217,6 @@ class: top, center
 knitr::include_graphics('figure/tbeptoolsref.PNG')
 ```
 
-[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
-
 ---
 class: top, center
 
@@ -227,8 +225,6 @@ class: top, center
 ```{r, out.width = '100%'}
 knitr::include_graphics('figure/tbeptoolsdoc.PNG')
 ```
-
-[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
 
 ---
 class: top, center
@@ -239,8 +235,6 @@ class: top, center
 knitr::include_graphics('figure/tbeptoolsvig.PNG')
 ```
 
-[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
-
 ---
 class: top, center
 
@@ -250,13 +244,12 @@ class: top, center
 knitr::include_graphics('figure/tbeptoolssrc.PNG')
 ```
 
-[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
-
-
 ---
 class: middle, left
 
+.center[
 ## IT'S SUPER SIMPLE...
+]
 
 ```{r, echo = T, fig.height = 4, fig.width = 7, out.width = '80%', message = F, warning = F, fig.align = 'center'}
 library(tbeptools)
@@ -296,23 +289,71 @@ class: top, center
 
 ## WATER QUALITY DASHBOARD
 
-```{r, out.width="100%"}
-knitr::include_graphics('figure/wqdash.PNG')
-```
+<video width="100%" controls>
+<source src="media/wqdemo.mp4" type = "video/mp4" controls>
+</video>
 
 [https://shiny.tbeptech.org/wq-dash/](https://shiny.tbeptech.org/wq-dash/)
 
 ---
 class: top, center
 
-## WATER QUALITY DASHBOARD
+## TIDAL CREEK ASSESSMENT
 
-<video width="100%" controls>
-<source src="media/wqdemo.mp4" type = "video/mp4" controls>
-</video>
+.pull-left[
+```{r, out.width="100%"}
+knitr::include_graphics('figure/tidalcreekreport1.PNG')
+```
+]
+
+.pull-right[
+```{r, out.width="100%"}
+knitr::include_graphics('figure/tidalcreekreport2.PNG')
+```
+]
 
 ---
-class: middle, center
+class: top, left
+
+.center[
+## TIDAL CREEK ASSESSMENT
+]
+
+### Creeks assigned to categories within a management framework:
+
+<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Target__</span>: At or below nitrogen concentrations that protect individual creek types within the larger population of creeks.
+
+<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: A site-specific early warning concentration that an individual creek may be trending towards a eutrophic condition and can help prioritize where management actions should begin to identify actions to prevent a threshold exceedance.
+
+<span style="color:#FFA500; text-shadow: 0 0 3px #333;">__Action__</span>: A concentration indicating a management action level that identifies a potential degradation point as an impetus to develop site-specific management actions.
+
+<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__Threshold__</span>: A concentration indicating that regulatory actions are needed to confirm the impairment and identify remediative actions for the creek watershed.
+
+---
+class: top, left
+
+.center[
+## IT'S SUPER SIMPLE...
+]
+
+```{r, echo = T}
+results <- anlz_tdlcrk(tidalcreeks, iwrraw)
+results
+```
+
+---
+class: top, left
+
+.center[
+## IT'S SUPER SIMPLE...
+]
+
+```{r, echo = T, out.width='100%', out.height='400px'}
+show_tdlcrk(results)
+```
+
+---
+class: top, center
 
 ## TIDAL CREEKS DASHBOARD
 
@@ -320,13 +361,43 @@ class: middle, center
 <source src="media/tidaldemo.mp4" type = "video/mp4" controls>
 </video>
 
----
+[https://shiny.tbeptech.org/wq-dash/](https://shiny.tbeptech.org/tidalcreek-dash/)
 
 ---
-class: middle, center
+class: top, center
 
-## HOW CAN THE TAC GUIDE THIS PROCESS
+## MORE TO COME
 
-* I cannot develop these indicators in isolation
+* Tidal creeks include several additional indicators as context
+* Two-pager or other summary document
+* Automated integration with data sources
+* Next indicators to tackle are nekton and benthic indices
 
+---
+class: top, center
 
+## MORE TO COME
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/website.png')
+```
+
+---
+class: top, center
+
+## TAC ROLES AND RESPONSIBILITIES
+
+* An application must meet the needs of those that require science to inform to make decisions
+* Development requires two-way exchange of ideas
+
+--
+
+### __*How could managers use these data?*__
+
+--
+
+### __*How could these products support policy?*__
+
+--
+
+### __*Let's create an open science subcommittee!*__
