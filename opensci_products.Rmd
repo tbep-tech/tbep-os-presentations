@@ -371,7 +371,10 @@ class: top, center
 * Tidal creeks include several additional indicators as context
 * Two-pager or other summary document
 * Automated integration with data sources
-* Next indicators to tackle are nekton and benthic indices
+
+--
+
+### __*Next indicators to tackle are nekton and benthic indices*__
 
 ---
 class: top, center
@@ -387,7 +390,7 @@ class: top, center
 
 ## TAC ROLES AND RESPONSIBILITIES
 
-* An application must meet the needs of those that require science to inform to make decisions
+* An application must meet the needs of those that require science to inform decisions
 * Development requires two-way exchange of ideas
 
 --
