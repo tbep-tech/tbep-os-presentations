@@ -24,78 +24,11 @@ knit_hooks$set(par = function(before, options, envir){
 
 class: middle, center
 
-# OPEN SCIENCE PRIMER
-
----
-
-class: middle, center
-
-### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
-
-.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
-
----
-
-class: middle, center
-
 # `r fa('table')` Open data 
 
 # `r fa("cogs")` Open process
 
 # `r fa("book")` Open products
-
----
-
-class: middle, center
-
-## THE OPEN SCIENCE CAKE
-
-```{r, fig.align = 'center', out.width='100%'}
-knitr::include_graphics('figure/cake.png')
-```
-
----
-
-class: middle, center
-
-# MY VISION FOR TBEP
-
----
-
-class: top, center
-
-.center[
-## SHORT-TERM
-]
-
-* Automated reporting of CCMP indicators
-* Made available through TBEP website, keeping entire workflow __transparent__ and __accessible__
-
---
-
-.center[
-## LONG-TERM
-]
-
-* Develop a community of practice to make better science in less time
-* Training workshops and online resources
-* Open science TAC subcomittee
-
----
-
-class: top, center
-
-.center[
-## WE ARE WELL UNDERWAY
-]
-
-* Workshop September 2019
-* First day at TBEP Nov. 1, 2019
-* Initial open science products
-
-```{r, echo = F, out.width = "60%", fig.align = 'center'}
-knitr::include_graphics('figure/workshop.jpg')
-```
 
 ---
 class: middle, center
@@ -185,14 +118,9 @@ class: top, center
 * New front-facing web products, both static and interactive
 
 ---
-class: middle, center
-
-# tbeptools
-
----
 class: top, center
 
-## tbeptools R package
+## TBEPTOOLS R PACKAGE
 
 * Import raw data, estimate indicators, and report outcomes
 * Foundational methods for indicator reporting
