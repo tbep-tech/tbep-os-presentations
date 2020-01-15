@@ -120,6 +120,15 @@ class: top, center
 ---
 class: top, center
 
+## THE NEW WAY
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/flow3.png')
+```
+
+---
+class: top, center
+
 ## TBEPTOOLS R PACKAGE
 
 * Import raw data, estimate indicators, and report outcomes
