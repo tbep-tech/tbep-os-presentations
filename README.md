@@ -13,3 +13,7 @@ Presentation materials for open science talks, OS workshop Sep 2019
 TAC meeting Jan 2020
 
 * Open Science Indicator Products: Water Quality and Tidal Tributaries [link](http://tbep-tech.github.io/tbep-os-presentations/opensci_products.html)
+
+Board meetings Feb 2020
+
+* 2019 water quality report card update [link](http://tbep-tech.github.io/tbep-os-presentations/wq_report_card_2019.html)
