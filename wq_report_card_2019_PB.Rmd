@@ -1,0 +1,136 @@
+---
+title: "2019 Water Quality Report Card: updates and why they're important"
+author: "[Dr. Marcus Beck](mailto:mbeck@tbep.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
+institute: "TAMPA BAY ESTUARY PROGRAM"
+date: "2/14/2020"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    css: styles.css
+---
+
+```{r, message = F, echo = F, warning = F}
+library(knitr)
+library(icon)
+library(tbeptools)
+library(extrafont)
+library(plotly)
+library(ggplot2)
+library(patchwork)
+
+loadfonts(device = 'pdf', quiet = T)
+loadfonts(device = 'win', quiet = T)
+
+fml <- 'Lato Light'
+maxyr <- 2019
+source(here::here('R', 'funcs.R'))
+
+# global knitr options
+opts_chunk$set(message = FALSE, dev.args = list(family = fml), echo = F, warning = F, dpi = 300)
+
+# minor theme tweaks
+pthm <- theme(
+  axis.text.x = element_text(size = 7, angle = 45, hjust = 1),
+  legend.text = element_text(size = 12), 
+  axis.title.y = element_text(size = 9),
+  text = element_text(fml), 
+  legend.position = 'none',
+  # panel.grid.minor=element_blank(),
+  # panel.grid.major=element_blank(),
+  panel.background = element_rect(fill = '#ECECEC')
+  ) 
+```
+
+class: top, center
+
+## WATER QUALITY REPORT CARD
+
+.pull-left[
+```{r, out.width="100%"}
+knitr::include_graphics('figure/wqstatic1.PNG')
+```
+(programmatic)
+]
+
+.pull-right[
+```{r, out.width="100%"}
+knitr::include_graphics('figure/wqstatic2.PNG')
+```
+(regulatory)
+]
+
+---
+class: middle, center
+
+# TRENDS TO NOTE
+
+---
+class: top, center
+
+## OTB issues
+
+```{r, fig.height=4, fig.width=8, fig.align='center', out.width='100%'}
+show_thrplot(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), family = fml)
+```
+
+---
+class: top, center
+
+## OTB issues
+
+```{r, fig.height=4, fig.width=8, fig.align='center', out.width='100%'}
+show_boxplot(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), family = fml)
+```
+
+---
+class: top, center
+
+## OTB issues
+
+```{r, fig.height = 6, fig.width = 9, out.width="100%", fig.align = 'center'}
+# p <- thrplotly(epcdata, 'OTB', maxyr, fml, pthm)
+# htmlwidgets::saveWidget(p,paste0(here::here('media', 'p.html')))
+p1 <- show_thrplot(epcdata, bay_segment = 'OTB', thr = "chla", yrrng = c(1975, maxyr), family = family, txtlab = F, labelexp = F) + 
+  ggtitle(NULL) +
+  pthm +
+  theme(axis.text.x = element_blank()) +
+  scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
+p2 <- show_thrplot(epcdata, bay_segment = 'OTB', thr = "la", yrrng = c(1975, maxyr), family = family, txtlab = F, labelexp = F) + 
+  ggtitle(NULL) +
+  pthm + 
+  scale_x_continuous(expand = c(0.01, 0.01), breaks = seq(1975, maxyr))
+
+p3 <- show_segmatrix(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), txtsz = NULL) + 
+  scale_y_continuous(expand = c(0,0), breaks = c(1975:maxyr)) +
+  coord_flip() +
+  theme(
+    axis.text.x = element_blank(),
+    axis.text = element_text(size = 9), 
+    text = element_text(family = fml)
+  ) 
+
+p1 + p3 + p2 + plot_layout(ncol = 1, heights = c(1, 0.3, 1))
+```
+
+<!-- <iframe src="media/p.html" width="110%" height="100%" scrolling="yes" seamless="seamless" frameBorder="1"> </iframe> -->
+
+---
+class: top, center
+
+## 2019 take home 
+
+* Large chl exceedance in summer/fall in OTB
+* Third non-consecutive year of not meeting chlorophyll target
+* Light attenuation not yet an issue, but stay alert
+* Anticipate seagrass 2020 estimate, make a push for the data!
+
+---
+class: top, center
+
+## WATER QUALITY DASHBOARD
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/wqdash2.PNG')
+```
+
+[https://shiny.tbeptech.org/wq-dash/](https://shiny.tbeptech.org/wq-dash/)
