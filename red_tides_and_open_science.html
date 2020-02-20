@@ -87,16 +87,6 @@ class: middle, center
 
 ---
 
-class: middle, top
-
-# &lt;center&gt;The open science workflow&lt;/center&gt;
-
-&lt;img src="figure/open.png" width="80%" style="display: block; margin: auto;" /&gt;
-
-.footnote[Adapted from Hampton et al. 2015 Ecosphere 6(7):120]
-
----
-
 class: middle, center, inverse
 
 # A TBEP example
@@ -128,6 +118,49 @@ class: top, center
 ## THE NEW (open) WAY
 
 &lt;img src="figure/flow3.png" width="100%" /&gt;
+
+---
+class: middle, center, inverse
+
+# Open data have a *life history*, are *unaltered*, *machine-readable*, and *readily available*!
+
+--
+
+# (versus the Excel file you're sitting on)
+
+---
+
+class: middle, center, inverse
+
+# *Discoverable* products - the Internet can find it!
+
+--
+
+# = *collaboration*
+
+.footnote[e.g., https://www.dataone.org/, https://knb.ecoinformatics.org/]
+
+---
+
+class: middle, center, inverse
+
+# What if my data are sensitive?
+
+---
+
+class: top, center
+
+# Dealing with sensitive data:
+
+## - Anonymyize or generalize information with readily-available tools
+
+--
+
+## - Don't be open when it's impractical!
+
+--
+
+## - Or just embrace the openness..
 
 ---
 
@@ -163,8 +196,8 @@ class: middle, center
 
 ## 1) Develop a regionally-coordinated, standardized red tide impact assessment method
 
-### - Identify data needs
-### - Establish assessment endpoints
+### - Identify priority metrics
+### - Link metrics to data
 ### - Develop analysis workflow (inputs/outputs, data dictionary, metadata)
 
 ---
@@ -195,7 +228,10 @@ class: top, center
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
-<script>var slideshow = remark.create();
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"countIncrementalSlides": false
+});
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });

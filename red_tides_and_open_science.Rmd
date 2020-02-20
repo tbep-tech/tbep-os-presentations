@@ -5,6 +5,9 @@ institute: "Tampa Bay Estuary Program"
 date: "2/21/2020"
 output:
   xaringan::moon_reader:
+    nature:
+      highlightLines: true
+      countIncrementalSlides: false
     lib_dir: libs
     css: styles.css
 ---
@@ -96,18 +99,6 @@ class: middle, center
 
 ---
 
-class: middle, top
-
-# <center>The open science workflow</center>
-
-```{r, echo = F, out.width = '80%', fig.align = 'center'}
-knitr::include_graphics("figure/open.png")
-```
-
-.footnote[Adapted from Hampton et al. 2015 Ecosphere 6(7):120]
-
----
-
 class: middle, center, inverse
 
 # A TBEP example
@@ -149,6 +140,49 @@ knitr::include_graphics('figure/flow3.png')
 ```
 
 ---
+class: middle, center, inverse
+
+# Open data have a *life history*, are *unaltered*, *machine-readable*, and *readily available*!
+
+--
+
+# (versus the Excel file you're sitting on)
+
+---
+
+class: middle, center, inverse
+
+# *Discoverable* products - the Internet can find it!
+
+--
+
+# = *collaboration*
+
+.footnote[e.g., https://www.dataone.org/, https://knb.ecoinformatics.org/]
+
+---
+
+class: middle, center, inverse
+
+# What if my data are sensitive?
+
+---
+
+class: top, center
+
+# Dealing with sensitive data:
+
+## - Anonymyize or generalize information with readily-available tools
+
+--
+
+## - Don't be open when it's impractical!
+
+--
+
+## - Or just embrace the openness..
+
+---
 
 class: top, center
 
@@ -184,8 +218,8 @@ class: middle, center
 
 ## 1) Develop a regionally-coordinated, standardized red tide impact assessment method
 
-### - Identify data needs
-### - Establish assessment endpoints
+### - Identify priority metrics
+### - Link metrics to data
 ### - Develop analysis workflow (inputs/outputs, data dictionary, metadata)
 
 ---
