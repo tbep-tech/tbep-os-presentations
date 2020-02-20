@@ -6,10 +6,7 @@ date: "2/21/2020"
 output:
   xaringan::moon_reader:
     lib_dir: libs
-    nature:
-      highlightStyle: github
-      highlightLines: true
-      countIncrementalSlides: false
+    css: styles.css
 ---
 
 ```{r, message = F, echo = F, warning = F}
@@ -107,8 +104,6 @@ class: middle, top
 knitr::include_graphics("figure/open.png")
 ```
 
-<br></br>
-<br></br>
 .footnote[Adapted from Hampton et al. 2015 Ecosphere 6(7):120]
 
 ---
