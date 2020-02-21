@@ -63,7 +63,7 @@ class: middle, center
 
 class: middle, center
 
-## Open sience can bridge this divide
+## Open science can bridge this divide
 
 &lt;img src="figure/bridge.png" width="100%" /&gt;
 
@@ -73,7 +73,7 @@ class: middle, center
 
 ### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
 
-.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
+.footnote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
 
 ---
 
@@ -152,7 +152,7 @@ class: top, center
 
 # Dealing with sensitive data:
 
-## - Anonymyize or generalize information with readily-available tools
+## - Anonymize or generalize information with readily-available tools
 
 --
 
@@ -186,7 +186,7 @@ class: middle, center
 
 ## 1) Develop a regionally-coordinated, standardized red tide impact assessment method
 
-## 2) Evaluate and make recommendations for optimizing reponse efforts
+## 2) Evaluate and make recommendations for optimizing response efforts
 
 ---
 
@@ -270,7 +270,24 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     deleted = true;
   });
-})();</script>
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {

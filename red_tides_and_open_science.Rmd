@@ -73,7 +73,7 @@ knitr::include_graphics('figure/michener.png')
 
 class: middle, center
 
-## Open sience can bridge this divide
+## Open science can bridge this divide
 
 ```{r, echo = F, out.width = '100%'}
 knitr::include_graphics("figure/bridge.png")
@@ -85,7 +85,7 @@ class: middle, center
 
 ### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
 
-.footenote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
+.footnote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
 
 ---
 
@@ -172,7 +172,7 @@ class: top, center
 
 # Dealing with sensitive data:
 
-## - Anonymyize or generalize information with readily-available tools
+## - Anonymize or generalize information with readily-available tools
 
 --
 
@@ -208,7 +208,7 @@ class: middle, center
 
 ## 1) Develop a regionally-coordinated, standardized red tide impact assessment method
 
-## 2) Evaluate and make recommendations for optimizing reponse efforts
+## 2) Evaluate and make recommendations for optimizing response efforts
 
 ---
 
