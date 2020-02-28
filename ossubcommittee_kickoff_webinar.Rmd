@@ -29,11 +29,11 @@ knit_hooks$set(par = function(before, options, envir){
 
 1. Introductions and goals
 
-1. Open Science overview 
+1. Open science overview 
 
 1. Roles and responsibilities of subcommittee
 
-1. Open Science at TBEP
+1. Open science at TBEP
 
 1. Action items
 
@@ -47,7 +47,7 @@ class: middle, center, inverse
 
 ---
 
-class: top, center
+class: top, left
 
 # Today's goals
 
@@ -61,7 +61,7 @@ class: top, center
 
 class: middle, center, inverse
 
-# An Open Science primer
+# An open science primer
 
 ---
 
@@ -186,29 +186,29 @@ class: middle, center, inverse
 
 ---
 
-class: top, center
+class: top, left
 
 # Why do we need a subcommittee?
 
 1. Products should not be created in a vacuum
 
-1. Open Science is not easy
+1. Open science is a new way of thinking for many
 
 ---
 
-class: top, center 
+class: top, left 
 
 # Subcommittee roles and responsibilities
 
 1. Support development of open science products at TBEP
 
-1. Rank priority research areas for developing Open Science products
+1. Rank priority research areas for developing open science products
 
 1. Facilitate training activities
 
 ---
 
-class: top, center 
+class: top, left 
 
 # 1. Support development of open science products at TBEP
 
@@ -220,43 +220,43 @@ class: top, center
 
 class: top 
 
-# 2. Rank priority research areas for developing Open Science products
+# 2. Rank priority research areas for developing open science products
 
 * Topics actively under development
-     + Water Quality report card
-     + Tidal Creeks dashboard
-* Anticipated products for remainder 2020
+     + Water quality report card
+     + Tidal creeks dashboard
+* Anticipated products for remainder of 2020
      + Nekton index
      + Benthic index
      + Others?
 
 ---
 
-class: top, center
+class: top, left
 
-# 2019 September OS workshop feedback
+# 2019 OS workshop feedback
 
-> " __Great exposure__ to a range tools, together with a solid intro of the philosophical underpinnings of Open Science"
+> ### " __Great exposure__ to a range tools, together with a solid intro of the philosophical underpinnings of open science"
 
-> "I was unaware of some of the data reporting capabilities that now exist. __It's exciting!__"
+> ### "I was unaware of some of the data reporting capabilities that now exist. __It's exciting!__"
 
-> "I have a much __better understanding__ of open science, and absolutely know where to look for resources."
-
----
-
-class: top, center
-
-# 2019 September OS workshop feedback
-
-> "I really liked the interactive nature of presentations. However, as a beginner in coding and open science at times __I felt it moved at a very fast pace.__"
-
-> "I liked the group discussion at the end of the workshop. I would have liked to have __more hands-on__ with Rstudio and Github."
-
-> "This was a good introduction, but I think a __hands-on follow-up__ is needed."
+> ### "I have a much __better understanding__ of open science, and absolutely know where to look for resources."
 
 ---
 
-class: top, center
+class: top, left
+
+# 2019 OS workshop feedback
+
+> ### "I really liked the interactive nature of presentations. However, as a beginner in coding and open science at times __I felt it moved at a very fast pace.__"
+
+> ### "I liked the group discussion at the end of the workshop. I would have liked to have __more hands-on__ with Rstudio and Github."
+
+> ### "This was a good introduction, but I think a __hands-on follow-up__ is needed."
+
+---
+
+class: top, left
 
 # 3. Facilitate training activities
 
@@ -286,17 +286,17 @@ class: top, center
 
 # The guidance document
 
-https://bit.ly/2T56dNQ
-
 ```{r, out.width = "70%"}
 knitr::include_graphics('figure/gdoc.PNG')
 ```
+
+[https://bit.ly/2T56dNQ](https://bit.ly/2T56dNQ)
 
 ---
 
 class: middle, center, inverse
 
-# Open Science at TBEP
+# Open science at TBEP
 
 ---
 
@@ -353,15 +353,15 @@ class: top, center
 
 ## Tbep-tech Github page
 
-https://github.com/tbep-tech
-
 ```{r, out.width="90%"}
 knitr::include_graphics('figure/githubtbeptech.PNG')
 ```
 
+[https://github.com/tbep-tech](https://github.com/tbep-tech)
+
 ---
 
-class: top, center
+class: top, left
 
 # Action items
 
@@ -375,12 +375,24 @@ class: top, center
 
 ---
 
+class: top, left
+
+# Today's goals
+
+1. Develop understanding of what we're trying to do with open science at TBEP
+
+1. Understand roles, responsibilities, and expectations
+
+1. Motivate subcommittee to spread the gospel of open science
+
+---
+
 class: top, center
 
 # Roadmap
 
-## What do we hope to accomplish in six months, 1 year, 5 years?  
-
 ## 2020: Four indicators done, at least one training session
+
+## What do we hope to accomplish in six months, 1 year, 5 years?  
 
 ## Others?
