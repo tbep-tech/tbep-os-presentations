@@ -1,6 +1,6 @@
 ---
 title: "Kickoff Webinar: Open Science Subcommittee"
-author: "[Dr. Marcus Beck](mailto:marcusb@sccwrp.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
+author: "[Dr. Marcus Beck](mailto:mbeck@tbep.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
 institute: "Tampa Bay Estuary Program"
 date: "3/2/2020"
 output:
@@ -37,7 +37,7 @@ knit_hooks$set(par = function(before, options, envir){
 
 1. Action items
 
-1. Roadmap
+1. Roadmap/discussion
 
 ---
 
@@ -272,6 +272,18 @@ class: middle, center, inverse
 
 ---
 
+class: top, center
+
+# Building a community of practice
+
+```{r, out.width = "90%"}
+knitr::include_graphics('figure/communitypaper.PNG')
+```
+
+[https://bit.ly/38bZVjP](https://bit.ly/38bZVjP)
+
+---
+
 class: center, middle, inverse
 
 # Ask not what open science can do for you, but what you can do with open science
@@ -365,7 +377,7 @@ class: top, left
 
 # Action items
 
-1. Fill out poll for training needs
+1. Fill out poll for training needs and priority items for open science implementation
 
 1. Review roles/responsibilities document and suggest edits
 
@@ -394,5 +406,3 @@ class: top, center
 ## 2020: Four indicators done, at least one training session
 
 ## What do we hope to accomplish in six months, 1 year, 5 years?  
-
-## Others?
