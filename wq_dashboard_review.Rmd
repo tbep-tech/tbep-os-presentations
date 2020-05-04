@@ -1,0 +1,215 @@
+---
+title: "Summary of WQ dashboard review"
+author: "[Dr. Marcus Beck](mailto:mbeck@tbep.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
+institute: "Tampa Bay Estuary Program"
+date: "5/6/2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightLines: true
+      countIncrementalSlides: false
+    lib_dir: libs
+    css: styles.css
+---
+
+
+```{r, message = F, echo = F, warning = F}
+library(knitr)
+library(icon)
+
+# global knitr options
+opts_chunk$set(message = FALSE, dev.args = list(family = 'serif'), echo = F, warning = F)
+
+# chunk hook for par
+knit_hooks$set(par = function(before, options, envir){
+  if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1))
+})
+```
+
+class: top, center
+
+## WATER QUALITY DASHBOARD
+
+```{r, out.width="100%"}
+knitr::include_graphics('figure/wqdash2.PNG')
+```
+
+[https://shiny.tbeptech.org/wq-dash/](https://shiny.tbeptech.org/wq-dash/)
+
+---
+
+# Agenda
+
+1. Goals for today
+
+1. Summarize comments from review (select comments are shown)
+
+1. Describe changes to date
+
+1. Discuss any outstanding issues
+
+1. Announcements
+
+---
+
+class: top, left
+
+# Today's goals
+
+1. Engage you guys!
+
+1. Understand gist of comments
+
+1. Openly discuss any questions/comments/concerns
+
+1. Understand changes made to dashboard
+
+---
+
+class: middle, center, inverse
+
+# Overview of comments
+
+---
+
+class: middle, center, inverse
+
+## What do you think is the purpose of this application? In other words, what questions or management needs does the application address?
+
+* To quickly see what areas of TB are and are not __meeting their intended targets__ and to __explore underlying causes__.
+* The dashboard provides exploratory data analysis of monitoring data to help a user __understand how the report card is scored__.
+* Let people know __how Tampa Bay's nitrogen management strategy works__, how it's calculated, and the outcomes for water quality monitoring. It can also be used to __investigate which factors__ (or algal species) are driving certain outcomes for the management matrix.
+* __When, where and how__ water quality is changing in Tampa Bay- so you can __look into why__ if necessary.
+
+---
+
+class: middle, center, inverse
+
+## Who is the intended audience? Should we contact specific people to get their feedback/identify needs? 
+
+* __Government agencies__; large entities that contribute to water pollution issues; __decision-makers__ or large players in the Tampa Bay watershed.
+* Mostly __resource managers__ and technical county/city staff who may be asked about TB WQ status and trends by executive staff, __elected officials__, and members of the __public__.
+* __Scientists__, __consultants__, __managers__ and __decision makers__
+* I suggest additional involvement of 1) Those involved in large-scale monitoring program QA like the EPA LTER program; and 2) Those involved in "big-data" analytical techniques
+
+---
+
+class: middle, center, inverse
+
+## Please rate the interface for ease of use, e.g., instructions were clear, information was easily navigated, etc.
+
+```{r, echo = F, out.width = '100%'}
+knitr::include_graphics("figure/easeofuse.PNG")
+```
+
+---
+
+class: middle, center, inverse
+
+## What is the best feature of the dashboard?
+
+* The __interactivity__ of the dashboard. Being able to look at most of the data in one place without having to move between several different panes.
+* The __multiple views__ of long, time series trends are a simple and incredibly effective way of __summarizing__ this major status and trend measure.
+* I like being able to go all the way __down to the site level__ in the 4th tab.
+* Data is __accessible__ and __interactive__
+* It gives a __quick high level snapshot__ of conditions relative to targets and also allows users to go a bit more in-depth.
+
+---
+
+class: middle, center, inverse
+
+## What is the worst feature of the dashboard?
+
+* Even though it's a small gripe, the __font color__ made it a little bit difficult to read.
+* __Instructions can be lengthy__. That detail should be available into how the science works/how decisions were made, but a quick start version for more casual users on simply how to interpret the graphs should be available and placed front and center.
+* The Site Trends is __very busy__ with too much data, and it doesn't achieve the purpose of seeing what sites might be influencing a segment's attainment.
+* Can be TMI for those not initiated - could be __overwhelming__ I think
+* Having some __lag__ between the mouse movement and the changes wanted
+* The first page, Overview, __has a lot of words__ and the format is kind of dry. It does not draw me in and make me want to further explore the pages
+
+---
+
+class: middle, center, inverse
+
+## Did you encounter any errors or unexpected issues that we need to fix/address?
+
+* When zoomed into the box and whisper graphs, there are __two separate sets__ of quartile, outlier, maximum, etc. points.
+* No. But normally I'd test a web-based application on common __mobile devices__ before saying I'm completely satisfied.
+* I'm not sure if it's just the size of my computer screen but the __legends__ on the map on Tab 1 were all __over-lapping__ and I couldn't read them. 
+* I had a question about "missing" secchi depths, but Marcus addressed it
+* There was a bit of a __lag__ for loading the pages.
+
+---
+
+class: middle, center, inverse
+
+## Are there any features you think are unnecessary or any features we should add?
+
+* I think a possible explainer __YouTube video__ might be helpful. A short 2-5 minute video of just a screen recording that goes through each tab.
+* Will the dashboard eventually be extended to include any __other water quality parameters__?
+* I would like to see more on __nutrients__, if available
+* Add other WQ parameters like TN and TP and allow __correlations__ between different parameters over different timescales and stations. And the final butter on my biscuit would be to allow users to fit certain (BUT appropriate) __trend lines or smoother functions__ like LOESS curves to plots like Chl-a versus TN.
+
+---
+
+class: middle, center, inverse
+
+## Anything else not covered above that we should know about?
+
+* I'd have somebody __independently review__ the dashboard generation process for any errors of omission.
+* When viewing on a smaller computer screen (15" laptop) the y-axis __labels start to overlap__: can we wrap them to two lines to prevent overlapping among panels?
+* No tools or insight into the __Why__?
+
+---
+
+class: middle, center, inverse
+
+## Please provide an overall assessment score for the dashboard that summarizes your responses to the above questions.
+
+```{r, echo = F, out.width = '100%'}
+knitr::include_graphics("figure/overallassess.PNG")
+```
+
+---
+
+class: top, left
+
+# Today's goals
+
+1. Engage you guys!
+
+1. Understand gist of comments
+
+1. Openly discuss any questions/comments/concerns
+
+1. Understand changes made to dashboard
+
+---
+
+class: top, left
+
+# Some light reading
+
+Powers, S.M. and Hampton, S.E., 2019. Open science, reproducibility, and transparency in ecology. Ecological applications, 29(1), p.e01822. [DOI:10.1002/eap.1822](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/eap.1822)
+
+Wilson, G., Bryan, J., Cranston, K., Kitzes, J., Nederbragt, L. and Teal, T.K., 2017. Good enough practices in scientific computing. PLoS computational biology, 13(6). [DOI:10.1371/journal.pcbi.1005510](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1005510)
+
+---
+
+class: top, left
+
+# R training!
+
+```{r, fig.align = 'center', out.width = '70%'}
+knitr::include_graphics('figure/TBEP R Training.png')
+```
+
+---
+
+class: top, left
+
+# Tampa Bay Nekton Index
+
+1. Now available on [tbeptools](https://tbep-tech.github.io/tbeptools/)
+1. Full vignette available [here](https://tbep-tech.github.io/tbeptools/tbni.html)
+1. Thanks to Meagan!

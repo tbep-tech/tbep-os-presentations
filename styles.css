@@ -92,10 +92,17 @@ ul li::before {
   margin-left: -1em; /* Also needed for space (tweak if needed) */
 }
 
-ul, ol {  
+ol {  
   font-family: 'Lato';
   font-weight: 300;
   font-size: 36px; /* roughly h3 font size */
+  color: #958984; /* Change the color */
+}
+
+ul {  
+  font-family: 'Lato';
+  font-weight: 300;
+  font-size: 24px; /* roughly h3 font size */
   color: #958984; /* Change the color */
 }
 
