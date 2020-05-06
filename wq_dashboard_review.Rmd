@@ -55,13 +55,11 @@ class: top, left
 
 # Today's goals
 
-1. Engage you guys!
-
 1. Understand gist of comments
 
 1. Openly discuss any questions/comments/concerns
 
-1. Understand changes made to dashboard
+1. Engage you guys!
 
 ---
 
@@ -175,13 +173,11 @@ class: top, left
 
 # Today's goals
 
-1. Engage you guys!
-
 1. Understand gist of comments
 
 1. Openly discuss any questions/comments/concerns
 
-1. Understand changes made to dashboard
+1. Engage you guys!
 
 ---
 
