@@ -9,6 +9,12 @@ output:
     css: styles.css
 ---
 
+<style>
+.remark-code, .remark-inline-code { font-family: 'Source Code Pro', 'Lucida Console', Monaco, monospace;
+                                    font-size: 70%;
+                                  }
+</style>
+
 ```{r, message = F, echo = F, warning = F}
 library(knitr)
 library(icon)
@@ -117,18 +123,6 @@ knitr::include_graphics('figure/wqstatic2.PNG')
 
 class: top, center
 
-## WATER QUALITY DASHBOARD
-
-```{r, out.width="100%"}
-knitr::include_graphics('figure/wqdash2.PNG')
-```
-
-[https://shiny.tbeptech.org/wq-dash/](https://shiny.tbeptech.org/wq-dash/)
-
----
-
-class: top, center
-
 ## THE OLD (closed) WAY
 
 ```{r, out.width="100%"}
@@ -192,22 +186,6 @@ knitr::include_graphics('figure/tidalcreekreport2.PNG')
 ```
 ]
 
----
-class: top, left
-
-.center[
-## TIDAL CREEK ASSESSMENT
-]
-
-### Creeks assigned to categories within a management framework:
-
-<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Target__</span>: Creek is at or below nitrogen concentrations that protect individual creek types within the larger population of creeks.
-
-<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: Creek nutrients showing signs of eleveted nutrient concentrations that may increase risk of eutrophic condition.
-
-<span style="color:#FFA500; text-shadow: 0 0 3px #333;">__Investigate__</span>: Creek nutrient concentrations above margin of safety to protect creek from potential impairment.
-
-<span style="color:#FF7F50; text-shadow: 0 0 3px #333;">__Act__</span>: Creek nutrient concentrations have exceeded regulatory standard for associated freshwater portion of tributary indicating that actions are needed to identify remediative measures to reduce nutrients to the creek.
 
 ---
 class: top, left
@@ -258,10 +236,15 @@ class: top, left
 ## TIDAL CREEK ASSESSMENT
 ]
 
-```{r, echo = F, out.width='100%', out.height='400px', eval = T}
-results <- anlz_tdlcrk(tidalcreeks, iwrraw)
-show_tdlcrk(results)
-```
+### Creeks assigned to categories within a management framework:
+
+<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Target__</span>: Creek is at or below nitrogen concentrations that protect individual creek types within the larger population of creeks.
+
+<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: Creek nutrients showing signs of eleveted nutrient concentrations that may increase risk of eutrophic condition.
+
+<span style="color:#FFA500; text-shadow: 0 0 3px #333;">__Investigate__</span>: Creek nutrient concentrations above margin of safety to protect creek from potential impairment.
+
+<span style="color:#FF7F50; text-shadow: 0 0 3px #333;">__Act__</span>: Creek nutrient concentrations have exceeded regulatory standard for associated freshwater portion of tributary indicating that actions are needed to identify remediative measures to reduce nutrients to the creek.
 
 ---
 class: middle, center
@@ -279,55 +262,13 @@ class: top, left
 * Foundational methods for indicator reporting
 * Freely available on GitHub for anyone to view source code, download for use, and make requests for additions
 
-```{r, echo = F, out.width = '25%', fig.align = 'center'}
+```{r, echo = F, out.width = '20%', fig.align = 'center'}
 knitr::include_graphics('figure/tbeptoolshex.png')
 ```
 
----
-class: top, center
-
-## WEBSITE
-
-```{r, out.width = '100%'}
-knitr::include_graphics('figure/tbeptools.PNG')
-```
-
+.center[
 [https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
-
----
-class: top, center
-
-## FUNCTION REFERENCES
-```{r, out.width = '100%'}
-knitr::include_graphics('figure/tbeptoolsref.PNG')
-```
-
----
-class: top, center
-
-## DOCUMENTATION
-
-```{r, out.width = '100%'}
-knitr::include_graphics('figure/tbeptoolsdoc.PNG')
-```
-
----
-class: top, center
-
-## VIGNETTES
-
-```{r, out.width = '100%'}
-knitr::include_graphics('figure/tbeptoolsvig.PNG')
-```
-
----
-class: top, center
-
-## SOURCE CODE
-
-```{r, out.width = '100%'}
-knitr::include_graphics('figure/tbeptoolssrc.PNG')
-```
+]
 
 ---
 class: top, left
