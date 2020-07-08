@@ -9,12 +9,6 @@ output:
     css: styles.css
 ---
 
-<style>
-.remark-code, .remark-inline-code { font-family: 'Source Code Pro', 'Lucida Console', Monaco, monospace;
-                                    font-size: 70%;
-                                  }
-</style>
-
 ```{r, message = F, echo = F, warning = F}
 library(knitr)
 library(icon)
@@ -30,6 +24,12 @@ knit_hooks$set(par = function(before, options, envir){
 ```
 
 class: top, middle
+
+<style>
+.remark-code, .remark-inline-code { font-family: 'Source Code Pro', 'Lucida Console', Monaco, monospace;
+                                    font-size: 70%;
+                                  }
+</style>
 
 ## TODAY'S GOALS
 
