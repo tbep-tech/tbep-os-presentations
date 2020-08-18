@@ -11,9 +11,13 @@ output:
 ```{r, message = F, echo = F, warning = F}
 library(knitr)
 library(xaringanthemer)
+library(SWMPr)
+library(tidyverse)
+library(patchwork)
+library(ggforce)
 
 # global knitr options
-opts_chunk$set(message = FALSE, dev.args = list(family = 'serif'), echo = F, warning = F)
+opts_chunk$set(message = FALSE, dev.args = list(family = 'serif'), dpi = 300, echo = F, warning = F, fig.align = 'center', out.width = '100%')
 
 style_mono_accent(
   base_color = "#1c5253",
@@ -21,33 +25,6 @@ style_mono_accent(
   text_font_google   = google_font("Montserrat", "300", "300i"),
   code_font_google   = google_font("Fira Mono")
 )
-
-# chunk hook for par
-knit_hooks$set(par = function(before, options, envir){
-  if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1))
-})
-
-library(SWMPr)
-library(ggplot2)
-
-theme_mine <- function (base_size = 12, base_family = "") {
-  theme_bw(base_size = base_size, base_family = base_family) %+replace% 
-  theme(
-    plot.background = element_rect(fill='transparent', 
-      colour = NA),
-    panel.background = element_rect(fill='transparent', 
-      colour = NA),
-    legend.background = element_rect(fill='transparent', 
-      colour = NA),
-    # strip.background = element_rect(fill = 
-        # alpha(pal(5)[5],0.5)),
-    legend.key = element_rect(fill = 'transparent', 
-      colour = NA)
-    )   
-}
-
-# set as default
-theme_set(theme_mine())
 ```
 
 class: center, middle, inverse
@@ -58,7 +35,7 @@ class: center, middle, inverse
 
 # The need for data analysis tools at NERRS
 
-#### NERRS researchers, managers, technicians, and stakeholders need more quantitative tools for handling data: 
+#### NERRS researchers, managers, technicians, and stakeholders need quantitative tools for handling data: 
 
 * Understand regional and national trends while retaining the ability to determine local trends
 
@@ -119,8 +96,8 @@ The most common question - what's happened at my site over time?
 
 Three Shiny applications allow users to visualize trends in SWMP data, these apps allow *reactive* use of SWMPr functions
 
-<br></br>
-```{r, out.width = "70%"}
+<br>
+```{r, out.width = "72%"}
 knitr::include_graphics('figure/swmp_summary.png')
 ```
 ]
@@ -159,13 +136,17 @@ library(SWMPr)
 
 * Standardizing time steps
 
-.pull-right[*Full details in Beck 2016, The R Journal, 8(1)]
+ <span style="float:right;">*[Beck 2016](https://journal.r-project.org/archive/2016/RJ-2016-015/index.html), The R Journal, 8(1)</span>
 
 ---
 
 ## The current state of affairs
 
+* SWMPrats is no more
+
 * SWMPr is still maintained but not under active development
+
+--
 
 * The SWMPrExtension package provides a suite of tools that build on SWMPr, with a leaning towards automated reporting
 
@@ -173,7 +154,7 @@ library(SWMPr)
 knitr::include_graphics('figure/swmpr_extension_logo.png')
 ```
 
-<https://github.com/NOAA-OCM/SWMPrExtension>
+<span style="float:right;">*<https://github.com/NOAA-OCM/SWMPrExtension></span>
 
 ---
 
@@ -207,7 +188,8 @@ dat <- comb(wq, met)
 res <- ecometab(dat)
 ```
 
-.pull-right[*Methods from Murrell et al. 2017, Estuaries & Coasts 41(3)]
+<br>
+<span style="float:right;">*Methods from [Murrell et al. 2017](https://link.springer.com/article/10.1007/s12237-017-0328-9), Estuaries & Coasts 41(3)</span>
 
 ---
 
@@ -227,7 +209,16 @@ class: middle, center, inverse
 
 ## Methodological assumptions
 
-* Requires an accurate DO time series of the diel cycle
+#### The Odum open-water method can provide an estimate of whole-system metabolic rates
+
+$$
+\frac{\delta DO}{\delta t} = P - R + D
+$$
+--
+
+<br>
+
+* Requires an accurate and continuous DO time series of the diel cycle
 
 * Requires accurate estimate of air-sea gas exchange
 
@@ -235,29 +226,152 @@ class: middle, center, inverse
 
 * Assumes sensor is sampling the same water mass over time
 
----
-
-Plot of SAPDC DO and tidal height
-
----
-
-Tidal advection removal method before/after, anomalous values
+<br>
+<span style="float:right;">*Odum 1956, Limnology and Oceanography 1</span>
 
 ---
 
-Method can be improved, compared to other metabolic estimation methods
+## Tidal advection is a nuisance
+
+```{r, fig.height = 5, fig.width = 9, fig.align = 'center'}
+dts <- as.Date(c('2012-02-01','2012-02-08')) 
+
+load('data/SAPDC_wtreg_12.RData')
+
+# raw data to plot
+toplo <- get('SAPDC_wtreg_12') %>% 
+  filter(met.date >= dts[1] & met.date <= dts[2])
+
+# day rectangles
+toplorect <- toplo %>% 
+  select(variable, met.date, DateTimeStamp) %>% 
+  group_by(met.date) %>% 
+  filter(variable %in% 'sunrise') %>% 
+  filter(1:length(variable) %in% c(1, length(variable))) %>% 
+  mutate(
+    xval = case_when(
+      seq_along(variable) == 1 ~ 'xmin', 
+      seq_along(variable) == 2 ~ 'xmax'
+    )
+  ) %>% 
+  ungroup %>% 
+  spread(xval, DateTimeStamp) %>% 
+  select(xmin, xmax)
+
+pthm <- theme_minimal() +
+  theme(
+    legend.position = 'none', 
+    axis.title.x = element_blank(), 
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(), 
+    panel.grid.minor.y = element_blank(), 
+    axis.ticks.x = element_line()
+    ) 
+
+p1 <- ggplot() + 
+  geom_rect(data = toplorect, aes(xmin = xmin, xmax = xmax, ymin = -Inf, ymax = Inf), fill = 'orange', alpha = 0.5) +
+  geom_line(data = toplo, aes(x = DateTimeStamp, y = DO_obs), colour = '#1c5253', size = 1) +
+  labs( 
+    y = expression(paste('DO (mg ',L^-1,')')),
+    title = 'Sapelo Island, 2012 DO and tidal height', 
+    subtitle = 'Sunrise to sundown shown in orange'
+    ) + 
+  pthm
+
+p2 <-ggplot() + 
+  geom_rect(data = toplorect, aes(xmin = xmin, xmax = xmax, ymin = -Inf, ymax = Inf), fill = 'orange', alpha = 0.5) +
+  geom_line(data = toplo, aes(x = DateTimeStamp, y = Tide), colour = '#1c5253', size = 1) +
+  labs( 
+    y = 'Height (m)'
+    ) + 
+  pthm
+
+p1 + p2 + plot_layout(ncol = 1)
+```
 
 ---
 
-## Take home messages
+## Leads to "anomalous" estimates
 
-* You have some pre-existing tools at your disposal
+```{r, fig.height = 5, fig.width = 9, fig.align = 'center'}
+library(WtRegDO)
+dts <- as.Date(c('2012-02-01','2012-02-08')) 
 
-* They can be improved to better satisfy requirements of the data
+data(metab_obs)
+p <- plot(metab_obs, by = 'days') + facet_zoom(x = Date >= as.numeric(dts[1]) & Date <= as.numeric(dts[2]), zoom.size = 1)
+p
+```
 
-* They can be improved to suit your needs!  
+---
 
-* Metabolism as a standard unit of comparison between reserves, measure of ecosystem health
+class: middle, center, inverse
+
+# We can get fancy
+
+---
+
+## Detiding the DO signal
+
+```{r, fig.height = 5, fig.width = 9, fig.align = 'center'}
+p1 <- ggplot() + 
+  geom_rect(data = toplorect, aes(xmin = xmin, xmax = xmax, ymin = -Inf, ymax = Inf), fill = 'orange', alpha = 0.5) +
+  geom_line(data = toplo, aes(x = DateTimeStamp, y = DO_obs), colour = '#1c5253', size = 1) +
+  labs( 
+    y = expression(paste('Obs. DO (mg ',L^-1,')')),
+    title = 'Sapelo Island, 2012 observed and detided DO', 
+    subtitle = 'Sunrise to sundown shown in orange'
+    ) + 
+  pthm
+
+p2 <-ggplot() + 
+  geom_rect(data = toplorect, aes(xmin = xmin, xmax = xmax, ymin = -Inf, ymax = Inf), fill = 'orange', alpha = 0.5) +
+  geom_line(data = toplo, aes(x = DateTimeStamp, y = DO_nrm), colour = '#1c5253', size = 1) +
+  labs( 
+    y = expression(paste('Detided DO (mg ',L^-1,')'))
+    ) + 
+  pthm
+
+p1 + p2 + plot_layout(ncol = 1)
+```
+
+<span style="float:right;">*[Beck et al. 2015](https://doi.org/10.1002/lom3.10062), L & O Methods, 13(12)</span>
+
+---
+
+## Leads to "better" estimates
+
+```{r, fig.height = 5, fig.width = 9, fig.align = 'center'}
+data(metab_dtd)
+plot(metab_dtd, by = 'days') + facet_zoom(x = Date >= as.numeric(dts[1]) & Date <= as.numeric(dts[2]), zoom.size = 1)
+```
+
+---
+
+## Why should you care?
+
+#### You have some pre-existing tools at your disposal
+
+* SWMPr R package: [github.com/fawda123/SWMPr](https://github.com/fawda123/SWMPr)
+* WtRegDO R package: [github.com/fawda123/WtRegDO](https://github.com/fawda123/WtRegDO)
+
+--
+
+#### They can be improved to better satisfy requirements of the data
+   
+* Better constrain metabolism assumptions
+* Field data to support stats models
+
+--
+
+#### They can be improved to suit your needs!  
+
+* What types of products would you like to see?
+
+--
+
+#### Metabolism as a standard unit of comparison, measure of ecosystem health
+
+* Measure process rates, ripe for cross-reserve comparison
 
 
 

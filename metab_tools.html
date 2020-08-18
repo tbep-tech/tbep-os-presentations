@@ -29,7 +29,7 @@ class: center, middle, inverse
 
 # The need for data analysis tools at NERRS
 
-#### NERRS researchers, managers, technicians, and stakeholders need more quantitative tools for handling data: 
+#### NERRS researchers, managers, technicians, and stakeholders need quantitative tools for handling data: 
 
 * Understand regional and national trends while retaining the ability to determine local trends
 
@@ -43,7 +43,7 @@ class: center, middle, inverse
 
 # Genesis of SWMPrats
 
-&lt;img src="figure/bg_main.jpg" width="1276" /&gt;
+&lt;img src="figure/bg_main.jpg" width="100%" style="display: block; margin: auto;" /&gt;
 
 #### One-day training workshop at 2014 annual meeting
 
@@ -57,7 +57,7 @@ class: center, middle, inverse
 
 ## Genesis of SWMPrats
 
-&lt;img src="figure/swmprats_logo.png" width="1273" /&gt;
+&lt;img src="figure/swmprats_logo.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 #### A working group was formed from this meeting
 
@@ -73,7 +73,7 @@ class: center, top
 
 A website with information and tools for SWMP data analysis
 
-&lt;img src="figure/swmprats_home.png" width="70%" /&gt;
+&lt;img src="figure/swmprats_home.png" width="70%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -84,14 +84,14 @@ The most common question - what's happened at my site over time?
 
 Three Shiny applications allow users to visualize trends in SWMP data, these apps allow *reactive* use of SWMPr functions
 
-&lt;br&gt;&lt;/br&gt;
-&lt;img src="figure/swmp_summary.png" width="70%" /&gt;
+&lt;br&gt;
+&lt;img src="figure/swmp_summary.png" width="72%" style="display: block; margin: auto;" /&gt;
 ]
 
 .pull-right[
-&lt;img src="figure/swmp_comp.png" width="80%" /&gt;
+&lt;img src="figure/swmp_comp.png" width="80%" style="display: block; margin: auto;" /&gt;
 &lt;br&gt;&lt;/br&gt;
-&lt;img src="figure/swmp_agg.png" width="80%" /&gt;
+&lt;img src="figure/swmp_agg.png" width="80%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -112,19 +112,23 @@ SWMPr is an open-source R package for working with SWMP data
 
 * Standardizing time steps
 
-.pull-right[*Full details in Beck 2016, The R Journal, 8(1)]
+ &lt;span style="float:right;"&gt;*[Beck 2016](https://journal.r-project.org/archive/2016/RJ-2016-015/index.html), The R Journal, 8(1)&lt;/span&gt;
 
 ---
 
 ## The current state of affairs
 
+* SWMPrats is no more
+
 * SWMPr is still maintained but not under active development
+
+--
 
 * The SWMPrExtension package provides a suite of tools that build on SWMPr, with a leaning towards automated reporting
 
 &lt;img src="figure/swmpr_extension_logo.png" width="90%" style="display: block; margin: auto;" /&gt;
 
-&lt;https://github.com/NOAA-OCM/SWMPrExtension&gt;
+&lt;span style="float:right;"&gt;*&lt;https://github.com/NOAA-OCM/SWMPrExtension&gt;&lt;/span&gt;
 
 ---
 
@@ -136,7 +140,7 @@ class: center, middle, inverse
 
 ## Buried in the SWMPr package...
 
-&lt;img src="figure/ecometabfunc.PNG" width="1516" /&gt;
+&lt;img src="figure/ecometabfunc.PNG" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -157,7 +161,8 @@ dat &lt;- comb(wq, met)
 res &lt;- ecometab(dat)
 ```
 
-.pull-right[*Methods from Murrell et al. 2017, Estuaries &amp; Coasts 41(3)]
+&lt;br&gt;
+&lt;span style="float:right;"&gt;*Methods from [Murrell et al. 2017](https://link.springer.com/article/10.1007/s12237-017-0328-9), Estuaries &amp; Coasts 41(3)&lt;/span&gt;
 
 ---
 
@@ -168,7 +173,7 @@ res &lt;- ecometab(dat)
 plot_metab(res)
 ```
 
-&lt;img src="metab_tools_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -180,7 +185,16 @@ class: middle, center, inverse
 
 ## Methodological assumptions
 
-* Requires an accurate DO time series of the diel cycle
+#### The Odum open-water method can provide an estimate of whole-system metabolic rates
+
+$$
+\frac{\delta DO}{\delta t} = P - R + D
+$$
+--
+
+&lt;br&gt;
+
+* Requires an accurate and continuous DO time series of the diel cycle
 
 * Requires accurate estimate of air-sea gas exchange
 
@@ -188,29 +202,68 @@ class: middle, center, inverse
 
 * Assumes sensor is sampling the same water mass over time
 
----
-
-Plot of SAPDC DO and tidal height
-
----
-
-Tidal advection removal method before/after, anomalous values
+&lt;br&gt;
+&lt;span style="float:right;"&gt;*Odum 1956, Limnology and Oceanography 1&lt;/span&gt;
 
 ---
 
-Method can be improved, compared to other metabolic estimation methods
+## Tidal advection is a nuisance
+
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-## Take home messages
+## Leads to "anomalous" estimates
 
-* You have some pre-existing tools at your disposal
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
-* They can be improved to better satisfy requirements of the data
+---
 
-* They can be improved to suit your needs!  
+class: middle, center, inverse
 
-* Metabolism as a standard unit of comparison between reserves, measure of ecosystem health
+# We can get fancy
+
+---
+
+## Detiding the DO signal
+
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+&lt;span style="float:right;"&gt;*[Beck et al. 2015](https://doi.org/10.1002/lom3.10062), L &amp; O Methods, 13(12)&lt;/span&gt;
+
+---
+
+## Leads to "better" estimates
+
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+## Why should you care?
+
+#### You have some pre-existing tools at your disposal
+
+* SWMPr R package: [github.com/fawda123/SWMPr](https://github.com/fawda123/SWMPr)
+* WtRegDO R package: [github.com/fawda123/WtRegDO](https://github.com/fawda123/WtRegDO)
+
+--
+
+#### They can be improved to better satisfy requirements of the data
+   
+* Better constrain metabolism assumptions
+* Field data to support stats models
+
+--
+
+#### They can be improved to suit your needs!  
+
+* What types of products would you like to see?
+
+--
+
+#### Metabolism as a standard unit of comparison, measure of ecosystem health
+
+* Measure process rates, ripe for cross-reserve comparison
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
