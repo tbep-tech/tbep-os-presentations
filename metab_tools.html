@@ -27,71 +27,25 @@ class: center, middle, inverse
 
 ---
 
-# The need for data analysis tools at NERRS
-
-#### NERRS researchers, managers, technicians, and stakeholders need quantitative tools for handling data: 
-
-* Understand regional and national trends while retaining the ability to determine local trends
-
-* Train users
-
-* Maintain a versatile and evolving data analysis approach
-
-* Create a community of practice
-
----
-
-# Genesis of SWMPrats
-
-&lt;img src="figure/bg_main.jpg" width="100%" style="display: block; margin: auto;" /&gt;
-
-#### One-day training workshop at 2014 annual meeting
-
-* Attended by over 70 NERRS staff, representing 19 of 28 reserves
-
-* General focus on time series analysis, simple application with SWMP data
-
-* Pre/post workshop materials including An R package for SWMP
-
----
-
-## Genesis of SWMPrats
-
 &lt;img src="figure/swmprats_logo.png" width="100%" style="display: block; margin: auto;" /&gt;
-
-#### A working group was formed from this meeting
 
 ### &lt;u&gt;S&lt;/u&gt;ystem-&lt;u&gt;W&lt;/u&gt;ide &lt;u&gt;M&lt;/u&gt;onitoring &lt;u&gt;P&lt;/u&gt;rogram &lt;u&gt;R&lt;/u&gt;esources for the &lt;u&gt;A&lt;/u&gt;nalysis of &lt;u&gt;T&lt;/u&gt;ime &lt;u&gt;S&lt;/u&gt;eries
 
-#### [SWMPrats.net](SWMPrats.net) was the base of operations...
-
----
-
-class: center, top
-
-## SWMPrats.net
-
-A website with information and tools for SWMP data analysis
-
-&lt;img src="figure/swmprats_home.png" width="70%" style="display: block; margin: auto;" /&gt;
-
----
-
-## SWMPrats.net: Interactive web apps
+#### [SWMPrats.net](SWMPrats.net)
 
 .pull-left[
-The most common question - what's happened at my site over time? 
+* Web resources for SWMP data analysis
 
-Three Shiny applications allow users to visualize trends in SWMP data, these apps allow *reactive* use of SWMPr functions
+* Workshop training materials and cookbooks
 
-&lt;br&gt;
-&lt;img src="figure/swmp_summary.png" width="72%" style="display: block; margin: auto;" /&gt;
+* Discussion forum 
+
+* Interactive dashboards
+
 ]
 
 .pull-right[
-&lt;img src="figure/swmp_comp.png" width="80%" style="display: block; margin: auto;" /&gt;
-&lt;br&gt;&lt;/br&gt;
-&lt;img src="figure/swmp_agg.png" width="80%" style="display: block; margin: auto;" /&gt;
+&lt;img src="figure/swmp_comp.png" width="90%" style="display: block; margin: auto;" /&gt;
 ]
 
 ---
@@ -100,7 +54,7 @@ Three Shiny applications allow users to visualize trends in SWMP data, these app
 
 &lt;img src="figure/swmpr_logo.png" width="90%" style="display: block; margin: auto;" /&gt;
 
-SWMPr is an open-source R package for working with SWMP data
+[SWMPr](https://github.com/fawda123/SWMPr) is an open-source R package for working with SWMP data
 
 
 
@@ -173,7 +127,7 @@ res &lt;- ecometab(dat)
 plot_metab(res)
 ```
 
-&lt;img src="metab_tools_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -209,13 +163,13 @@ $$
 
 ## Tidal advection is a nuisance
 
-&lt;img src="metab_tools_files/figure-html/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
 ## Leads to "anomalous" estimates
 
-&lt;img src="metab_tools_files/figure-html/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -227,15 +181,15 @@ class: middle, center, inverse
 
 ## Detiding the DO signal
 
-&lt;img src="metab_tools_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
-&lt;span style="float:right;"&gt;*[Beck et al. 2015](https://doi.org/10.1002/lom3.10062), L &amp; O Methods, 13(12)&lt;/span&gt;
+&lt;span style="float:right;"&gt;*[WtRegDO](https://github.com/fawda123/WtRegDO) R package, [Beck et al. 2015](https://doi.org/10.1002/lom3.10062), L &amp; O Methods, 13(12)&lt;/span&gt;
 
 ---
 
 ## Leads to "better" estimates
 
-&lt;img src="metab_tools_files/figure-html/unnamed-chunk-17-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="metab_tools_files/figure-html/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 

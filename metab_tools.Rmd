@@ -33,82 +33,28 @@ class: center, middle, inverse
 
 ---
 
-# The need for data analysis tools at NERRS
-
-#### NERRS researchers, managers, technicians, and stakeholders need quantitative tools for handling data: 
-
-* Understand regional and national trends while retaining the ability to determine local trends
-
-* Train users
-
-* Maintain a versatile and evolving data analysis approach
-
-* Create a community of practice
-
----
-
-# Genesis of SWMPrats
-
-```{r, echo = F}
-knitr::include_graphics('figure/bg_main.jpg')
-```
-
-#### One-day training workshop at 2014 annual meeting
-
-* Attended by over 70 NERRS staff, representing 19 of 28 reserves
-
-* General focus on time series analysis, simple application with SWMP data
-
-* Pre/post workshop materials including An R package for SWMP
-
----
-
-## Genesis of SWMPrats
-
 ```{r, echo = F}
 knitr::include_graphics('figure/swmprats_logo.png')
 ```
 
-#### A working group was formed from this meeting
-
 ### <u>S</u>ystem-<u>W</u>ide <u>M</u>onitoring <u>P</u>rogram <u>R</u>esources for the <u>A</u>nalysis of <u>T</u>ime <u>S</u>eries
 
-#### [SWMPrats.net](SWMPrats.net) was the base of operations...
-
----
-
-class: center, top
-
-## SWMPrats.net
-
-A website with information and tools for SWMP data analysis
-
-```{r, echo = F, out.width = '70%'}
-knitr::include_graphics('figure/swmprats_home.png')
-```
-
----
-
-## SWMPrats.net: Interactive web apps
+#### [SWMPrats.net](SWMPrats.net)
 
 .pull-left[
-The most common question - what's happened at my site over time? 
+* Web resources for SWMP data analysis
 
-Three Shiny applications allow users to visualize trends in SWMP data, these apps allow *reactive* use of SWMPr functions
+* Workshop training materials and cookbooks
 
-<br>
-```{r, out.width = "72%"}
-knitr::include_graphics('figure/swmp_summary.png')
-```
+* Discussion forum 
+
+* Interactive dashboards
+
 ]
 
 .pull-right[
-```{r, out.width = "80%"}
+```{r, out.width = "90%"}
 knitr::include_graphics('figure/swmp_comp.png')
-```
-<br></br>
-```{r, out.width = "80%"}
-knitr::include_graphics('figure/swmp_agg.png')
 ```
 ]
 
@@ -120,7 +66,7 @@ knitr::include_graphics('figure/swmp_agg.png')
 knitr::include_graphics('figure/swmpr_logo.png')
 ```
 
-SWMPr is an open-source R package for working with SWMP data
+[SWMPr](https://github.com/fawda123/SWMPr) is an open-source R package for working with SWMP data
 
 ```{r eval = F}
 # install/load from R
@@ -334,7 +280,7 @@ p2 <-ggplot() +
 p1 + p2 + plot_layout(ncol = 1)
 ```
 
-<span style="float:right;">*[Beck et al. 2015](https://doi.org/10.1002/lom3.10062), L & O Methods, 13(12)</span>
+<span style="float:right;">*[WtRegDO](https://github.com/fawda123/WtRegDO) R package, [Beck et al. 2015](https://doi.org/10.1002/lom3.10062), L & O Methods, 13(12)</span>
 
 ---
 
