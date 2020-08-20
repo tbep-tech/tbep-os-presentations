@@ -319,5 +319,73 @@ plot(metab_dtd, by = 'days') + facet_zoom(x = Date >= as.numeric(dts[1]) & Date 
 
 * Measure process rates, ripe for cross-reserve comparison
 
+---
 
+class: middle, center, inverse
 
+# Survey responses
+
+---
+
+# Survey goals
+
+* Help us better understand your needs to develop applied research tools
+
+* Gauge interest in participation
+
+* Facilitate discussion 
+
+---
+
+### Q1: What are some historical or current management issues at your reserve that may be of interest for applying new methods to help understand ecosystem processes?   
+
+1. As a multi-component reserve, we have two tidal fresh, and one tidal brackish system, each with their own unique needs and challenges (eg urban vs rural inputs, SLR, saltwater intrusion, etc).
+1. Episodic freshwater inflows, hypersalinity during droughts, highly nitrogen limited system, nitrogen fixation, denitrification, role of organic N
+1. blue carbon
+1. Riverine nutrient loading, Stormwater pollution, invasive algal species - significant increases in autotrophic biomass, changes in watershed land-use, increased stormwater flashiness
+1. how watershed alterations (hydrological manipulations and increases in nutrient load) affect ecosystem dynamics; potential for NEM be used as an indicator of coastal condition for regular status reports
+1. climate change
+1. Effects of changes in river flow to bay to bay ecosystem metabolism
+
+---
+
+### Q2: What questions would you like to see addressed for cross-reserve comparisons to understand ecosystem processes?
+
+1. As a multi component reserve, sharing a watershed with another reserve, any comparisons we can make to level our understanding of our systems would help increase inter-reserve collaboration.
+1. how water replacement time impacts measures of ecosystem metabolism - the water replacement time for our lagoonal, microtidal estuary is about one year on average
+1. regional to national metabolic responses to climate and large-scale weather events (ocean/atmos oscillations, cyclones, etc)
+1. what drives changes in ecosystem metabolism?; temporal and spatial scales of variability; can we relate water column metabolism estimates to biological observations?; does NEM reflect ecosystem health/condition?
+1. Questions relative to climate change and episodic weather events
+1. Are there differences in primary drivers of metabolism for each reserve, if so, what are they?
+
+---
+
+### Q3: Please describe any applications where you have used ecosystem metabolism. What questions were you addressing? What methods did you use to estimate metabolism?
+
+1. None
+1. We have analyzed 10 years of SWMP oxygen and met data to calculate net ecosystem metabolism and gross primary production, and look at the impacts of freshwater inflow and drought events, and made a few measurements of N fixation and denitrification in sediments
+1. 2 of our SWMP stations are located in a small lagoonal estuary and are seasonally prone to large pH excursions >9.0. These were explained by seasonal shifts in system metabolism coinciding with DO, chlorohpyll, and salinity signals
+1. assisted a grad student studying impacts of tropical storms on nutrient and carbon loading - Marcus' SWMPr
+1. I have not been directly involved in any metabolism projects at our reserve. I know that there was metabolism work done by Neubauer, Anderson, Neikirk et al. in the late 90's through early 00's at our reserve sites.
+1. We've used R and excel to calculate metabolic rates using our swmp data. Interested in the net metabolism over a long-term time scales
+
+---
+
+### Q4: Do you or any of your staff have experience using open-source software (e.g., R or SWMPr) to analyze SWMP data?
+
+1. Some, but not much.
+1. Yes, Research Associate Lindsay Scheef
+1. limited experience
+1. Yes. Some beginner level experience with both.
+1. Shannon Dunnigan (our SWMP Manager) has a lot of experience
+1. I use R frequently to analyze SWMP data
+1. Yep
+
+---
+
+### Q5: Anything else you'd like us to know?
+
+1. I'm excited to learn and help contribute our long term SWMP data to this effort, but our current staffing capacity is very low.
+1. We are also looking at how phytoplankton biomass and zooplankton populations respond to freshwater inflows, gross primary production and net ecosystem metabolism
+1. I'm excited to participate in this!
+1. Not right now?
