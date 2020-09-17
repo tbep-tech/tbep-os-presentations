@@ -1,0 +1,122 @@
+# setup -------------------------------------------------------------------
+
+library(dataRetrieval)
+library(rnoaa)
+library(tidyverse)
+library(lubridate)
+library(tbeptools)
+library(WRTDStidal)
+
+chldat <- epcdata
+
+# key for noaa data
+mykey <- Sys.getenv("NOAA_KEY")
+
+# get hydroload estimates -------------------------------------------------
+
+hydest <- tibble(
+  yr = 1974:2019
+  ) %>% 
+  group_by(yr) %>% 
+  nest %>% 
+  mutate(
+    data = purrr::pmap(list(yr), function(yr){
+      
+      cat(yr, '\t')
+      
+      start <- paste0(yr, "-01-01")
+      end <- paste0(yr, "-12-31")
+      
+      # get rainfall data at station
+      tia_rainfall <- ncdc(datasetid = "GHCND", stationid = "GHCND:USW00012842",
+                           datatypeid = "PRCP", startdate = start, enddate = end,
+                           limit = 500, add_units = TRUE, token = mykey)
+      
+      # convert rain data to inches
+      tia_rain <- tia_rainfall$data %>%
+        mutate(daily_in = (value/254),
+               Date = as.Date(date))
+      
+      # get hydrological data
+      bkr<- readNWISdv("02307359", "00060", start, end) %>%
+        renameNWISColumns() %>%
+        mutate(bkr_flow = (Flow*3.05119225))
+      
+      out <- left_join(tia_rain, bkr, by=c("Date")) %>%
+        select(Date, daily_in, bkr_flow) %>%
+        mutate(hyd_est = (154.22+(8.12*bkr_flow)+(6.73*daily_in))/365) %>% 
+        drop_na(hyd_est)
+      
+      return(out)
+      
+    })
+  ) %>% 
+  unnest('data')
+
+save(hydest, file = 'data/hydest.RData', compress = 'xz')
+
+# wrtds models ------------------------------------------------------------
+
+data(hydest)
+
+# water quality
+wqdat <- epcdata %>% 
+  filter(yr > 1973 & yr < 2020) %>% 
+  rowwise() %>% 
+  mutate(
+    date = as.Date(SampleTime), 
+    date = floor_date(date, unit = 'month')
+  ) %>% 
+  ungroup() %>% 
+  select(-matches('\\_q$|^sd|^Temp|\\_ppth$|\\_Depth\\_m$|^Lat|^Lon|^yr$|^mo$|^SampleTime$')) %>% 
+  group_by(bay_segment, date) %>% 
+  summarise(
+    tn = median(tn, na.rm = T), 
+    chla = median(chla, na.rm = T), 
+    .groups = 'drop'
+  )
+
+# hydrologic estimates, floored to month, summed in month
+hyddat <- hydest %>% 
+  ungroup %>% 
+  select(date = Date, hyd_est) %>% 
+  mutate(
+    date = floor_date(date, unit = 'months')
+  ) %>% 
+  group_by(date) %>% 
+  summarise(hyd_est = sum(hyd_est, na.rm = T), .groups = 'drop')
+
+# models
+wrtdsmods <- wqdat %>% 
+  left_join(hyddat, by = 'date') %>% 
+  mutate(
+    res = log(chla), 
+    res = ifelse(is.infinite(res), NA, res),
+    lim = 0, 
+  ) %>% 
+  select(bay_segment, date, res, flo = hyd_est, lim) %>% 
+  na.omit() %>% 
+  group_by(bay_segment) %>% 
+  nest() %>% 
+  mutate(
+    mod = purrr::map(data, function(x){
+      
+      out <- as.data.frame(x) %>% tidalmean %>%  modfit(flo_div = 50, fill_empty = T)
+      
+      return(out)
+      
+    })
+  )
+
+save(wrtdsmods, file = 'data/wrtdsmods.RData', compress = 'xz')
+
+tmp1 <- tomod1 %>% 
+  tmp2 <- tomod2 %>% tidalmean %>%  modfit(flo_div = 50, fill_empty = T)
+
+tmp1fit <- with(tmp1, sqrt(sum((fits - res)^2 / length(fits))))
+tmp1r2 <- lm(fits ~ res, tmp1) %>% summary %>% .$adj.r.squared
+tmp2fit <- with(tmp2, sqrt(sum((fits - res)^2 / length(fits))))
+tmp2r2 <- lm(fits ~ res, tmp2) %>% summary %>% .$adj.r.squared
+list(tmp1fit, tmp1r2, tmp2fit, tmp2r2)
+
+

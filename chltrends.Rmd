@@ -1,0 +1,141 @@
+---
+title: "Hydrology and chlorophyll trends in Tampa Bay: Alternative modelling approaches"
+author: "[Dr. Marcus Beck](mailto:mbeck@tbep.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
+institute: "Tampa Bay Estuary Program"
+date: "10/16/2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+    lib_dir: libs
+    css: styles.css
+    includes: 
+      after_body: insert-logo.html
+---
+
+```{r, message = F, echo = F, warning = F}
+library(knitr)
+library(icon)
+library(tbeptools)
+# devtools::load_all('../tbeptools')
+
+# global knitr options
+opts_chunk$set(message = FALSE, dev.args = list(family = 'serif'), echo = F, warning = F)
+
+# chunk hook for par
+knit_hooks$set(par = function(before, options, envir){
+  if (before && options$fig.show!='none') par(mar=c(4,4,.1,.1))
+})
+```
+
+class: middle, center, inverse
+
+# Our last discussion...
+
+---
+
+class: center, top
+
+# Recent trends 
+
+<div class="container">
+   <div class="column-left"><img src="figure/decisionframework.png" width = "340"></img></div>
+   <div class="column-center"><img src="figure/wqstatic1.png" width = "340"></img></div>
+   <div class="column-right"><img src="figure/wqstatic2.png" width = "340"></img></div>
+</div>
+
+---
+
+class: left, top
+
+# Recent trends 
+
+```{r, out.width = '100%'}
+show_segplotly(epcdata, bay_segment = 'OTB')
+```
+
+---
+
+class: center, top
+
+# Recent trends
+
+```{r, out.width = '100%'}
+knitr::include_graphics('figure/allsal.png')
+```
+
+---
+
+class: center, top
+
+# Recent trends
+
+```{r, out.width = '100%'}
+knitr::include_graphics('figure/alltmp.png')
+```
+
+---
+
+class: center, top
+
+# Conclusions and next steps
+
+## Long-term trends
+
+* Overall, nutrients have decreased and segrasses have recovered
+
+## Concerning recent changes
+
+* Recent increases in chlorophyll, increases in diatom density
+* Temperature increase and salinity decrease in the past ten years
+* HAB increases in some locations, possibly linked to temperature and salinity, also maybe linked to methodology changes
+
+---
+
+class: center, top
+
+# Conclusions and next steps (for chl-a)
+
+## Role of hydrogy
+
+* Chlorophyll trends are linked to many factors, not just nutrients
+* Hydrology may be a confounding factor driving trends
+
+## Seasonal differences
+
+* All previous analyses evaluated annual trends, as in the NMC action plan
+* Seasonal differences are also very important to consider, i.e., when are exceedances happening and what's driving them?
+
+---
+
+class: center, top
+
+# hydrology plot
+
+---
+
+class: center, top
+
+# hydrology vs chlorophyll plot
+
+---
+
+class: center, top
+
+# Analysis goals
+
+## Explore alternative methods
+
+* Use of Weighted Regression to evaluate past trends ()
+
+* Modelling chlorophyll as a function of time, discharge (flow), and season
+
+* Ability to extract "flow-normalized" to remove hydrologic influence
+
+---
+
+class: center, top
+
+# WRTDS method
