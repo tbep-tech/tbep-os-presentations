@@ -37,7 +37,8 @@ hydest <- tibble(
         mutate(daily_in = (value/254),
                Date = as.Date(date))
       
-      # get hydrological data
+      # get hydrological data, 0060 is discharge as cfs, converted to million m3/day
+      # converting ft3/s * 86400 s/d / 0.0283168 m3/ft3 * 1,000,000
       bkr<- readNWISdv("02307359", "00060", start, end) %>%
         renameNWISColumns() %>%
         mutate(bkr_flow = (Flow*3.05119225))
@@ -101,7 +102,7 @@ wrtdsmods <- wqdat %>%
   mutate(
     mod = purrr::map(data, function(x){
       
-      out <- as.data.frame(x) %>% tidalmean %>%  modfit(flo_div = 50, fill_empty = T)
+      out <- as.data.frame(x) %>% tidalmean %>%  modfit(flo_div = 10, fill_empty = T)
       
       return(out)
       
