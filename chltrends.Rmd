@@ -155,7 +155,7 @@ p1 <- ggplot(toplo, aes(x = flo, y = exp(res))) +
   theme_bw(base_family = fml) + 
   labs(
     subtitle = 'OTB, 1980 - present',
-    x = 'Hydrologic load (mill m3/d)', 
+    x = 'Salinity (ppth)', 
     y = 'Chl-a (ug/L)'
   )
 
@@ -171,7 +171,7 @@ p2 <- ggplot(toplo, aes(x = flo, y = exp(res))) +
   ) +
   labs(
     subtitle = 'By quarter', 
-    x = 'Hydrologic load (mill m3/d)', 
+    x = 'Salinity (ppth)', 
     y = 'Chl-a (ug/L)'
   )
 
@@ -195,7 +195,7 @@ class: center, top
 # WRTDS method
 
 $$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Flo + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
+\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
 $$
 ```{r, message = F, results = 'hide'}
 tmp <- wrtdsmods %>% 
@@ -235,16 +235,16 @@ p1 <- pbase +
   ggtitle('ln(Chl) ~ t')
 p2 <- pbase + 
   geom_line(aes(y = mod2), colour = 'tomato1') + 
-  ggtitle('ln(Chl) ~ Flo')
+  ggtitle('ln(Chl) ~ Sal')
 p3 <- pbase + 
   geom_line(aes(y = mod3), colour = 'tomato1') + 
   ggtitle('ln(Chl) ~ cos(2pi * t) + sin(2pi * t)')
 p4 <- pbase + 
   geom_line(aes(y = mod4), colour = 'tomato1') + 
-  ggtitle('ln(Chl) ~ t + Flo')
+  ggtitle('ln(Chl) ~ t + Sal')
 p5 <- pbase + 
   geom_line(aes(y = mod5), colour = 'tomato1') + 
-  ggtitle('ln(Chl) ~ t + Flo + cos(2pi * t) + sin(2pi * t)')
+  ggtitle('ln(Chl) ~ t + Sal + cos(2pi * t) + sin(2pi * t)')
 
 png('figure/wrtds_pieces1.PNG', family = fml, height = 2.5, width = 7, units = 'in', res = 300)
 print(p1)
@@ -278,7 +278,7 @@ class: center, top
 # WRTDS method
 
 $$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Flo + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
+\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
 $$
 
 $Chl$: chlorophyll (or other response endpoint), $t$: time, $Flo$: hydrologic inputs
@@ -294,7 +294,7 @@ class: center, top
 # WRTDS method
 
 $$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Flo + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
+\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
 $$
 
 $Chl$: chlorophyll (or other response endpoint), $t$: time, $Flo$: hydrologic inputs
@@ -310,7 +310,7 @@ class: center, top
 # WRTDS method
 
 $$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Flo + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
+\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
 $$
 
 $Chl$: chlorophyll (or other response endpoint), $t$: time, $Flo$: hydrologic inputs
@@ -326,7 +326,7 @@ class: center, top
 # WRTDS method
 
 $$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Flo + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
+\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
 $$
 
 $Chl$: chlorophyll (or other response endpoint), $t$: time, $Flo$: hydrologic inputs
@@ -501,7 +501,7 @@ p
 class: center, top 
 
 ```{r}
-toplo <- wrtdsmods %>% 
+fitscorr <- wrtdsmods %>% 
   mutate(
     plos = purrr::pmap(list(data, mod), function(data, mod){
 
@@ -526,7 +526,7 @@ toplo <- wrtdsmods %>%
         theme_bw(base_family = fml) + 
         labs(
           subtitle = '1975 - present',
-          x = 'Hydrologic load (mill m3/d)', 
+          x = 'Salinity (ppth)', 
           y = 'Predicted Chl-a (ug/L)'
         )
       
@@ -542,7 +542,7 @@ toplo <- wrtdsmods %>%
         ) +
         labs(
           subtitle = 'By quarter', 
-          x = 'Hydrologic load (mill m3/d)', 
+          x = 'Salinity (ppth)', 
           y = 'Predicted Chl-a (ug/L)'
         )
       
@@ -553,40 +553,7 @@ toplo <- wrtdsmods %>%
     })
   )
  
-```
-
-.panelset[
-.panel[.panel-name[OTB]
-```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
-```
-]
-
-.panel[.panel-name[HB]
-```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'HB') %>% pull(plos) %>% .[[1]]
-```
-]
-
-.panel[.panel-name[MTB]
-```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'MTB') %>% pull(plos) %>% .[[1]]
-```
-]
-
-.panel[.panel-name[LTB]
-```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'LTB') %>% pull(plos) %>% .[[1]]
-```
-]
-]
-
----
-
-class: center, top 
-
-```{r}
-toplo <- wrtdsmods %>% 
+nrmscorr <- wrtdsmods %>% 
   mutate(
     plos = purrr::pmap(list(data, mod), function(data, mod){
       
@@ -611,7 +578,7 @@ toplo <- wrtdsmods %>%
         theme_bw(base_family = fml) + 
         labs(
           subtitle = '1975 - present',
-          x = 'Hydrologic load (mill m3/d)', 
+          x = 'Salinity (ppth)', 
           y = 'Flow-normalized Chl-a (ug/L)'
         )
       
@@ -627,7 +594,7 @@ toplo <- wrtdsmods %>%
         ) +
         labs(
           subtitle = 'By quarter', 
-          x = 'Hydrologic load (mill m3/d)', 
+          x = 'Salinity (ppth)', 
           y = 'Flow-normalized Chl-a (ug/L)'
         )
       
@@ -641,30 +608,20 @@ toplo <- wrtdsmods %>%
 ```
 
 .panelset[
-.panel[.panel-name[OTB]
+.panel[.panel-name[OTB Predicted vs Salinity]
 ```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
+fitscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
 ```
 ]
 
-.panel[.panel-name[HB]
+.panel[.panel-name[OTB Normalized vs Salinity]
 ```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'HB') %>% pull(plos) %>% .[[1]]
+nrmscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
 ```
+]
 ]
 
-.panel[.panel-name[MTB]
-```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'MTB') %>% pull(plos) %>% .[[1]]
-```
-]
-
-.panel[.panel-name[LTB]
-```{r, fig.height = 4.5, fig.width = 10}
-toplo %>% filter(bay_segment %in% 'LTB') %>% pull(plos) %>% .[[1]]
-```
-]
-]
+---
 
 # Percent explained by hydrology
 
