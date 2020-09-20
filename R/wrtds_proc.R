@@ -103,7 +103,7 @@ wrtdsmods <- wqdat %>%
     mod = purrr::map(data, function(x){
       
       out <- as.data.frame(x) %>% tidalmean %>%  
-        modfit(flo_div = 10, fill_empty = T, wins = as.list(c(0.323088491810723, 14.9398949283111, 0.894609819824893)))
+        modfit(flo_div = 50, fill_empty = T, wins = as.list(c(0.323088491810723, 14.9398949283111, 0.894609819824893)))
       
       return(out)
       
