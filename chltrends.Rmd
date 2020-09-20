@@ -449,7 +449,6 @@ p <- ggplot(toplo, aes(x = date)) +
     axis.title.x = element_blank(), 
     strip.background = element_blank()
     )
-
 p
 ```
 
@@ -492,7 +491,6 @@ p <- ggplot(toplo, aes(x = date)) +
     axis.title.x = element_blank(), 
     strip.background = element_blank()
     )
-
 p
 ```
 
@@ -608,13 +606,13 @@ nrmscorr <- wrtdsmods %>%
 ```
 
 .panelset[
-.panel[.panel-name[OTB Predicted vs Salinity]
+.panel[.panel-name[OTB predicted vs salinity]
 ```{r, fig.height = 4.5, fig.width = 10}
 fitscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
 ```
 ]
 
-.panel[.panel-name[OTB Normalized vs Salinity]
+.panel[.panel-name[OTB normalized vs salinity]
 ```{r, fig.height = 4.5, fig.width = 10}
 nrmscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
 ```
@@ -623,8 +621,102 @@ nrmscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
 
 ---
 
-# Percent explained by hydrology
+```{r}
+toplo <- wrtdsmods %>%  
+  filter(bay_segment %in% 'OTB') %>% 
+  select(-data) %>% 
+  mutate(
+    mod = purrr::map(mod, function(x) {
+      
+      out <- prdnrmplot(x, annuals = T, plot = F, logspace = F)
+      out <- full_join(out[[1]], out[[2]], by = 'date') %>% 
+        select(date, bt_norm = nrms_variable, bt_fits = fits_variable) %>% 
+        mutate(resid = bt_fits - bt_norm)
+      
+      return(out)
+      
+    })
+  ) %>% 
+  pull(mod) %>% 
+  .[[1]] %>% 
+  filter(date >= as.numeric(as.Date('2000-01-01'))) %>% 
+  mutate(date = year(date))
 
-What percentage of the variation in chl is related to hydro? 
+hydplo <- hydest %>% 
+  filter(yr >= 2000) %>% 
+  group_by(yr) %>% 
+  summarise(hyd_est = sum(hyd_est), .groups = 'drop') %>% 
+  mutate(
+    hyd_dev = hyd_est - mean(hyd_est)
+  )
+
+#y axis label for plots
+ylabs1 <- expression(paste('Chloropyhll-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
+ylabs2 <- expression(paste('Pred. - norm. chl-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
+
+p1 <- ggplot(toplo, aes(x = date)) + 
+  geom_point(aes(y = bt_fits, alpha=0.7), colour = 'tomato1') +
+  geom_line(aes(y = bt_norm), colour = '#00806E', alpha = 0.9, size = 1) +
+  scale_y_continuous(ylabs1) +
+  theme_bw() +
+  theme(
+    legend.position = 'none',
+    axis.title.x = element_blank()
+    )
+
+p2 <- ggplot(hydplo, aes( x = yr, y = hyd_est)) + 
+  geom_bar(stat = 'identity') +
+  theme_bw() +
+  labs(
+    y = 'Hydrologic load (mill m3/d)'
+  ) +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none'
+    )
+
+pA <- p1 + p2 + plot_layout(ncol = 1)
+
+p1 <- ggplot(toplo, aes(x = date, y = resid)) + 
+  geom_point(stat = 'identity', colour = '#00806E') + 
+  geom_segment(aes(xend = date, yend = 0)) + 
+  scale_y_continuous(ylabs2) +
+  geom_hline(yintercept = 0, colour = 'tomato1') +
+  theme_bw() +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none'
+    )
+
+p2 <- ggplot(hydplo, aes( x = yr, y = hyd_dev, fill = hyd_dev)) + 
+  geom_bar(stat = 'identity', colour = 'black') + 
+  labs(y = 'Annual hydrologic\nanomalies (mill m3/d)') + 
+  scale_fill_gradient2(low = 'lightblue', mid = "white", high = 'lightgreen', midpoint = 0) +
+  geom_hline(yintercept = 0) +
+  theme_bw() +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none'
+    )
+
+pB <- p1 + p2 + plot_layout(ncol = 1)
+
+```
+
+.panelset[
+.panel[.panel-name[OTB predictions and hydrology]
+```{r, fig.height = 4.5, fig.width = 10}
+pA
+```
+]
+
+.panel[.panel-name[OTB residuals vs anomalies]
+```{r, fig.height = 4.5, fig.width = 10}
+pB
+```
+]
+]
 
 ---
+
+Same as last but do by quarters
