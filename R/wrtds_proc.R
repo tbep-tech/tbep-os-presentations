@@ -102,7 +102,8 @@ wrtdsmods <- wqdat %>%
   mutate(
     mod = purrr::map(data, function(x){
       
-      out <- as.data.frame(x) %>% tidalmean %>%  modfit(flo_div = 10, fill_empty = T)
+      out <- as.data.frame(x) %>% tidalmean %>%  
+        modfit(flo_div = 10, fill_empty = T, wins = as.list(c(0.323088491810723, 14.9398949283111, 0.894609819824893)))
       
       return(out)
       
@@ -110,14 +111,16 @@ wrtdsmods <- wqdat %>%
   )
 
 save(wrtdsmods, file = 'data/wrtdsmods.RData', compress = 'xz')
-
-tmp1 <- tomod1 %>% 
-  tmp2 <- tomod2 %>% tidalmean %>%  modfit(flo_div = 50, fill_empty = T)
-
-tmp1fit <- with(tmp1, sqrt(sum((fits - res)^2 / length(fits))))
-tmp1r2 <- lm(fits ~ res, tmp1) %>% summary %>% .$adj.r.squared
-tmp2fit <- with(tmp2, sqrt(sum((fits - res)^2 / length(fits))))
-tmp2r2 <- lm(fits ~ res, tmp2) %>% summary %>% .$adj.r.squared
-list(tmp1fit, tmp1r2, tmp2fit, tmp2r2)
-
+# 
+# tmp <- wrtdsmods %>% 
+#   filter(bay_segment %in% 'OTB') %>% 
+#   pull(data) %>% 
+#   .[[1]] %>% 
+#   as.data.frame %>% 
+#   tidalmean
+# 
+# library(doParallel)
+# ncores <- detectCores() - 1  
+# registerDoParallel(cores = ncores)
+# res <- winsrch_optim(tmp)
 
