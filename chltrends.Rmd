@@ -26,7 +26,9 @@ library(lubridate)
 library(extrafont)
 library(patchwork)
 library(WRTDStidal)
-# devtools::load_all('../tbeptools')
+library(xaringanExtra)
+
+use_panelset()
 
 source(file = "https://raw.githubusercontent.com/EvaMaeRey/little_flipbooks_library/master/xaringan_reveal_parenthetical.R")
 
@@ -35,7 +37,7 @@ loadfonts(device = 'win', quiet = T)
 fml <- 'Lato Light'
 
 # global knitr options
-opts_chunk$set(message = FALSE, dev.args = list(family = 'fml'), dpi = 300, echo = F, warning = F, fig.align = 'center', out.width = '100%')
+opts_chunk$set(message = FALSE, dev.args = list(family = fml), dpi = 300, dev = 'png', echo = F, warning = F, fig.align = 'center', out.width = '100%')
 
 data(hydest)
 data(wrtdsmods)
@@ -75,16 +77,6 @@ class: center, top
 
 ```{r, out.width = '100%'}
 knitr::include_graphics('figure/allsal.png')
-```
-
----
-
-class: center, top
-
-# Recent trends
-
-```{r, out.width = '100%'}
-knitr::include_graphics('figure/alltmp.png')
 ```
 
 ---
@@ -134,7 +126,7 @@ p <- ggplot(hydest, aes(x = Date, y = hyd_est)) +
   theme(
     axis.title.x = element_blank()
   ) + 
-  labs(y = 'Load (mill m3 / day)') +
+  labs(y = 'Load (mill m3/day)') +
   facet_zoom(x = Date >= as.numeric(dts[1]) & Date <= as.numeric(dts[2]), zoom.size = 1)
 p
 ```
@@ -163,7 +155,7 @@ p1 <- ggplot(toplo, aes(x = flo, y = exp(res))) +
   theme_bw(base_family = fml) + 
   labs(
     subtitle = 'OTB, 1980 - present',
-    x = 'Hydrologic load (mill m3 / d)', 
+    x = 'Hydrologic load (mill m3/d)', 
     y = 'Chl-a (ug/L)'
   )
 
@@ -179,7 +171,7 @@ p2 <- ggplot(toplo, aes(x = flo, y = exp(res))) +
   ) +
   labs(
     subtitle = 'By quarter', 
-    x = 'Hydrologic load (mill m3 / d)', 
+    x = 'Hydrologic load (mill m3/d)', 
     y = 'Chl-a (ug/L)'
   )
 
@@ -351,7 +343,7 @@ class: center, top
 
 * It is also a dynamic, moving window model that fits a unique parameter set to each point in the time series
 
-```{r, results = 'hide', message = F}
+```{r, results = 'hide', message = F, fig.height = 2.5, fig.width = 8}
 toplo <- wrtdsmods %>% 
   filter(bay_segment %in% 'OTB') %>% 
   pull(mod) %>% 
@@ -393,22 +385,17 @@ p <- ggplot(toplo, aes(x = date, y = res)) +
   mytheme +
   geom_line(aes(y = est, colour = mod)) +
   scale_colour_manual(values = c('black', 'tomato1'))
-png('figure/wrtds_comp.PNG', family = fml, height = 2.5, width = 7, units = 'in', res = 300)
-print(p)
-dev.off()
-```
 
-```{r}
-knitr::include_graphics('figure/wrtds_comp.PNG')
+p
 ```
 
 ---
 
-class: top, center
+class: center, top
 
 # Better predictions relative to time and flow
 
-```{r, results = 'hide'}
+```{r wrtds_prds,  fig.height = 4, fig.width = 10}
 toplo <- wrtdsmods %>%  
   select(-data) %>% 
   unnest(mod) %>% 
@@ -431,21 +418,256 @@ p <- ggplot(toplo, aes(x = date)) +
     strip.background = element_blank()
     )
 
-png('figure/wrtds_prds.PNG', family = fml, height = 4.5, width = 9, units = 'in', res = 300)
-print(p)
-dev.off()
-```
-
-```{r}
-knitr::include_graphics('figure/wrtds_prds.PNG')
+p
 ```
 
 ---
 
-class: top, center
+class: center, top
 
-# Identify flow-normalizd trends
+# Identify flow-normalized trends
 
+```{r wrtds_nrms1, fig.height = 4, fig.width = 10}
+toplo <- wrtdsmods %>%  
+  select(-data) %>% 
+  unnest(mod) %>% 
+  mutate(
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB'))
+  )
+  
+#y axis label for plots
+ylabs<-expression(paste('Chloropyhll-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
 
+p <- ggplot(toplo, aes(x = date)) + 
+  geom_point(aes(y = bt_fits, alpha=0.7), colour = 'tomato1') +
+  geom_line(aes(y= bt_norm), colour = '#00806E', alpha = 0.9, size = 1) +
+  scale_y_continuous(ylabs) +
+  facet_wrap(~bay_segment, nrow = 2, ncol = 2, scales = 'free_y') +
+  theme_bw() +
+  theme(
+    legend.position = 'none', 
+    axis.title.x = element_blank(), 
+    strip.background = element_blank()
+    )
 
+p
+```
 
+---
+
+class: center, top 
+
+# Identify flow-normalized trends, annual average
+
+```{r wrtds_nrms2, fig.height = 4, fig.width = 10}
+toplo <- wrtdsmods %>%  
+  select(-data) %>% 
+  mutate(
+    mod = purrr::map(mod, function(x) {
+      
+      out <- prdnrmplot(x, annuals = T, plot = F, logspace = F)
+      out <- full_join(out[[1]], out[[2]], by = 'date') %>% 
+        select(date, bt_norm = nrms_variable, bt_fits = fits_variable)
+      
+      return(out)
+      
+    })
+  ) %>% 
+  unnest(mod) %>% 
+  mutate(
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB'))
+  )
+  
+#y axis label for plots
+ylabs<-expression(paste('Chloropyhll-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
+
+p <- ggplot(toplo, aes(x = date)) + 
+  geom_point(aes(y = bt_fits, alpha=0.7), colour = 'tomato1') +
+  geom_line(aes(y= bt_norm), colour = '#00806E', alpha = 0.9, size = 1) +
+  scale_y_continuous(ylabs) +
+  facet_wrap(~bay_segment, nrow = 2, ncol = 2, scales = 'free_y') +
+  theme_bw() +
+  theme(
+    legend.position = 'none', 
+    axis.title.x = element_blank(), 
+    strip.background = element_blank()
+    )
+
+p
+```
+
+---
+
+class: center, top 
+
+```{r}
+toplo <- wrtdsmods %>% 
+  mutate(
+    plos = purrr::pmap(list(data, mod), function(data, mod){
+
+      flodat <- data %>% 
+        select(date, flo)
+      toplo <- mod %>%
+        # filter(dec_time > 2010) %>% 
+        mutate(
+          qrt = quarter(date),
+          qrt = factor(qrt, levels = c('1', '2', '3', '4'), labels = c('JFM', 'AMJ', 'JAS', 'OND'))
+        ) %>% 
+        select(date, bt_fits, qrt) %>% 
+        left_join(flodat, by = 'date')
+      
+      rng <- mod %>% pull(bt_fits) %>% range  
+      
+      p1 <- ggplot(toplo, aes(x = flo, y = bt_fits)) + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
+        scale_y_log10(limits = rng) + 
+        scale_x_log10() +
+        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+        theme_bw(base_family = fml) + 
+        labs(
+          subtitle = '1975 - present',
+          x = 'Hydrologic load (mill m3/d)', 
+          y = 'Predicted Chl-a (ug/L)'
+        )
+      
+      p2 <- ggplot(toplo, aes(x = flo, y = bt_fits)) + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
+        facet_wrap(~qrt, ncol = 2) +
+        scale_y_log10(limits = rng) + 
+        scale_x_log10() +
+        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+        theme_bw(base_family = fml) + 
+        theme(
+          strip.background = element_blank()
+        ) +
+        labs(
+          subtitle = 'By quarter', 
+          x = 'Hydrologic load (mill m3/d)', 
+          y = 'Predicted Chl-a (ug/L)'
+        )
+      
+      out <- p1  + p2 + plot_layout(ncol = 2)
+          
+      return(out)
+      
+    })
+  )
+ 
+```
+
+.panelset[
+.panel[.panel-name[OTB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
+```
+]
+
+.panel[.panel-name[HB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'HB') %>% pull(plos) %>% .[[1]]
+```
+]
+
+.panel[.panel-name[MTB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'MTB') %>% pull(plos) %>% .[[1]]
+```
+]
+
+.panel[.panel-name[LTB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'LTB') %>% pull(plos) %>% .[[1]]
+```
+]
+]
+
+---
+
+class: center, top 
+
+```{r}
+toplo <- wrtdsmods %>% 
+  mutate(
+    plos = purrr::pmap(list(data, mod), function(data, mod){
+      
+      flodat <- data %>% 
+        select(date, flo)
+      toplo <- mod %>%
+        # filter(dec_time > 2010) %>% 
+        mutate(
+          qrt = quarter(date),
+          qrt = factor(qrt, levels = c('1', '2', '3', '4'), labels = c('JFM', 'AMJ', 'JAS', 'OND'))
+        ) %>% 
+        select(date, bt_norm, qrt) %>% 
+        left_join(flodat, by = 'date')
+
+      rng <- mod %>% pull(bt_fits) %>% range  
+      
+      p1 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
+        scale_y_log10(limits = rng) + 
+        scale_x_log10() +
+        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+        theme_bw(base_family = fml) + 
+        labs(
+          subtitle = '1975 - present',
+          x = 'Hydrologic load (mill m3/d)', 
+          y = 'Flow-normalized Chl-a (ug/L)'
+        )
+      
+      p2 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
+        facet_wrap(~qrt, ncol = 2) +
+        scale_y_log10(limits = rng) + 
+        scale_x_log10() +
+        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+        theme_bw(base_family = fml) + 
+        theme(
+          strip.background = element_blank()
+        ) +
+        labs(
+          subtitle = 'By quarter', 
+          x = 'Hydrologic load (mill m3/d)', 
+          y = 'Flow-normalized Chl-a (ug/L)'
+        )
+      
+      out <- p1  + p2 + plot_layout(ncol = 2)
+          
+      return(out)
+      
+    })
+  )
+ 
+```
+
+.panelset[
+.panel[.panel-name[OTB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
+```
+]
+
+.panel[.panel-name[HB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'HB') %>% pull(plos) %>% .[[1]]
+```
+]
+
+.panel[.panel-name[MTB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'MTB') %>% pull(plos) %>% .[[1]]
+```
+]
+
+.panel[.panel-name[LTB]
+```{r, fig.height = 4.5, fig.width = 10}
+toplo %>% filter(bay_segment %in% 'LTB') %>% pull(plos) %>% .[[1]]
+```
+]
+]
+
+# Percent explained by hydrology
+
+What percentage of the variation in chl is related to hydro? 
+
+---
