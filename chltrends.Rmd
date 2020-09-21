@@ -84,7 +84,7 @@ knitr::include_graphics('figure/allsal.png')
 
 class: center, top
 
-# Conclusions and next steps
+# Conclusions from last time
 
 ## Long-term trends
 
@@ -100,11 +100,11 @@ class: center, top
 
 class: center, top
 
-# Conclusions and next steps (for chl-a)
+# Questions for today
 
 ## Role of hydrogy
 
-* Chlorophyll trends are linked to many factors, not just nutrients
+* Chlorophyll is linked to many factors, nutrients are a primary driver
 * Hydrology may be a confounding factor driving trends
 
 ## Seasonal differences
@@ -189,15 +189,18 @@ class: center, top
 * Modelling chlorophyll as a function of time, discharge (flow), and season
 * Ability to extract "flow-normalized" trend to remove hydrologic influence
 
+--
+
+$$
+\ln\left(Chl\right) = \beta_0 + \beta_1 time + \beta_2 Salinity + \beta_3 \sin\left(2\pi \cdot time\right) + \beta_4 \cos\left(2\pi\cdot time \right)
+$$
+
 ---
 
 class: center, top
 
 # WRTDS method
 
-$$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
-$$
 ```{r, message = F, results = 'hide'}
 tmp <- wrtdsmods %>% 
   filter(bay_segment %in% 'OTB') %>% 
@@ -264,77 +267,38 @@ print(p5)
 dev.off()
 ```
 
-$Chl$: chlorophyll (or other response endpoint), $t$: time,  $Sal$: hydrologic inputs
+.panelset[
 
---
-
+.panel[.panel-name[time]
 ```{r}
 knitr::include_graphics('figure/wrtds_pieces1.png')
 ```
+]
 
----
-
-class: center, top
-
-# WRTDS method
-
-$$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
-$$
-
-$Chl$: chlorophyll (or other response endpoint), $t$: time,  $Sal$: hydrologic inputs
-
+.panel[.panel-name[salinity]
 ```{r}
 knitr::include_graphics('figure/wrtds_pieces2.png')
 ```
+]
 
----
-
-class: center, top
-
-# WRTDS method
-
-$$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
-$$
-
-$Chl$: chlorophyll (or other response endpoint), $t$: time,  $Sal$: hydrologic inputs
-
+.panel[.panel-name[season]
 ```{r}
 knitr::include_graphics('figure/wrtds_pieces3.png')
 ```
+]
 
----
-
-class: center, top
-
-# WRTDS method
-
-$$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
-$$
-
-$Chl$: chlorophyll (or other response endpoint), $t$: time,  $Sal$: hydrologic inputs
-
+.panel[.panel-name[time + salinity]
 ```{r}
 knitr::include_graphics('figure/wrtds_pieces4.png')
 ```
+]
 
----
-
-class: center, top
-
-# WRTDS method
-
-$$
-\ln\left(Chl\right) = \beta_0 + \beta_1 t + \beta_2 Sal + \beta_3 \sin\left(2\pi t\right) + \beta_4 \cos\left(2\pi t\right)
-$$
-
-$Chl$: chlorophyll (or other response endpoint), $t$: time, $Sal$: hydrologic inputs
-
+.panel[.panel-name[time + salinity + season]
 ```{r}
 knitr::include_graphics('figure/wrtds_pieces5.png')
 ```
+]
+]
 
 ---
 
@@ -463,7 +427,7 @@ p
 
 class: center, top 
 
-# Identify flow-normalized trends, annual average
+# Identify flow-normalized trends, annual averages
 
 ```{r wrtds_nrms2, fig.height = 4.5, fig.width = 10}
 toplo <- wrtdsmods %>%  
@@ -503,6 +467,12 @@ p <- ggplot(toplo, aes(x = date)) +
     )
 p
 ```
+
+---
+
+class: middle, center
+
+# Is the hydrology signal removed from the trend? 
 
 ---
 
@@ -627,6 +597,12 @@ nrmscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
 
 ---
 
+class: middle, center
+
+# How much of the trend can we explain with hydrology?
+
+---
+
 ```{r}
 toplo <- wrtdsmods %>%  
   filter(bay_segment %in% 'OTB') %>% 
@@ -727,7 +703,7 @@ pB
 
 ---
 
-## A simple regression model
+## A simple regression model for anomalies
 
 .pull-left[
 ```{r annreg, fig.height = 4, fig.width = 4}
@@ -762,8 +738,50 @@ tab_model(mod, dv.labels = 'Chl anomalies')
 
 ---
 
+class: middle, center
+
+# But there is seasonal variation...
+
+---
+
+class: top, center
+
+# OTB chloropyll by season
+
 ```{r}
-toplo <- wrtdsmods %>%  
+p1 <- show_boxplot(epcdata, param = 'chla', yrsel = 2015, bay_segment = 'OTB') + labs(title = NULL) + theme(legend.position = 'none')
+p2 <- show_boxplot(epcdata, param = 'chla', yrsel = 2017, bay_segment = 'OTB') + labs(title = NULL) + theme(legend.position = 'none')
+p3 <- show_boxplot(epcdata, param = 'chla', yrsel = 2019, bay_segment = 'OTB') + labs(title = NULL) + theme(legend.position = 'none')
+```
+
+.panelset[
+.panel[.panel-name[2015]
+
+```{r, fig.height = 3, fig.width = 8}
+p1
+```
+]
+
+.panel[.panel-name[2017]
+
+```{r, fig.height = 3, fig.width = 8}
+p2
+```
+]
+
+.panel[.panel-name[2019]
+
+```{r, fig.height = 3, fig.width = 8}
+p3
+```
+]
+
+]
+
+---
+
+```{r}
+chlqrt <- wrtdsmods %>%  
   filter(bay_segment %in% 'OTB') %>% 
   select(-data) %>% 
   mutate(
@@ -787,9 +805,14 @@ toplo <- wrtdsmods %>%
     yr = year(date)
   ) %>% 
   group_by(yr, qrt) %>% 
-  summarise(resid = mean(resid, na.rm = T), .groups = 'drop')
+  summarise(
+    resid = mean(resid, na.rm = T), 
+    bt_norm = mean(bt_norm, na.rm = T), 
+    bt_fits = mean(bt_fits, na.rm = T),
+    .groups = 'drop'
+    )
 
-hydplo <- hydest %>% 
+hydqrt <- hydest %>% 
   ungroup %>% 
   filter(yr >= 2000) %>% 
   mutate(
@@ -799,12 +822,13 @@ hydplo <- hydest %>%
   ) %>% 
   group_by(yr, qrt) %>% 
   summarise(hyd_est = sum(hyd_est, na.rm = T), .groups = 'drop') %>% 
+  group_by(qrt) %>% 
   mutate(
     hyd_dev = hyd_est - mean(hyd_est)
   ) %>% 
-  select(yr, Hydro = hyd_dev, qrt)
+  select(yr, Hydro = hyd_dev, hyd_est, qrt)
 
-seascmps <- full_join(hydplo, toplo, by = c('yr', 'qrt')) %>% 
+seascmps <- full_join(hydqrt, chlqrt, by = c('yr', 'qrt')) %>% 
   group_by(qrt) %>%
   nest() %>% 
   mutate(
@@ -833,7 +857,155 @@ seascmps <- full_join(hydplo, toplo, by = c('yr', 'qrt')) %>%
     }), 
     rsqs = purrr::map(mods, . %>% summary %>% .$r.squared %>% '*'(100) %>% round)
   )
+
+toplo <- seascmps %>% 
+  select(qrt, data) %>% 
+  unnest(data) %>% 
+  arrange(yr, qrt) %>% 
+  mutate(yr = yr + as.numeric(qrt) / 4)
+
+#y axis label for plots
+ylabs1 <- expression(paste('Chloropyhll-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
+ylabs2 <- expression(paste('Pred. - norm. chl-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
+
+p1 <- ggplot(toplo, aes(x = yr)) + 
+  geom_point(aes(y = bt_fits, alpha=0.7), colour = 'tomato1', size = 3) +
+  geom_line(aes(y = bt_norm), colour = '#00806E', alpha = 0.9, size = 1) +
+  scale_y_continuous(ylabs1) +
+  theme_bw() +
+  theme(
+    legend.position = 'none',
+    axis.title.x = element_blank()
+    )
+
+p2 <- ggplot(toplo, aes(x = yr, y = hyd_est)) + 
+  geom_bar(stat = 'identity') +
+  theme_bw() +
+  labs(
+    y = 'Hydrologic load (mill m3/d)'
+  ) +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none'
+    )
+
+pA <- p1 + p2 + plot_layout(ncol = 1)
+
+p1 <- ggplot(toplo, aes(x = yr, y = resid)) + 
+  # geom_point(stat = 'identity', colour = '#00806E') + 
+  # geom_segment(aes(xend = date, yend = 0)) + 
+  geom_bar(aes(fill = resid), stat = 'identity', colour = 'black') + 
+  scale_fill_gradient2(low = 'lightblue', mid = "white", high = 'lightgreen', midpoint = 0) +
+  scale_y_continuous(ylabs2) +
+  geom_hline(yintercept = 0, colour = 'black') +
+  theme_bw() +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none'
+    )
+
+p2 <- ggplot(toplo, aes(x = yr, y = Hydro, fill = Hydro)) + 
+  geom_bar(stat = 'identity', colour = 'black') + 
+  labs(y = 'Annual hydrologic\nanomalies (mill m3/d)') + 
+  scale_fill_gradient2(low = 'lightblue', mid = "white", high = 'lightgreen', midpoint = 0) +
+  geom_hline(yintercept = 0) +
+  theme_bw() +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none'
+    )
+
+pB <- p1 + p2 + plot_layout(ncol = 1)
+
+p1 <- ggplot(toplo, aes(x = yr)) + 
+  geom_point(aes(y = bt_fits, alpha=0.7), colour = 'tomato1', size = 3) +
+  geom_line(aes(y = bt_norm), colour = '#00806E', alpha = 0.9, size = 1) +
+  scale_y_continuous(ylabs1) +
+  facet_wrap(~qrt, ncol = 4, scales = 'free_x') + 
+  theme_bw() +
+  theme(
+    legend.position = 'none',
+    strip.background = element_blank(),
+    axis.title.x = element_blank()
+    )
+
+p2 <- ggplot(toplo, aes(x = yr, y = hyd_est)) + 
+  geom_bar(stat = 'identity', width = 0.95) +
+  theme_bw() +
+  facet_wrap(~qrt, ncol = 4, scales = 'free_x') + 
+  labs(
+    y = 'Hydrologic load (mill m3/d)'
+  ) +
+  theme(
+    axis.title.x = element_blank(), 
+    strip.background = element_blank(),
+    legend.position = 'none'
+    )
+
+pC <- p1 + p2 + plot_layout(ncol = 1)
+
+p1 <- ggplot(toplo, aes(x = yr, y = resid)) + 
+  # geom_point(stat = 'identity', colour = '#00806E') + 
+  # geom_segment(aes(xend = date, yend = 0)) + 
+  geom_bar(aes(fill = resid), stat = 'identity', colour = 'black', width = 0.95) + 
+  scale_fill_gradient2(low = 'lightblue', mid = "white", high = 'lightgreen', midpoint = 0) +
+  facet_wrap(~qrt, ncol = 4, scales = 'free_x') + 
+  scale_y_continuous(ylabs2) +
+  geom_hline(yintercept = 0, colour = 'black') +
+  theme_bw() +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none', 
+    strip.background = element_blank()
+    )
+
+p2 <- ggplot(toplo, aes(x = yr, y = Hydro, fill = Hydro)) + 
+  geom_bar(stat = 'identity', colour = 'black', width = 0.95) + 
+  labs(y = 'Annual hydrologic\nanomalies (mill m3/d)') + 
+  scale_fill_gradient2(low = 'lightblue', mid = "white", high = 'lightgreen', midpoint = 0) +
+  geom_hline(yintercept = 0) +
+  facet_wrap(~qrt, ncol = 4, scales = 'free_x') + 
+  theme_bw() +
+  theme(
+    axis.title.x = element_blank(), 
+    legend.position = 'none', 
+    strip.background = element_blank()
+    )
+
+pD <- p1 + p2 + plot_layout(ncol = 1)
 ```
+
+.panelset[
+.panel[.panel-name[OTB predictions and hydrology]
+```{r, fig.height = 4.5, fig.width = 10}
+pA
+```
+]
+
+.panel[.panel-name[OTB residuals vs anomalies]
+```{r, fig.height = 4.5, fig.width = 10}
+pB
+```
+]
+]
+
+---
+
+.panelset[
+.panel[.panel-name[OTB predictions and hydrology]
+```{r, fig.height = 4.5, fig.width = 10}
+pC
+```
+]
+
+.panel[.panel-name[OTB residuals vs anomalies]
+```{r, fig.height = 4.5, fig.width = 10}
+pD
+```
+]
+]
+
+---
 
 .panelset[
 
@@ -893,3 +1065,65 @@ seascmps %>% filter(qrt %in% 'OND') %>% pull(mods) %>% .[[1]] %>% tab_model(dv.l
 ]
 ]
 ]
+
+---
+
+class: middle, center
+
+# Another way to look at it...
+
+---
+
+class: top, center
+
+# OTB salinity prediction surface from WRTDS
+
+```{r}
+toplo <- wrtdsmods %>% 
+  filter(bay_segment == 'OTB') %>% 
+  pull(mod) %>% 
+  .[[1]]
+
+p1 <- gridplot(toplo, floscl = F, logspace = F, years = c(2000, 2019), month = 'all', allflo = T)
+p2 <- gridplot(toplo, floscl = F, logspace = F, years = c(2000, 2019), month = c(7, 8, 9, 10), allflo = T, ncol = 4) + 
+  theme(strip.background = element_blank())
+```
+
+.panelset[
+.panel[.panel-name[All months]
+```{r, fig.height = 3, fig.width = 8}
+p1
+```
+]
+
+.panel[.panel-name[Summer months]
+```{r, fig.height = 3, fig.width = 8}
+p2
+```
+]
+
+]
+
+---
+
+class: top, center
+
+# Conclusions
+
+## Hydrology is obviously linked to variation in chlorophyll
+
+* Explains 60% of the annual variation in the last ten years in OTB
+* Explains 71% of the seasonal variation during the summer months
+* Danger zone is late summer, high hydrologic loads
+
+---
+
+class: top, center
+
+# Conclusions
+
+## However, there are interesting seasonal trends in chlorophyll independent of hydrology
+
+* Increase in observed, predicted trends in OTB - a function of nutrients and hydrology
+* Annual, flow-normalized annual trends are constant
+* But... increase in seasonal, flow-normalized trends in the summer - not a function of nutrients. Is this a concern?
