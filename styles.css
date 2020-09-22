@@ -124,3 +124,6 @@ ul {
 .panelset .panel-tabs {
   font-size: 2rem;
 }
+
+.large { font-size: 130% }
+.small { font-size: 70% }
