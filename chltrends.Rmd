@@ -56,8 +56,8 @@ class: center, top
 
 <div class="container">
    <div class="column-left"><img src="figure/decisionframework.png" width = "340"></img></div>
-   <div class="column-center"><img src="figure/wqstatic1.png" width = "340"></img></div>
-   <div class="column-right"><img src="figure/wqstatic2.png" width = "340"></img></div>
+   <div class="column-center"><img src="figure/wqstatic1.PNG" width = "340"></img></div>
+   <div class="column-right"><img src="figure/wqstatic2.PNG" width = "340"></img></div>
 </div>
 
 ---
@@ -271,31 +271,31 @@ dev.off()
 
 .panel[.panel-name[time]
 ```{r}
-knitr::include_graphics('figure/wrtds_pieces1.png')
+knitr::include_graphics('figure/wrtds_pieces1.PNG')
 ```
 ]
 
 .panel[.panel-name[salinity]
 ```{r}
-knitr::include_graphics('figure/wrtds_pieces2.png')
+knitr::include_graphics('figure/wrtds_pieces2.PNG')
 ```
 ]
 
 .panel[.panel-name[season]
 ```{r}
-knitr::include_graphics('figure/wrtds_pieces3.png')
+knitr::include_graphics('figure/wrtds_pieces3.PNG')
 ```
 ]
 
 .panel[.panel-name[time + salinity]
 ```{r}
-knitr::include_graphics('figure/wrtds_pieces4.png')
+knitr::include_graphics('figure/wrtds_pieces4.PNG')
 ```
 ]
 
 .panel[.panel-name[time + salinity + season]
 ```{r}
-knitr::include_graphics('figure/wrtds_pieces5.png')
+knitr::include_graphics('figure/wrtds_pieces5.PNG')
 ```
 ]
 ]
@@ -991,6 +991,12 @@ pB
 
 ---
 
+class: middle, center
+
+# Same plots but arranged by quarter...
+
+---
+
 .panelset[
 .panel[.panel-name[OTB predictions and hydrology]
 ```{r, fig.height = 4.5, fig.width = 10}
@@ -1126,4 +1132,19 @@ class: top, center
 
 * Increase in observed, predicted trends in OTB - a function of nutrients and hydrology
 * Annual, flow-normalized annual trends are constant
-* But... increase in seasonal, flow-normalized trends in the summer - not a function of nutrients. Is this a concern?
+* But... increase in seasonal, flow-normalized trends in the summer - not a function of hydrology. Is this a concern?
+
+---
+
+class: top, left 
+
+# Resources
+
+* Hirsch, R.M., Moyer, D.L., Archfield, S.A. 2010. Weighted regressions on time, discharge, and season (WRTDS), with an
+application to Chesapeake Bay river inputs. Journal of the American Water Resources Association, 46(5):857–880. [10.1111/j.1752-1688.2010.00482.x](https://onlinelibrary.wiley.com/doi/pdf/10.1111/j.1752-1688.2010.00482.x)
+
+* Beck, M.W., Hagy, J.D. 2015. Adaptation of a weighted regression approach to evaluate water quality trends in an estuary. Environmental Modelling and Assessment. 20:637-655. [10.1007/s10666-015-9452-8](https://link.springer.com/article/10.1007/s10666-015-9452-8)
+
+* Beck, MW. 2020. WRTDStidal R package. https://github.com/fawda123/WRTDStidal v1.1.3. Zenodo. [10.5281/zenodo.4034843](http://doi.org/10.5281/zenodo.4034843)
+
+* Presentation: [link](https://tbep-tech.github.io/tbep-os-presentations/chltrends.html), [source](https://github.com/tbep-tech/tbep-os-presentations/chltrends.Rmd)
