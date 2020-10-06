@@ -191,9 +191,8 @@ class: center, top
 
 --
 
-$$
-\ln\left(Chl\right) = \beta_0 + \beta_1 time + \beta_2 Salinity + \beta_3 \sin\left(2\pi \cdot time\right) + \beta_4 \cos\left(2\pi\cdot time \right)
-$$
+
+$$\Large \ln\left(Chl\right) = \beta_0 + \beta_1 time + \beta_2 Salinity + \beta_3 \sin\left(2\pi \cdot time\right) + \beta_4 \cos\left(2\pi\cdot time \right)$$
 
 ---
 
