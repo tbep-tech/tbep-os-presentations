@@ -88,7 +88,7 @@ class: center, top
 
 ## Long-term trends
 
-* Overall, nutrients have decreased and segrasses have recovered
+* Overall, nutrients have decreased and seagrasses have recovered
 
 ## Concerning recent changes
 
@@ -102,10 +102,10 @@ class: center, top
 
 # Questions for today
 
-## Role of hydrogy
+## Role of hydrology
 
-* Chlorophyll is linked to many factors, nutrients are a primary driver
-* Hydrology may be a confounding factor driving trends
+* Chlorophyll is linked to many factors, nutrients are first!
+* Hydrology may be a confounding factor driving trends (e.g., compliance load adjustment factors)
 
 ## Seasonal differences
 
@@ -127,7 +127,9 @@ p <- ggplot(hydest, aes(x = Date, y = hyd_est)) +
   theme(
     axis.title.x = element_blank()
   ) + 
-  labs(y = 'Load (mill m3/day)') +
+  labs(
+    y = 'Load (mill m3/day)', 
+    title = 'Estimated to OTB: Brooker Creek + rainfall') +
   facet_zoom(x = Date >= as.numeric(dts[1]) & Date <= as.numeric(dts[2]), zoom.size = 1)
 p
 ```
@@ -136,7 +138,7 @@ p
 
 class: center, top
 
-# Salinity vs chlorophyll
+# Salinity (hydrology surrogate) vs chlorophyll
 
 ```{r, fig.height = 4.5, fig.width = 10}
 toplo <- wrtdsmods %>% 
@@ -149,10 +151,10 @@ toplo <- wrtdsmods %>%
     )
 
 p1 <- ggplot(toplo, aes(x = flo, y = exp(res))) + 
-  geom_point(alpha = 0.6, color = '#00806E') + 
+  geom_point(alpha = 0.6, color = '#5C4A42') + 
   scale_y_log10() + 
   # scale_x_log10() +
-  geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+  geom_smooth(method = 'lm', se = F, color = 'red') + 
   theme_bw(base_family = fml) + 
   labs(
     subtitle = 'OTB, 1975 - present',
@@ -161,11 +163,11 @@ p1 <- ggplot(toplo, aes(x = flo, y = exp(res))) +
   )
 
 p2 <- ggplot(toplo, aes(x = flo, y = exp(res))) + 
-  geom_point(alpha = 0.6, color = '#00806E') + 
+  geom_point(alpha = 0.6, color = '#5C4A42') + 
   facet_wrap(~qrt, ncol = 2) +
   scale_y_log10() + 
   scale_x_log10() +
-  geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+  geom_smooth(method = 'lm', se = F, color = 'red') + 
   theme_bw(base_family = fml) + 
   theme(
     strip.background = element_blank()
@@ -187,12 +189,12 @@ class: center, top
 
 * Use of Weighted Regression (WRTDS) to evaluate past trends ([Hirsch et al. 2010](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3307614/), [Beck and Hagy 2015](https://link.springer.com/article/10.1007/s10666-015-9452-8))
 * Modelling chlorophyll as a function of time, discharge (flow), and season
-* Ability to extract "flow-normalized" trend to remove hydrologic influence
+
+$$\Large \ln\left(Chl\right) = \beta_0 + \beta_1 time + \beta_2 Salinity + \beta_3 \sin\left(2\pi \cdot time\right) + \beta_4 \cos\left(2\pi\cdot time \right)$$
 
 --
 
-
-$$\Large \ln\left(Chl\right) = \beta_0 + \beta_1 time + \beta_2 Salinity + \beta_3 \sin\left(2\pi \cdot time\right) + \beta_4 \cos\left(2\pi\cdot time \right)$$
+* Ability to extract "flow-normalized" trend to remove hydrologic influence
 
 ---
 
@@ -229,7 +231,7 @@ mytheme <- theme_bw() +
     )   
 
 pbase <- ggplot(toplo, aes(x = date, y = res)) + 
-  geom_point(alpha = 0.6, color = '#00806E') + 
+  geom_point(alpha = 0.6, color = '#5C4A42') + 
   scale_y_continuous('ln-Chl') + 
   mytheme
 
@@ -303,60 +305,6 @@ knitr::include_graphics('figure/wrtds_pieces5.PNG')
 
 class: center, top
 
-# WRTDS method
-
-* It is also a dynamic, moving window model that fits a unique parameter set to each point in the time series
-
-```{r, results = 'hide', message = F, fig.height = 2.5, fig.width = 8}
-toplo <- wrtdsmods %>% 
-  filter(bay_segment %in% 'OTB') %>% 
-  pull(mod) %>% 
-  .[[1]] %>% 
-  mutate(
-    fixfits = predict(lm(res ~ flo + dec_time + sin(2 * pi * dec_time) + cos(2 * pi * dec_time), data = .))
-  ) %>% 
-  select(date, dec_time, res, fits, fixfits) %>% 
-  gather('mod', 'est', fits, fixfits) %>% 
-  mutate(mod = factor(mod, levels = c('fixfits', 'fits'), labels = c('Global', 'Moving window')))
-
-fitval <- toplo %>% 
-  group_by(mod) %>% 
-  summarise(
-    fit = sqrt(sum((est - res) ^ 2) / length(est)), 
-    .groups = 'drop'
-  ) %>% 
-  mutate(
-    fit = paste0('(RMSE ', round(fit, 2), ')')
-  )
-
-toplo <- left_join(toplo, fitval, by = 'mod') %>% 
-  mutate(
-    mod = as.character(mod)
-  ) %>% 
-  unite('mod', mod, fit, sep = ' ') %>% 
-  mutate(mod = factor(mod, levels = rev(unique(mod))))
-
-mytheme <- theme_bw() + 
-  theme(
-    axis.title.x = element_blank(), 
-    legend.title = element_blank(), 
-    legend.position = 'top'
-    )   
-
-p <- ggplot(toplo, aes(x = date, y = res)) + 
-  geom_point(alpha = 0.6, color = '#00806E') + 
-  scale_y_continuous('ln-Chl') + 
-  mytheme +
-  geom_line(aes(y = est, colour = mod)) +
-  scale_colour_manual(values = c('black', 'tomato1'))
-
-p
-```
-
----
-
-class: center, top
-
 # Better predictions relative to time and flow
 
 ```{r wrtds_prds,  fig.height = 4.5, fig.width = 10}
@@ -374,7 +322,7 @@ p <- ggplot(toplo, aes(x = date)) +
   geom_point(aes(y = exp(res), colour = 'Observations'),alpha=0.7) +
   geom_line(aes(y = bt_fits, colour = 'Predictions'), alpha = 0.9, size = 1) +
   scale_y_continuous(ylabs) +
-  scale_colour_manual(values = c('black', 'tomato1')) +
+  scale_colour_manual(values = c('#5C4A42', 'tomato1')) +
   guides(color = guide_legend(override.aes = list(linetype = c(0, 1), shape = c(16, NA)))) + 
   facet_wrap(~bay_segment, nrow = 2, ncol = 2, scales = 'free_y') +
   theme_bw() +
@@ -385,40 +333,6 @@ p <- ggplot(toplo, aes(x = date)) +
     strip.background = element_blank()
     )
 
-p
-```
-
----
-
-class: center, top
-
-# Identify flow-normalized trends
-
-```{r wrtds_nrms1, fig.height = 4.5, fig.width = 10}
-toplo <- wrtdsmods %>%  
-  select(-data) %>% 
-  unnest(mod) %>% 
-  mutate(
-    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB'))
-  )
-  
-#y axis label for plots
-ylabs<-expression(paste('Chloropyhll-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
-
-p <- ggplot(toplo, aes(x = date)) + 
-  geom_point(aes(y = bt_fits, colour = 'Predicted'), alpha=0.7) +
-  geom_line(aes(y= bt_norm ,colour = 'Flow-normalized'), alpha = 0.9, size = 1) +
-  scale_y_continuous(ylabs) +
-  scale_colour_manual(values = c('tomato1', '#00806E')) +
-  guides(color = guide_legend(override.aes = list(linetype = c(0, 1), shape = c(16, NA)))) + 
-  facet_wrap(~bay_segment, nrow = 2, ncol = 2, scales = 'free_y') +
-  theme_bw() +
-  theme(
-    legend.position = 'top',
-    legend.title = element_blank(),
-    axis.title.x = element_blank(), 
-    strip.background = element_blank()
-    )
 p
 ```
 
@@ -454,8 +368,8 @@ p <- ggplot(toplo, aes(x = date)) +
   geom_point(aes(y = bt_fits, colour = 'Predicted'), alpha=0.7) +
   geom_line(aes(y= bt_norm, colour = 'Flow-normalized'), alpha = 0.9, size = 1) +
   scale_y_continuous(ylabs) +
-  scale_colour_manual(values = c('tomato1', '#00806E')) +
-  guides(color = guide_legend(override.aes = list(linetype = c(0, 1), shape = c(16, NA)))) + 
+  scale_colour_manual(values = c('#00806E', 'tomato1')) +
+  guides(color = guide_legend(override.aes = list(linetype = c(1, 0), shape = c(NA, 16)))) + 
   facet_wrap(~bay_segment, nrow = 2, ncol = 2, scales = 'free_y') +
   theme_bw() +
   theme(
@@ -469,130 +383,37 @@ p
 
 ---
 
-class: middle, center
+class: center, top
 
-# Is the hydrology signal removed from the trend? 
+# Identify flow-normalized trends, complete data
 
----
-
-class: center, top 
-
-```{r}
-fitscorr <- wrtdsmods %>% 
+```{r wrtds_nrms1, fig.height = 4.5, fig.width = 10}
+toplo <- wrtdsmods %>%  
+  select(-data) %>% 
+  unnest(mod) %>% 
   mutate(
-    plos = purrr::pmap(list(data, mod), function(data, mod){
-
-      flodat <- data %>% 
-        select(date, flo)
-      toplo <- mod %>%
-        # filter(dec_time > 2010) %>% 
-        mutate(
-          qrt = quarter(date),
-          qrt = factor(qrt, levels = c('1', '2', '3', '4'), labels = c('JFM', 'AMJ', 'JAS', 'OND'))
-        ) %>% 
-        select(date, bt_fits, qrt) %>% 
-        left_join(flodat, by = 'date')
-      
-      rng <- mod %>% pull(bt_fits) %>% range  
-      
-      p1 <- ggplot(toplo, aes(x = flo, y = bt_fits)) + 
-        geom_point(alpha = 0.6, color = '#00806E') + 
-        scale_y_log10(limits = rng) + 
-        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
-        theme_bw(base_family = fml) + 
-        labs(
-          subtitle = '1975 - present',
-          x = 'Salinity (ppth)', 
-          y = 'Predicted Chl-a (ug/L)'
-        )
-      
-      p2 <- ggplot(toplo, aes(x = flo, y = bt_fits)) + 
-        geom_point(alpha = 0.6, color = '#00806E') + 
-        facet_wrap(~qrt, ncol = 2) +
-        scale_y_log10(limits = rng) + 
-        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
-        theme_bw(base_family = fml) + 
-        theme(
-          strip.background = element_blank()
-        ) +
-        labs(
-          subtitle = 'By quarter', 
-          x = 'Salinity (ppth)', 
-          y = 'Predicted Chl-a (ug/L)'
-        )
-      
-      out <- p1  + p2 + plot_layout(ncol = 2)
-          
-      return(out)
-      
-    })
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB'))
   )
- 
-nrmscorr <- wrtdsmods %>% 
-  mutate(
-    plos = purrr::pmap(list(data, mod), function(data, mod){
-      
-      flodat <- data %>% 
-        select(date, flo)
-      toplo <- mod %>%
-        # filter(dec_time > 2010) %>% 
-        mutate(
-          qrt = quarter(date),
-          qrt = factor(qrt, levels = c('1', '2', '3', '4'), labels = c('JFM', 'AMJ', 'JAS', 'OND'))
-        ) %>% 
-        select(date, bt_norm, qrt) %>% 
-        left_join(flodat, by = 'date')
+  
+#y axis label for plots
+ylabs<-expression(paste('Chloropyhll-',italic(a),' (',italic('\u03bc'),'g ',L^-1,')'))
 
-      rng <- mod %>% pull(bt_fits) %>% range  
-      
-      p1 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
-        geom_point(alpha = 0.6, color = '#00806E') + 
-        scale_y_log10(limits = rng) + 
-        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
-        theme_bw(base_family = fml) + 
-        labs(
-          subtitle = '1975 - present',
-          x = 'Salinity (ppth)', 
-          y = 'Flow-normalized Chl-a (ug/L)'
-        )
-      
-      p2 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
-        geom_point(alpha = 0.6, color = '#00806E') + 
-        facet_wrap(~qrt, ncol = 2) +
-        scale_y_log10(limits = rng) + 
-        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
-        theme_bw(base_family = fml) + 
-        theme(
-          strip.background = element_blank()
-        ) +
-        labs(
-          subtitle = 'By quarter', 
-          x = 'Salinity (ppth)', 
-          y = 'Flow-normalized Chl-a (ug/L)'
-        )
-      
-      out <- p1  + p2 + plot_layout(ncol = 2)
-          
-      return(out)
-      
-    })
-  )
- 
+p <- ggplot(toplo, aes(x = date)) + 
+  geom_point(aes(y = bt_fits, colour = 'Predicted'), alpha=0.7) +
+  geom_line(aes(y= bt_norm ,colour = 'Flow-normalized'), alpha = 0.9, size = 1) +
+  scale_y_continuous(ylabs) +
+  scale_colour_manual(values = c('#00806E', 'tomato1')) +
+  guides(color = guide_legend(override.aes = list(linetype = c(1, 0), shape = c(NA, 16)))) + 
+  facet_wrap(~bay_segment, nrow = 2, ncol = 2, scales = 'free_y') +
+  theme_bw() +
+  theme(
+    legend.position = 'top',
+    legend.title = element_blank(),
+    axis.title.x = element_blank(), 
+    strip.background = element_blank()
+    )
+p
 ```
-
-.panelset[
-.panel[.panel-name[OTB predicted vs salinity]
-```{r, fig.height = 4.5, fig.width = 10}
-fitscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
-```
-]
-
-.panel[.panel-name[OTB normalized vs salinity]
-```{r, fig.height = 4.5, fig.width = 10}
-nrmscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
-```
-]
-]
 
 ---
 
@@ -745,7 +566,7 @@ class: middle, center
 
 class: top, center
 
-# OTB chloropyll by season
+# OTB chlorophyll by season
 
 ```{r}
 p1 <- show_boxplot(epcdata, param = 'chla', yrsel = 2015, bay_segment = 'OTB') + labs(title = NULL) + theme(legend.position = 'none')
@@ -1115,23 +936,36 @@ class: top, center
 
 # Conclusions
 
-## Hydrology is obviously linked to variation in chlorophyll
+* Chlorophyll is "high" at some places, at some times, and under certain conditions
+--
 
 * Explains 60% of the annual variation in the last ten years in OTB
+--
+
 * Explains 71% of the seasonal variation during the summer months
-* Danger zone is late summer, high hydrologic loads
+--
+
+* Must vulnerable is OTB, late summer, high flow/rain
+--
+
+* Analysis assumes link between hydrology, nutrients, chlorophyll...
 
 ---
 
 class: top, center
 
-# Conclusions
+# What to do about it? 
 
-## However, there are interesting seasonal trends in chlorophyll independent of hydrology
+* Consider the most vulnerable locations/times/conditions, plan accordingly 
+--
 
-* Increase in observed, predicted trends in OTB - a function of nutrients and hydrology
-* Annual, flow-normalized annual trends are constant
-* But... increase in seasonal, flow-normalized trends in the summer - not a function of hydrology. Is this a concern?
+* Are we evaluating climatic variation or extreme events? 
+--
+
+* Mitigation/restoration activities, e.g., bio-remediation, enhanced circulation, SSO prevention, tidal trib inflows, etc.
+--
+
+* Follow-up analyses - what is specific role of hydrology with Pyro?  Do spring time storms trigger bloom events?
 
 ---
 
@@ -1146,3 +980,132 @@ application to Chesapeake Bay river inputs. JAWRA, 46(5):857–880. [10.1111/j.1
 * Beck 2020. WRTDStidal R package. https://github.com/fawda123/WRTDStidal v1.1.3. Zenodo. [10.5281/zenodo.4034843](http://doi.org/10.5281/zenodo.4034843)
 * Presentation: [link](https://tbep-tech.github.io/tbep-os-presentations/chltrends.html), [source](https://github.com/tbep-tech/tbep-os-presentations/blob/master/chltrends.Rmd)
 ]
+
+---
+
+class: middle, center
+
+# Is the hydrology signal removed from the trend? 
+
+---
+
+class: center, top 
+
+```{r}
+fitscorr <- wrtdsmods %>% 
+  mutate(
+    plos = purrr::pmap(list(data, mod), function(data, mod){
+
+      flodat <- data %>% 
+        select(date, flo)
+      toplo <- mod %>%
+        # filter(dec_time > 2010) %>% 
+        mutate(
+          qrt = quarter(date),
+          qrt = factor(qrt, levels = c('1', '2', '3', '4'), labels = c('JFM', 'AMJ', 'JAS', 'OND'))
+        ) %>% 
+        select(date, bt_fits, qrt) %>% 
+        left_join(flodat, by = 'date')
+      
+      rng <- mod %>% pull(bt_fits) %>% range  
+      
+      p1 <- ggplot(toplo, aes(x = flo, y = bt_fits)) + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
+        scale_y_log10(limits = rng) + 
+        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+        theme_bw(base_family = fml) + 
+        labs(
+          subtitle = '1975 - present',
+          x = 'Salinity (ppth)', 
+          y = 'Predicted Chl-a (ug/L)'
+        )
+      
+      p2 <- ggplot(toplo, aes(x = flo, y = bt_fits)) + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
+        facet_wrap(~qrt, ncol = 2) +
+        scale_y_log10(limits = rng) + 
+        geom_smooth(method = 'lm', se = F, color = 'tomato1') + 
+        theme_bw(base_family = fml) + 
+        theme(
+          strip.background = element_blank()
+        ) +
+        labs(
+          subtitle = 'By quarter', 
+          x = 'Salinity (ppth)', 
+          y = 'Predicted Chl-a (ug/L)'
+        )
+      
+      out <- p1  + p2 + plot_layout(ncol = 2)
+          
+      return(out)
+      
+    })
+  )
+ 
+nrmscorr <- wrtdsmods %>% 
+  mutate(
+    plos = purrr::pmap(list(data, mod), function(data, mod){
+      
+      flodat <- data %>% 
+        select(date, flo)
+      toplo <- mod %>%
+        # filter(dec_time > 2010) %>% 
+        mutate(
+          qrt = quarter(date),
+          qrt = factor(qrt, levels = c('1', '2', '3', '4'), labels = c('JFM', 'AMJ', 'JAS', 'OND'))
+        ) %>% 
+        select(date, bt_norm, qrt) %>% 
+        left_join(flodat, by = 'date')
+
+      rng <- mod %>% pull(bt_fits) %>% range  
+      
+      p1 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
+        geom_point(alpha = 0.6, color = 'tomato1') + 
+        scale_y_log10(limits = rng) + 
+        geom_smooth(method = 'lm', se = F, color = 'red') + 
+        theme_bw(base_family = fml) + 
+        labs(
+          subtitle = '1975 - present',
+          x = 'Salinity (ppth)', 
+          y = 'Flow-normalized Chl-a (ug/L)'
+        )
+      
+      p2 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
+        geom_point(alpha = 0.6, color = 'tomato1') + 
+        facet_wrap(~qrt, ncol = 2) +
+        scale_y_log10(limits = rng) + 
+        geom_smooth(method = 'lm', se = F, color = 'red') + 
+        theme_bw(base_family = fml) + 
+        theme(
+          strip.background = element_blank()
+        ) +
+        labs(
+          subtitle = 'By quarter', 
+          x = 'Salinity (ppth)', 
+          y = 'Flow-normalized Chl-a (ug/L)'
+        )
+      
+      out <- p1  + p2 + plot_layout(ncol = 2)
+          
+      return(out)
+      
+    })
+  )
+ 
+```
+
+.panelset[
+.panel[.panel-name[OTB predicted vs salinity]
+```{r, fig.height = 4.5, fig.width = 10}
+fitscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
+```
+]
+
+.panel[.panel-name[OTB normalized vs salinity]
+```{r, fig.height = 4.5, fig.width = 10}
+nrmscorr %>% filter(bay_segment %in% 'OTB') %>% pull(plos) %>% .[[1]]
+```
+]
+]
+
+---
