@@ -1,0 +1,129 @@
+/* Frutiger Light approximate */
+@import url("//fonts.googleapis.com/css?family=Lato:100,200,300,400,500,600,700,800,900"); 
+
+/* DIN condensed approximate */
+@import url("//fonts.googleapis.com/css?family=Roboto+Condensed:300,700,900");
+
+/* header styles */
+
+h1 {
+  font-family: 'Roboto Condensed';
+  font-weight: 700;
+  color: #5C4A42;
+  letter-spacing: -0.05em;
+}
+h2 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #00806E;
+  letter-spacing: -0.05em;
+}
+h3 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #00806E;
+  letter-spacing: -0.05em;
+}
+h4 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+}
+h5 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+}
+a {
+  font-family: 'Roboto Condensed';
+  font-weight: 400;
+  color: #00806E;
+}
+p {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+  font-style: italic;
+  letter-spacing: -0.05em;
+}
+
+.inverse {
+  background-color: #FFFFFF;
+  color: #d6d6d6;
+  text-shadow: 0 0 0px #333;
+}
+
+/* Two-column layout */
+.left-column {
+  color: #777;
+  width: 20%;
+  height: 92%;
+  float: left;
+}
+.left-column h2:last-of-type, .left-column h3:last-child {
+  color: #000;
+}
+.right-column {
+  width: 75%;
+  float: right;
+  padding-top: 1em;
+}
+.pull-left {
+  float: left;
+  width: 47%;
+}
+.pull-right {
+  float: right;
+  width: 47%;
+}
+.pull-right ~ * {
+  clear: both;
+}
+
+ul {
+  list-style: none; /* Remove default bullets */
+}
+
+ul li::before {
+  content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+  color: #958984; /* Change the color */
+  display: inline-block; /* Needed to add space between the bullet and the text */
+  width: 1em; /* Also needed for space (tweak if needed) */
+  margin-left: -1em; /* Also needed for space (tweak if needed) */
+}
+
+ol {  
+  font-family: 'Lato';
+  font-weight: 300;
+  font-size: 36px; /* roughly h3 font size */
+  color: #958984; /* Change the color */
+}
+
+ul {  
+  font-family: 'Lato';
+  font-weight: 300;
+  font-size: 36px; /* roughly h3 font size */
+  color: #958984; /* Change the color */
+}
+
+.remark-slide-number {
+  font-size: 15pt;
+  margin-bottom: -11.6px;
+  margin-right: -12px;
+  color: #00806E; 
+  opacity: 1; /* default: 0.5 */
+}
+
+
+.column-left{ float: left; width: 33.333%; }
+.column-right{ float: right; width: 33.333%; }
+.column-center{ display: inline-block; width: 33.333%; }
+
+
+/* panelset font size */
+.panelset .panel-tabs {
+  font-size: 2rem;
+}
+
+.large { font-size: 130% }
+.small { font-size: 70% }
