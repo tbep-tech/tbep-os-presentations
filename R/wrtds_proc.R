@@ -6,6 +6,7 @@ library(tidyverse)
 library(lubridate)
 library(tbeptools)
 library(WRTDStidal)
+library(haven)
 
 chldat <- epcdata
 
@@ -123,4 +124,49 @@ save(wrtdsmods, file = 'data/wrtdsmods.RData', compress = 'xz')
 # ncores <- detectCores() - 1  
 # registerDoParallel(cores = ncores)
 # res <- winsrch_optim(tmp)
+
+# loading model results from janicki --------------------------------------
+
+fls <- list.files(path = '~/Desktop/TBEP/TB_LOADS', recursive = T, full.names = T)
+fls <- grep('totn.*month', fls, value = T)
+dat <- tibble(
+    fl = fls
+  ) %>% 
+  group_by(fl) %>% 
+  nest %>% 
+  mutate(
+    data = purrr:::pmap(list(fl), function(fl){
+      
+      out <- read_sas(fl)
+      names(out) <- tolower(names(out))
+      # out <- out %>% 
+      #   select(bay_seg, year, month, tnload, h2oload, source)
+      # 
+      return(out)
+      
+    })
+  ) %>% 
+  unnest(data) %>%
+  ungroup %>% 
+  select(-fl) %>% 
+  filter(bay_seg == 1) %>% 
+  mutate(dy = 1) %>% 
+  unite('date', year, month, dy, sep = '-') %>% 
+  mutate(date = ymd(date)) %>% 
+  group_by(date) %>% 
+  summarise(
+    tnload = sum(tnload, na.rm = T), 
+    h2oload = sum(h2oload, na.rm = T), 
+    .groups = 'drop'
+  ) %>% 
+  mutate(
+    tnload = case_when(
+      date <= as.numeric(as.Date('2011-12-01')) ~ tnload * 0.00110231, 
+      T ~ tnload
+    )
+  )
+
+loadmoddat <- dat
+
+save(loadmoddat, file = 'data/loadmoddat.RData', compress = 'xz')
 

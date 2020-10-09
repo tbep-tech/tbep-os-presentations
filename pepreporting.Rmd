@@ -472,7 +472,7 @@ class: left, top
 ## REPORTING
 ]
 
-* Jointly considers chlorophyll and clarity water quality endpoints
+* Jointly considers chlorophyll and water clarity endpoints
 * Annual categories depend on both a __duration__ and __magnitude__ of exceedance
 --
 
