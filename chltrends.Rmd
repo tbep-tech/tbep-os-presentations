@@ -1079,7 +1079,7 @@ nrmscorr <- wrtdsmods %>%
       rng <- mod %>% pull(bt_fits) %>% range  
       
       p1 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
-        geom_point(alpha = 0.6, color = 'tomato1') + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
         scale_y_log10(limits = rng) + 
         geom_smooth(method = 'lm', se = F, color = 'red') + 
         theme_bw(base_family = fml) + 
@@ -1090,7 +1090,7 @@ nrmscorr <- wrtdsmods %>%
         )
       
       p2 <- ggplot(toplo, aes(x = flo, y = bt_norm)) + 
-        geom_point(alpha = 0.6, color = 'tomato1') + 
+        geom_point(alpha = 0.6, color = '#00806E') + 
         facet_wrap(~qrt, ncol = 2) +
         scale_y_log10(limits = rng) + 
         geom_smooth(method = 'lm', se = F, color = 'red') + 
@@ -1137,7 +1137,8 @@ class: center, top
 dts <- as.Date(c('2015-01-01', '2019-12-31'))
 p <- ggplot(hydest, aes(x = Date, y = hyd_est)) +
   geom_area(fill = '#00806E') +
-  scale_x_continuous(expand = c(0, 0)) +
+  scale_x_date(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) + 
   theme_bw(base_family = fml) +
   theme(
     axis.title.x = element_blank()
@@ -1145,6 +1146,6 @@ p <- ggplot(hydest, aes(x = Date, y = hyd_est)) +
   labs(
     y = 'Load (mill m3/day)',
     title = 'Estimated to OTB: Brooker Creek + rainfall') +
-  facet_zoom(x = Date >= as.numeric(dts[1]) & Date <= as.numeric(dts[2]), zoom.size = 1)
+  facet_zoom(x = Date >= dts[1] & Date <= dts[2], zoom.size = 1)
 p
 ```
