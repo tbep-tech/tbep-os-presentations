@@ -94,7 +94,7 @@ class: middle, center
 knitr::include_graphics('figure/michener.png')
 ```
 
-.footnote[Michener et al. 1997 Ecol. App. 7(1):330-342.]
+.footnote[[Michener et al. 1997 Ecol. App. 7(1):330-342.](https://www.researchgate.net/publication/246959596_Nongeospatial_Metadata_for_the_Ecological_Sciences)]
 
 ---
 
@@ -504,7 +504,7 @@ class: left, top
 ## EXPLORING ALTERNATIVES
 ]
 
-* Futuree discussions may involve additional decisions on appropriate targets 
+* Future discussions may involve additional decisions on appropriate targets 
 * AND if the targets vary by estuary segments, e.g., by salinity gradients
 --
 
