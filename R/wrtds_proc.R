@@ -7,6 +7,7 @@ library(lubridate)
 library(tbeptools)
 library(WRTDStidal)
 library(haven)
+library(readxl)
 
 chldat <- epcdata
 
@@ -17,45 +18,77 @@ mykey <- Sys.getenv("NOAA_KEY")
 
 hydest <- tibble(
   yr = 1974:2019
-  ) %>% 
-  group_by(yr) %>% 
-  nest %>% 
+  ) %>%
+  group_by(yr) %>%
+  nest %>%
   mutate(
     data = purrr::pmap(list(yr), function(yr){
-      
+
       cat(yr, '\t')
-      
+
       start <- paste0(yr, "-01-01")
       end <- paste0(yr, "-12-31")
-      
+
       # get rainfall data at station
       tia_rainfall <- ncdc(datasetid = "GHCND", stationid = "GHCND:USW00012842",
                            datatypeid = "PRCP", startdate = start, enddate = end,
                            limit = 500, add_units = TRUE, token = mykey)
-      
+
       # convert rain data to inches
       tia_rain <- tia_rainfall$data %>%
         mutate(daily_in = (value/254),
                Date = as.Date(date))
-      
+
       # get hydrological data, 0060 is discharge as cfs, converted to million m3/day
       # converting ft3/s * 86400 s/d / 0.0283168 m3/ft3 * 1,000,000
       bkr<- readNWISdv("02307359", "00060", start, end) %>%
         renameNWISColumns() %>%
         mutate(bkr_flow = (Flow*3.05119225))
-      
+
       out <- left_join(tia_rain, bkr, by=c("Date")) %>%
         select(Date, daily_in, bkr_flow) %>%
-        mutate(hyd_est = (154.22+(8.12*bkr_flow)+(6.73*daily_in))/365) %>% 
+        mutate(hyd_est = (154.22+(8.12*bkr_flow)+(6.73*daily_in))/365) %>%
         drop_na(hyd_est)
-      
+
       return(out)
-      
+
     })
-  ) %>% 
+  ) %>%
   unnest('data')
 
 save(hydest, file = 'data/hydest.RData', compress = 'xz')
+
+# get hydroload estimates from Janicki ------------------------------------
+# 
+# # this file replaces the original hydest in the commented code above
+# # it is direct from Janicki models and provides a better estimate of hydro load
+# 
+# # import, format
+# 
+# bayseg <- read_excel('data/Tampa Bay Loadings 1985-2016.xlsx', sheet = 'Segment ID') %>% 
+#   rename(
+#     bayid = `Bay Segments`, 
+#     bay_segment = `...2`
+#   ) %>% 
+#   mutate(
+#     bay_segment = factor(bay_segment, 
+#       levels = c("Old Tampa Bay", "Hillsborough Bay", "Middle Tampa Baty", "Old Tampa Bay", "Boca Cieaga Bay", "Terra Ceia Bay", "Manatee River"), 
+#       labels = c('OTB', 'HB', 'MTB', 'OTB', 'BCB', 'TCB', 'MR')
+#     )
+#   )
+#   
+# hydest <- read_excel('data/Tampa Bay Loadings 1985-2016.xlsx', sheet = 'Monthly H2O Loads') %>% 
+#   mutate(
+#     bayid = Month,
+#     dy = 1
+#   ) %>% 
+#   left_join(bayseg, by = 'bayid') %>% 
+#   unite('date', YEAR, MONTH, dy, sep = '-') %>% 
+#   select(date, hyd_est = `H2O Load (million m3/month)`, bay_segment) %>% 
+#   mutate(date = ymd(date)) %>% 
+#   filter(!bay_segment %in% c('BCB', 'TCB', 'MR'))
+# 
+# save(hydest, file = 'data/hydest.RData', compress = 'xz')
 
 # wrtds models ------------------------------------------------------------
 
@@ -127,6 +160,7 @@ save(wrtdsmods, file = 'data/wrtdsmods.RData', compress = 'xz')
 
 # loading model results from janicki --------------------------------------
 
+# the original TB Loads folder was on the T drive in NMC committee folder
 fls <- list.files(path = '~/Desktop/TBEP/TB_LOADS', recursive = T, full.names = T)
 fls <- grep('totn.*month', fls, value = T)
 dat <- tibble(
