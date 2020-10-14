@@ -123,31 +123,32 @@ wqdat <- epcdata %>%
     date = floor_date(date, unit = 'month')
   ) %>% 
   ungroup() %>% 
-  select(-matches('\\_q$|^sd|^Temp|\\_ppth$|\\_Depth\\_m$|^Lat|^Lon|^yr$|^mo$|^SampleTime$')) %>% 
+  select(-matches('\\_q$|^sd|^Temp|\\_Depth\\_m$|^Lat|^Lon|^yr$|^mo$|^SampleTime$')) %>% 
+  mutate(sal = (Sal_Top_ppth + Sal_Mid_ppth + Sal_Bottom_ppth) / 3) %>% 
   group_by(bay_segment, date) %>% 
   summarise(
     tn = median(tn, na.rm = T), 
     chla = median(chla, na.rm = T), 
+    sal = median (sal, na.rm = T),
     .groups = 'drop'
   )
 
 # models
 wrtdsmods <- wqdat %>% 
-  left_join(hydest, by = c('date', 'bay_segment')) %>% 
   mutate(
     res = log(chla), 
     res = ifelse(is.infinite(res), NA, res),
     lim = 0, 
   ) %>% 
-  select(bay_segment, date, res, flo = hyd_est, lim) %>% 
+  select(bay_segment, date, res, flo = sal, lim) %>% 
   na.omit() %>% 
   group_by(bay_segment) %>% 
   nest() %>% 
   mutate(
     mod = purrr::map(data, function(x){
       
-      out <- as.data.frame(x) %>% tidalmean %>%  
-        modfit(flo_div = 50, fill_empty = T, wins = as.list(c(0.323088491810723, 14.9398949283111, 0.894609819824893)))
+      out <- as.data.frame(x) %>% tidal %>%  
+        modfit(flo_div = 20, fill_empty = T, tau = 0.5)
       
       return(out)
       
