@@ -116,7 +116,7 @@ data(hydest)
 
 # water quality
 wqdat <- epcdata %>% 
-  filter(yr > 1984 & yr < 2020) %>% 
+  filter(yr > 1974 & yr < 2020) %>% 
   rowwise() %>% 
   mutate(
     date = as.Date(SampleTime), 
@@ -148,7 +148,7 @@ wrtdsmods <- wqdat %>%
     mod = purrr::map(data, function(x){
       
       out <- as.data.frame(x) %>% tidal %>%  
-        modfit(flo_div = 20, fill_empty = T, tau = 0.5)
+        modfit(flo_div = 40, fill_empty = T, tau = 0.5)
       
       return(out)
       
