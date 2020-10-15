@@ -131,25 +131,9 @@ knitr::include_graphics("figure/fiveschools.PNG")
 .footnote[[Fecher and Friesike 2014. Opening Science, Springer.](https://doi.org/10.1007/978-3-319-00026-8_2)]
 
 ---
-
-class: middle, center
-
-# `r fa('table')` Open data 
-
-# `r fa("cogs")` Open process
-
-# `r fa("book")` Open products
-
----
-
-class: middle, center
-
-# Open Science at TBEP
-
----
 class: top, center
 
-## WATER QUALITY REPORT CARD
+## OPEN SCIENCE AT TBEP
 
 .pull-left[
 ```{r, out.width="100%"}
@@ -167,7 +151,7 @@ knitr::include_graphics('figure/wqstatic2.PNG')
 
 class: top, center
 
-## THE OLD (closed) WAY
+## THE OLD WAY
 
 ```{r, out.width="100%"}
 knitr::include_graphics('figure/badflow2.png')
@@ -176,7 +160,7 @@ knitr::include_graphics('figure/badflow2.png')
 ---
 class: top, center
 
-## THE NEW (open) WAY
+## THE NEW WAY
 
 ```{r, out.width="100%"}
 knitr::include_graphics('figure/flow3.png')
