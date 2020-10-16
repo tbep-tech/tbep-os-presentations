@@ -53,7 +53,7 @@ class: middle, center, inverse
 
 class: center, top
 
-# Recent trends 
+# Reporting requirements and products 
 
 <div class="container">
    <div class="column-left"><img src="figure/decisionframework.png" width = "340"></img></div>
@@ -65,7 +65,7 @@ class: center, top
 
 class: center, top
 
-# Recent trends 
+# Old Tampa Bay trends 
 
 ```{r, out.width = '100%', out.height='78%'}
 show_segplotly(epcdata, bay_segment = 'OTB')
@@ -75,7 +75,7 @@ show_segplotly(epcdata, bay_segment = 'OTB')
 
 class: center, top
 
-# Recent trends
+# Baywide salinity averages
 
 ```{r, out.width = '100%'}
 knitr::include_graphics('figure/allsal.png')
