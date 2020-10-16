@@ -138,7 +138,7 @@ p1 <- ggplot(toplo1, aes(x = date, y = val)) +
     strip.background = element_blank()
   ) + 
   labs(
-    title = 'OTB Loading model estimates'
+    title = 'OTB loading model estimates'
   )
 p2 <- ggplot(toplo2, aes(x = `H2O load (mill m3/mo)`, y = `TN load (tons/mo)`)) + 
   geom_point(size = 3, alpha = 0.6, color = '#5C4A42') +
@@ -944,7 +944,7 @@ toplo <- wrtdsmods %>%
   .[[1]]
 
 p1 <- gridplot(toplo, floscl = F, logspace = F, years = c(2000, 2019), month = 'all', allflo = T)
-p2 <- gridplot(toplo, floscl = F, logspace = F, years = c(2000, 2019), month = c(7, 8, 9, 10), allflo = T, ncol = 4) + 
+p2 <- gridplot(toplo, floscl = F, logspace = F, years = c(2000, 2019), month = c(5, 6, 7, 8, 9, 10), allflo = T, ncol = 6) + 
   theme(strip.background = element_blank())
 ```
 
@@ -955,7 +955,7 @@ p1
 ```
 ]
 
-.panel[.panel-name[Summer months]
+.panel[.panel-name[Wet season]
 ```{r, fig.height = 3, fig.width = 8}
 p2
 ```
@@ -972,7 +972,7 @@ class: top, center
 * Chlorophyll is "high" at some places, at some times, and under certain conditions
 --
 
-* Explains `r allr2`% of the annual variation in the last ten years in OTB
+* Explains `r allr2`% of the annual variation in the last twenty years in OTB
 --
 
 * Variation is better explained by hydrology during the summer months
@@ -981,7 +981,7 @@ class: top, center
 * Must vulnerable is OTB, late summer, high flow/rain
 --
 
-* Analysis assumes link between hydrology, nutrients, chlorophyll... there may be other factors AND association != causation
+* Analysis assumes link between hydrology, nutrients, chlorophyll... there may be other factors AND association does not equal causation
 
 ---
 
@@ -998,7 +998,7 @@ class: top, center
 * Mitigation/restoration activities, e.g., bio-remediation, enhanced circulation, SSO prevention, tidal trib inflows, etc.
 --
 
-* Follow-up analyses - what is specific role of hydrology with Pyro?  Do spring time storms trigger bloom events?  Can we link any of these changes to seagrass? 
+* Follow-up analyses - what is specific role of hydrology with Pyro?  Do spring time storms trigger bloom events?  Can we link any of these changes to [seagrass](https://tbep-tech.github.io/tbeptools/articles/seagrasstransect.html)? 
 
 ---
 
