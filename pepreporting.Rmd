@@ -110,25 +110,25 @@ knitr::include_graphics("figure/bridge.png")
 
 class: middle, center
 
+```{r, echo = F, out.width = '85%'}
+knitr::include_graphics("figure/fiveschools.PNG")
+```
+
+.footnote[[Fecher and Friesike 2014. Opening Science, Springer.](https://doi.org/10.1007/978-3-319-00026-8_2)]
+
+---
+
+class: middle, center
+
 ### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
 
 .footnote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
 
 --
 
-### Date are __F__indable, __A__ccessible, __I__nteroperable, and __R__esuable
+### Data are __F__indable, __A__ccessible, __I__nteroperable, and __R__esuable
 
 .footnote[[Wilkinson et al. 2016 Nature 3:160018](https://doi.org/10.1038/sdata.2016.18)]
-
----
-
-class: middle, center
-
-```{r, echo = F, out.width = '85%'}
-knitr::include_graphics("figure/fiveschools.PNG")
-```
-
-.footnote[[Fecher and Friesike 2014. Opening Science, Springer.](https://doi.org/10.1007/978-3-319-00026-8_2)]
 
 ---
 class: top, center
@@ -165,18 +165,6 @@ class: top, center
 ```{r, out.width="100%"}
 knitr::include_graphics('figure/flow3.png')
 ```
-
----
-class: top, center
-
-## THE NEW (open) WAY
-
-.left[
-* Transparent and reproducible methods
-* Discoverable products that can engage others
-* Automated data QAQC and integration with reporting
-* New front-facing web products, both static and interactive
-]
 
 ---
 class: left, top
@@ -275,7 +263,7 @@ class: left, top
 ## TECH TRANSFER
 ]
 
-* No need to rebuild the wheel!
+* No need to reinvent the wheel!
 --
 
 * Leverage other methods (technical foundation) AND tools (analysis workflows) using FAIR principles
@@ -316,7 +304,7 @@ class: left, top
 * Consider existing LTM datasets that can be used to assess progress in attaining CCMP goals (*Goal: Clean Waters*)
 --
 
-* Spatial divisions of Peconic Estuary to applying numeric thresholds
+* Spatial divisions of Peconic Estuary for applying numeric thresholds
 --
 
 * Relevant thresholds and how to quantify (median vs. mean)
@@ -368,25 +356,10 @@ show_sitemappep(dat, yrsel = 2019, param = 'sd')
 class: left, top
 
 .center[
-## EXISTING DATA
-]
-
-* Provisional targets ([Suffolk Co 2019 SWP](https://suffolkcountyny.gov/Departments/Health-Services/Environmental-Quality#SubWWPlan)) for water clarity and secchi depth
-
-```{r, echo = T}
-peptargets
-```
---
-
-* All segment annual values based on medians, account for censored data (secchi on bottom)
-
----
-
-class: left, top
-
-.center[
 ## ESTIMATE SEGMENT MEDIANS
 ]
+
+* All segment annual values based on medians, account for censored data (secchi on bottom)
 
 ```{r, echo = T}
 medpep <- anlz_medpep(dat)
@@ -395,27 +368,24 @@ medpep$ann
 
 ---
 
-class: left, top
-
 .center[
-## ESTIMATE SEGMENT MEDIANS
+## REPORTING
 ]
 
+* Provisional targets ([Suffolk Co 2019 SWP](https://suffolkcountyny.gov/Departments/Health-Services/Environmental-Quality#SubWWPlan)) for water clarity and secchi depth
+
 ```{r, echo = T}
-medpep <- anlz_medpep(dat)
-medpep$mos
+peptargets
 ```
 
 ---
 
-class: left, top
-
 .center[
-## ESTIMATE SEGMENT MEDIANS
+## REPORTING
 ]
 
-```{r, echo = T, fig.height = 4, fig.width = 7, out.width = '100%'}
-show_boxpep(dat, param = 'chla', bay_segment = "Western")
+```{r, echo = T}
+anlz_attainpep(medpep)
 ```
 
 ---
@@ -462,6 +432,25 @@ class: left, top
 
 ```{r, out.width = '90%'}
 knitr::include_graphics('figure/outints.png')
+```
+
+.center[
+.footnote[[TBEP tech report #04-00](https://drive.google.com/file/d/1juhfptqA4R-Bq_XfW6nOhqFxJSorGkfq/view?usp=drivesdk)]
+]
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+* Jointly considers chlorophyll and water clarity endpoints
+* Annual categories depend on both a __duration__ and __magnitude__ of exceedance
+
+```{r, out.width = '80%'}
+knitr::include_graphics('figure/matrixcats.png')
 ```
 
 .center[
