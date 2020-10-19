@@ -384,38 +384,10 @@ peptargets
 ## REPORTING
 ]
 
+* Apply targets to annual medians
+
 ```{r, echo = T}
 anlz_attainpep(medpep)
-```
-
----
-class: left, top
-
-.center[
-## REPORTING
-]
-
-* Translate segment water quality conditions into annual reporting categories to inform/prioritize management actions towards CCMP goals
---
-
-* In Tampa...
-
-<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports and Baywide Environmental Monitoring Report. 
-
-<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: Review monitoring data and nitrogen loading estimates. Begin/continue TAC and Management Board development of specific management recommendations.
-
-<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>: Finalize development and implement appropriate management actions to get back on track.
-
----
-
-class: left, top
-
-.center[
-## REPORTING
-]
-
-```{r, echo = T}
-show_matrixpep(dat, asreact = TRUE, nrows = 8)
 ```
 
 ---
@@ -456,6 +428,37 @@ knitr::include_graphics('figure/matrixcats.png')
 .center[
 .footnote[[TBEP tech report #04-00](https://drive.google.com/file/d/1juhfptqA4R-Bq_XfW6nOhqFxJSorGkfq/view?usp=drivesdk)]
 ]
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+* Translate segment water quality conditions into annual reporting categories to inform/prioritize management actions towards CCMP goals
+--
+
+* In Tampa...
+
+<span style="color:#33FF3B; text-shadow: 0 0 3px #333;">__Stay the Course__</span>: Continue planned projects. Report data via annual progress reports and Baywide Environmental Monitoring Report. 
+
+<span style="color:#F9FF33; text-shadow: 0 0 3px #333;">__Caution__</span>: Review monitoring data and nitrogen loading estimates. Begin/continue TAC and Management Board development of specific management recommendations.
+
+<span style="color:#FF3333; text-shadow: 0 0 3px #333;">__On Alert__</span>: Finalize development and implement appropriate management actions to get back on track.
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+```{r, echo = T}
+show_matrixpep(dat, asreact = TRUE, nrows = 8)
+```
 
 ---
 
