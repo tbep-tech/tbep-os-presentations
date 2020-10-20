@@ -1,0 +1,36 @@
+---
+title: "Open Science Updates"
+author: "[Dr. Marcus Beck](mailto:mbeck@tbep.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
+institute: "Tampa Bay Estuary Program"
+date: "10/27/2020"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightLines: true
+      countIncrementalSlides: false
+    lib_dir: libs
+    css: styles3.css
+    includes: 
+      after_body: insert-logo-tbep.html
+---
+
+```{r, message = F, echo = F, warning = F}
+library(knitr)
+library(extrafont)
+library(xaringanExtra)
+library(icon)
+
+loadfonts(device = 'win', quiet = T)
+
+fml <- 'Lato Light'
+
+# global knitr options
+opts_chunk$set(message = FALSE, dev.args = list(family = fml), dpi = 300, dev = 'png', echo = F, warning = F, fig.align = 'center', out.width = '100%')
+
+```
+
+class: top, center
+
+## UPDATES
+
+---
