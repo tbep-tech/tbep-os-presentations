@@ -29,15 +29,31 @@ opts_chunk$set(message = FALSE, dev.args = list(family = fml), dpi = 300, dev = 
 
 ```
 
-class: top, center
+class: top, left
 
-## WEBSITE UPDATE
+.center[
+## Subcommittee roles and responsibilities
+]
+
+1. Support development of open science products at TBEP
+
+1. Rank priority research areas for developing open science products
+
+1. Facilitate training activities
+
+.center[[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)]
 
 ---
 
 class: top, center
 
 ## WEBSITE UPDATE
+
+[https://www.tbep.org](https://www.tbep.org)
+
+```{r}
+knitr::include_graphics('figure/website2.PNG')
+```
 
 ---
 
@@ -45,11 +61,23 @@ class: top, center
 
 ## MEETING MATERIALS
 
+[https://tbep.org/our-work/boards-committees/](https://tbep.org/our-work/boards-committees/)
+
+```{r}
+knitr::include_graphics('figure/boards.PNG')
+```
+
 ---
 
 class: top, center
 
 ## DATA VIZ WEBPAGE
+
+[https://tbep.org/our-work/data-vizualization/](https://tbep.org/our-work/data-vizualization/)
+
+```{r}
+knitr::include_graphics('figure/datavizpage.PNG')
+```
 
 ---
 
@@ -57,11 +85,35 @@ class: top, center
 
 ## NEKTON INDEX
 
+[https://tbep.org/tampa-bay-nekton-index/](https://tbep.org/tampa-bay-nekton-index/)
+
+```{r}
+knitr::include_graphics('figure/tbnipage.PNG')
+```
+
 ---
 
 class: top, center
 
-## BENTHIC DATA/INDEX
+## NEKTON INDEX
+
+[https://shiny.tbep.org/nekton-dash/](https://shiny.tbep.org/nekton-dash/)
+
+```{r}
+knitr::include_graphics('figure/tbnidash.PNG')
+```
+
+---
+
+class: top, center
+
+## BENTHIC DATA AND INDEX
+
+[https://tbep-tech.github.io/tbeptools/articles/tbbi.html](https://tbep-tech.github.io/tbeptools/articles/tbbi.html)
+
+```{r}
+knitr::include_graphics('figure/tbbivignette.PNG')
+```
 
 ---
 
@@ -69,16 +121,37 @@ class: top, center
 
 ## SEAGRASS TRANSECT DATA
 
+[https://tbep-tech.github.io/tbeptools/articles/seagrasstransect.html](https://tbep-tech.github.io/tbeptools/articles/seagrasstransect.html)
+
+```{r}
+knitr::include_graphics('figure/seagrassvignette.PNG')
+```
+
 ---
 
-class: top, center
+class: top, left
 
+.center[
 ## 2021 PROPOSED MEETINGS
+]
+
+* Quarterly, biannually? 
+* Proposed dates
+     * Feb 2
+     * May 4
+     * Aug 3
+     * Nov 2
+* Soliciting speakers, send us ideas!
 
 ---
 
-class: top, center
+class: top, left
 
-## 2021 PROPOSED TRAININGS
+.center[
+## 2021 TRAINING NEEDS
+]
 
----
+* June 2020 R training, video link [here](https://www.youtube.com/playlist?list=PLfJ6-D-exF9RM5TPtT4T0nxieqpr_R4pJ)
+* One training event for 2021
+     * More R training? tbeptools?
+     * Other ideas? 
