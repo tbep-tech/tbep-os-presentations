@@ -155,3 +155,5 @@ class: top, left
 * One training event for 2021
      * More R training? tbeptools?
      * Other ideas? 
+* BASIS workshop Oct. 2021
+* CERF workshop Nov. 2021
