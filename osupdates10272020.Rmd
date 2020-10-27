@@ -79,6 +79,21 @@ class: top, center
 knitr::include_graphics('figure/datavizpage.PNG')
 ```
 
+
+---
+
+class: top, center
+
+## NEW OS WORKFLOWS
+
+* Nekton Index, Benthic Index, Seagrass transect data
+
+--
+
+```{r, out.width = '75%'}
+knitr::include_graphics('figure/flow3.png')
+```
+
 ---
 
 class: top, center
@@ -107,7 +122,7 @@ knitr::include_graphics('figure/tbnidash.PNG')
 
 class: top, center
 
-## BENTHIC DATA AND INDEX
+## BENTHIC INDEX
 
 [https://tbep-tech.github.io/tbeptools/articles/tbbi.html](https://tbep-tech.github.io/tbeptools/articles/tbbi.html)
 
@@ -155,5 +170,6 @@ class: top, left
 * One training event for 2021
      * More R training? tbeptools?
      * Other ideas? 
+--
 * BASIS workshop Oct. 2021
 * CERF workshop Nov. 2021
