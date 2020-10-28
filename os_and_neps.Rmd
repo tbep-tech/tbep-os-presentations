@@ -126,7 +126,7 @@ class: middle, center
 
 class: middle, center
 
-```{r, echo = F, out.width = '85%'}
+```{r, echo = F, out.width = '90%'}
 knitr::include_graphics("figure/fiveschools.PNG")
 ```
 
@@ -160,7 +160,7 @@ knitr::include_graphics("figure/open.png")
 
 class: middle, center
 
-# The old way at TBEP
+# CCMP reporting: The old way
 
 ```{r, out.width="100%"}
 knitr::include_graphics('figure/badflow2.png')
@@ -169,17 +169,17 @@ knitr::include_graphics('figure/badflow2.png')
 ---
 class: middle, center
 
-# The new way at TBEP
+# CCMP reporting: The new way
 
 ```{r, out.width="100%"}
-knitr::include_graphics('figure/flow3.png')
+knitr::include_graphics('figure/openflow.png')
 ```
 
 ---
 
 class: middle, center, inverse
 
-# Open science is a process and a philosophy that can super-charge your program to "create better science in less time"
+# Open science is a process and a philosophy that can super-charge your program to "create better science in less time", together
 
 .footnote[[Lowndes et al. 2017. Nature Ecology & Evolution. 1:0160.](https://doi.org/10.1038/s41559-017-0160)]
 
