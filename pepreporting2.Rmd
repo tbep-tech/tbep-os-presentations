@@ -302,7 +302,7 @@ class: left, top
 ## PATHOGENS: SUMMARIZE
 ]
 
-* Summarize the data with [`anlz_pepent()`](https://tbep-tech.github.io/pepreporting/reference/anlz_pepent.html)
+* Summarize the data with [`anlz_entpep()`](https://tbep-tech.github.io/pepreporting/reference/anlz_entpep.html)
 * This creates a count of exceedances in each 24 hour period for each year and each beach
 --
 
@@ -559,6 +559,7 @@ class: left, top
 
 * Pathogens vignette: [link](https://tbep-tech.github.io/pepreporting/articles/pathogens.html)
 * Dissolved oxygen vignette: [link](https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html)
+* Package overview vignette: [link](https://tbep-tech.github.io/pepreporting/articles/Introduction.html)
 * `pepreporting` package website: [link](https://tbep-tech.github.io/pepreporting/)
 * `pepreporting` GitHub source: [link](https://github.com/tbep-tech/pepreporting)
 
