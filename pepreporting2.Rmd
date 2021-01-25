@@ -248,9 +248,16 @@ class: left, top
 ]
 
 * 28 swimming/bathing beaches in the Peconic Estuary
+--
+
 * *Enterococcus* concentrations monitored by SCDHS
+--
+
 * Beaches are closed if concentrations are high
+--
+
 * Data can be summarized to understand __relative risk__ of exposure
+--
 
 .center[
 <https://tbep-tech.github.io/pepreporting/articles/pathogens.html>
@@ -297,9 +304,11 @@ class: left, top
 
 * Summarize the data with [`anlz_pepent()`](https://tbep-tech.github.io/pepreporting/reference/anlz_pepent.html)
 * This creates a count of exceedances in each 24 hour period for each year and each beach
+--
 
 ```{r, echo = T}
-anlz_entpep(entdat)
+entsum <- anlz_entpep(entdat)
+head(entsum)
 ```
 
 ---
@@ -325,8 +334,14 @@ class: left, top
 ]
 
 * This plot communicates exposure risk, NOT beach closures
+--
+
 * Exceedances based on concentrations above 104 cfu/100 mL
+--
+
 * Color categories based on zero (green), one (yellow), and two or more (red)
+--
+
 * We can change this...
 
 ---
@@ -352,8 +367,13 @@ class: left, top
 ]
 
 * Two continuous USGS monitoring stations in Peconic Estuary
+--
+
 * Peconic River (01304562) and Orient Harbor (01304200)
+--
+
 * Data can be summarized to understand hypoxia frequency/duration
+--
 
 .center[
 <https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html>
@@ -434,6 +454,8 @@ class: left, top
 ]
 
 * DO data have diurnal and seasonal variation, how can we summarize this to quantify hypoxia stress?
+--
+
 * Hypoxia can have both acute and chronic impacts, how can we summarize the DO data to express magnitude and duration of hypoxia?
 
 ---
@@ -445,11 +467,12 @@ class: left, top
 ]
 
 * Summarize the data with [`anlz_domopep()`](https://tbep-tech.github.io/pepreporting/reference/anlz_domopep.html)
-* Gets the following for each month:
+--
 
-   1. Mean daily DO
-   1. Proportion of days with low DO (magnitude)
-   1. max run of days with low DO (duration)
+* Gets the following for each month:
+     * Mean daily DO
+     * Proportion of days with low DO (magnitude)
+     * Max run of days with low DO (duration)
 
 ---
 
@@ -516,8 +539,14 @@ class: left, top
 ]
 
 * The summaries show relative hypoxia stress between locations, with stress quantified as magnitude or duration
+--
+
 * What is the relevance of the threshold to a meaningful endpoint? 
+--
+
 * Are there breakpoints we need to consider?
+--
+
 * What can we reasonably say about the spatial extent of hypoxia? 
 
 ---
