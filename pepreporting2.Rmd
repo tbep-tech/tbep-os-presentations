@@ -81,7 +81,7 @@ class: center, top
 ## `pepreporting` R PACKAGE
 
 ```{r, out.width = '90%'}
-knitr::include_graphics('figure/pepfuncs2.PNG')
+knitr::include_graphics('figure/pepfuncs2.png')
 ```
 
 ---
@@ -260,7 +260,7 @@ class: left, top
 --
 
 .center[
-<https://tbep-tech.github.io/pepreporting/articles/pathogens.html>
+.footnote[[https://tbep-tech.github.io/pepreporting/articles/pathogens.html](https://tbep-tech.github.io/pepreporting/articles/pathogens.html)]
 ]
 
 ---
@@ -376,7 +376,7 @@ class: left, top
 --
 
 .center[
-<https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html>
+.footnote[[https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html](https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html)]
 ]
 
 ---
