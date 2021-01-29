@@ -411,14 +411,14 @@ toplo <- dodat %>% filter(site %in% 'Peconic River')
 ggplot(toplo, aes(x = DateTime, y = do_mgl)) + 
   geom_point(size = 0.5) + 
   geom_hline(yintercept = 4.8, linetype = 'dashed', colour = 'red') + 
-  geom_hline(yintercept = 2.3, linetype = 'dashed', colour = 'red') +
+  geom_hline(yintercept = 3, linetype = 'dashed', colour = 'red') +
   scale_y_continuous(limits = c(0, 18)) +
   theme_minimal() + 
   labs(
     y = 'Dissolved oxygen (mg/L)', 
     x = NULL, 
     title = 'Dissolved oxygen time series at Peconic River', 
-    subtitle = 'Dashed lines are chronic and acute threhsolds (4.8, 2.3 mg/L)'
+    subtitle = 'Dashed lines are chronic and acute threhsolds (4.8, 3 mg/L)'
   )
 ```
 
@@ -434,14 +434,14 @@ toplo <- dodat %>% filter(site %in% 'Orient Harbor')
 ggplot(toplo, aes(x = DateTime, y = do_mgl)) + 
   geom_point(size = 0.5) + 
   geom_hline(yintercept = 4.8, linetype = 'dashed', colour = 'red') + 
-  geom_hline(yintercept = 2.3, linetype = 'dashed', colour = 'red') +
+  geom_hline(yintercept = 3, linetype = 'dashed', colour = 'red') +
   scale_y_continuous(limits = c(0, 18)) +
   theme_minimal() + 
   labs(
     y = 'Dissolved oxygen (mg/L)', 
     x = NULL, 
     title = 'Dissolved oxygen time series at Orient Harbor', 
-    subtitle = 'Dashed lines are chronic and acute threhsolds (4.8, 2.3 mg/L)'
+    subtitle = 'Dashed lines are chronic and acute threhsolds (4.8, 3 mg/L)'
   )
 ```
 
@@ -485,7 +485,7 @@ class: left, top
 * Summarize the data with [`anlz_domopep()`](https://tbep-tech.github.io/pepreporting/reference/anlz_domopep.html)
 
 ```{r, echo = T}
-anlz_domopep(dodat, thr = 2.3)
+anlz_domopep(dodat, thr = 3)
 ```
 
 ---
@@ -499,7 +499,7 @@ class: left, top
 * Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/pepreporting/reference/show_domatrix.html)
 
 ```{r, echo = T, fig.height = 4, fig.width = 9}
-show_domatrix(dodat, thr = 2.3, show = 'below_ave')
+show_domatrix(dodat, thr = 3, show = 'below_ave')
 ```
 
 ---
@@ -513,7 +513,7 @@ class: left, top
 * Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/pepreporting/reference/show_domatrix.html)
 
 ```{r, echo = T, fig.height = 4, fig.width = 9}
-show_domatrix(dodat, thr = 2.3, show = 'below_maxrun')
+show_domatrix(dodat, thr = 3, show = 'below_maxrun')
 ```
 
 ---
