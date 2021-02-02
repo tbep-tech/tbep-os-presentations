@@ -146,9 +146,7 @@ class: top, left
 ## 2021 TRAINING
 ]
 
-* Feb 9th Shiny training - FWRI R club
+* Feb 9th [Shiny training](https://tbep-tech.github.io/tbep-r-training/shiny.html) - FWRI R club
 * March [NERRS R trainings](https://tbep-tech.github.io/ecometab-r-training/) - open invite
---
-
 * BASIS workshop Oct. 2021
 * CERF workshop Nov. 2021
