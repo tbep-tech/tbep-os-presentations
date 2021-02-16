@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Open source water quality reporting tools for the PEP Monitoring Collaborative</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Marcus Beck \bullet @fawda123 \bullet #TampaBayOpensci" />
+    <meta name="date" content="2020-10-19" />
+    <link href="libs/anchor-sections-1.0/anchor-sections.css" rel="stylesheet" />
+    <script src="libs/anchor-sections-1.0/anchor-sections.js"></script>
+    <script src="libs/htmlwidgets-1.5.3/htmlwidgets.js"></script>
+    <script src="libs/jquery-3.5.1/jquery.min.js"></script>
+    <link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-1.3.1/leaflet.js"></script>
+    <link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+    <script src="libs/proj4-2.6.2/proj4.min.js"></script>
+    <script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+    <link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+    <script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+    <script src="libs/leaflet-providers-plugin-2.0.4.1/leaflet-providers-plugin.js"></script>
+    <link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+    <script src="libs/HomeButton-0.0.1/home-button.js"></script>
+    <script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+    <script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+    <link href="libs/PopupTable-0.0.1/popup.css" rel="stylesheet" />
+    <script src="libs/core-js-2.5.3/shim.min.js"></script>
+    <script src="libs/react-16.12.0/react.min.js"></script>
+    <script src="libs/react-16.12.0/react-dom.min.js"></script>
+    <script src="libs/reactwidget-1.0.0/react-tools.js"></script>
+    <script src="libs/reactable-binding-0.2.3/reactable.js"></script>
+    <script src="libs/plotly-binding-4.9.3/plotly.js"></script>
+    <script src="libs/typedarray-0.1/typedarray.min.js"></script>
+    <link href="libs/crosstalk-1.1.1/css/crosstalk.css" rel="stylesheet" />
+    <script src="libs/crosstalk-1.1.1/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css-1.57.1/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main-1.57.1/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="styles3.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Open source water quality reporting tools for the PEP Monitoring Collaborative
+### <a href="mailto:mbeck@tbep.org">Dr. Marcus Beck</a> <span class="math inline">•</span> <a href="https://twitter.com/fawda123">@fawda123</a> <span class="math inline">•</span> <a href="https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click">#TampaBayOpensci</a>
+### Tampa Bay Estuary Program
+### 10/19/2020
+
+---
+
+
+
+
+class: left, top
+
+.center[
+## AGENDA FOR TODAY
+]
+
+1. Overview of open science philosophy
+
+1. Application to TBEP and partner reporting products
+
+1. Tech transfer to other NEPs
+
+1. PEP reporting tools: `peptools` R package
+
+1. Discussion, next steps
+
+---
+
+class: left, top
+
+.center[
+## GOALS FOR TODAY
+]
+
+1. Vibe check: do we like these approaches? 
+
+1. Are there additional tools to add? 
+
+1. How could the Monitoring Collaborative use these tools? 
+
+--
+
+&lt;h3 style="text-align: center;"&gt;
+We are not revisiting past decisions, but understanding how the tools use these decisions and could be used to answer future questions!
+&lt;/h3&gt;
+
+---
+
+class: middle, center
+
+# Open Science: why, what, and how
+
+---
+
+class: middle, center
+
+## The research-management divide
+
+&lt;img src="figure/divide2.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle, center
+
+&lt;img src="figure/michener.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+.footnote[[Michener et al. 1997 Ecol. App. 7(1):330-342.](https://www.researchgate.net/publication/246959596_Nongeospatial_Metadata_for_the_Ecological_Sciences)]
+
+---
+
+class: middle, center
+
+## Open science can bridge this divide
+
+&lt;img src="figure/bridge.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: middle, center
+
+&lt;img src="figure/fiveschools.PNG" width="85%" style="display: block; margin: auto;" /&gt;
+
+.footnote[[Fecher and Friesike 2014. Opening Science, Springer.](https://doi.org/10.1007/978-3-319-00026-8_2)]
+
+---
+
+class: middle, center
+
+### The practice of science in such a way that others can **collaborate** and **contribute**, where research data, lab notes and other research processes are **freely available**, under terms that enable **reuse**, **redistribution** and **reproduction** of the research and its underlying data and methods
+
+.footnote[Open Knowledge International, [http://opendefinition.org/](http://opendefinition.org/), [https://creativecommons.org/](https://creativecommons.org/about/program-areas/open-science/)]
+
+--
+
+### Data are __F__indable, __A__ccessible, __I__nteroperable, and __R__esuable
+
+.footnote[[Wilkinson et al. 2016 Nature 3:160018](https://doi.org/10.1038/sdata.2016.18)]
+
+---
+class: top, center
+
+## OPEN SCIENCE AT TBEP
+
+.pull-left[
+&lt;img src="figure/wqstatic1.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+.pull-right[
+&lt;img src="figure/wqstatic2.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+]
+
+---
+
+class: top, center
+
+## THE OLD WAY
+
+&lt;img src="figure/badflow2.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: top, center
+
+## THE NEW WAY
+
+&lt;img src="figure/flow3.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: left, top
+
+.center[
+## `TBEPTOOLS` R PACKAGE
+]
+
+* Import raw data, estimate indicators, and report outcomes
+* Foundational methods for indicator reporting
+* Freely available on GitHub for anyone to view source code, download for use, and make requests for additions
+
+&lt;img src="figure/tbeptoolshex.png" width="20%" style="display: block; margin: auto;" /&gt;
+ 
+---
+
+class: top, center
+
+## WEBSITE
+
+&lt;img src="figure/tbeptools.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+
+[https://tbep-tech.github.io/tbeptools/](https://tbep-tech.github.io/tbeptools)
+
+---
+class: top, center
+
+## FUNCTION REFERENCES
+
+&lt;img src="figure/tbeptoolsref.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: top, center
+
+## DOCUMENTATION
+
+&lt;img src="figure/tbeptoolsdoc.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: top, center
+
+## VIGNETTES
+
+&lt;img src="figure/tbeptoolsvig.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: top, center
+
+## SOURCE CODE
+
+&lt;img src="figure/tbeptoolssrc.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, left
+
+.center[
+## IT'S SUPER SIMPLE...
+]
+
+
+```r
+library(tbeptools)
+xlsx &lt;- 'data/2019_Results_updated.xls'
+ecpdata &lt;- read_importwq(xlsx)
+show_thrplot(epcdata, bay_segment = "OTB", thr = "chla")
+```
+
+&lt;img src="peptools_files/figure-html/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: left, top
+
+.center[
+## TECH TRANSFER
+]
+
+&lt;img src="figure/repetitive.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: left, top
+
+.center[
+## TECH TRANSFER
+]
+
+* No need to reinvent the wheel!
+--
+
+* Leverage other methods (technical foundation) AND tools (analysis workflows) using FAIR principles
+--
+
+* Increase collaboration among NEPs, we are a community that should be open and learn from each other 
+
+---
+
+class: center, top
+
+## `peptools` R PACKAGE
+
+&lt;img src="figure/pepintro.PNG" width="100%" style="display: block; margin: auto;" /&gt;
+
+.footenote[[https://tbep-tech.github.io/peptools/](https://tbep-tech.github.io/peptools/)]
+
+---
+
+class: center, top
+
+## `peptools` R PACKAGE
+
+&lt;img src="figure/pepfuncs.PNG" width="90%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: left, top
+
+.center[
+## PAST DECISIONS
+]
+
+* Consider existing LTM datasets that can be used to assess progress in attaining CCMP goals (*Goal: Clean Waters*)
+--
+
+* Spatial divisions of Peconic Estuary for applying numeric thresholds
+--
+
+* Relevant thresholds and how to quantify (median vs. mean)
+
+--
+* Stoplight graphic for public-facing documents, update annually
+
+---
+
+class: left, top
+
+.center[
+## IT'S SUPER SIMPLE...
+]
+
+
+```r
+library(peptools)
+dat &lt;- read_pepwq('data/currentdata.xlsx')
+show_thrpep(dat, bay_segment = "Western", param = "chla")
+```
+
+&lt;img src="peptools_files/figure-html/unnamed-chunk-20-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: left, top
+
+.center[
+## EXISTING DATA
+]
+
+
+```r
+locs &lt;- st_as_sf(pepstations, coords = c('Longitude', 'Latitude'), crs = 4326)
+mapview(locs, zcol = 'bay_segment', layer.name = 'Bay segment')
+```
+
+<div id="htmlwidget-424fd358a41599ca7c1b" style="width:100%;height:400px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-424fd358a41599ca7c1b">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["CartoDB.Positron",1,"CartoDB.Positron",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["CartoDB.DarkMatter",2,"CartoDB.DarkMatter",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["OpenStreetMap",3,"OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["Esri.WorldImagery",4,"Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["OpenTopoMap",5,"OpenTopoMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"createMapPane","args":["point",440]},{"method":"addCircleMarkers","args":[[40.917283,40.917,40.9176,40.91776,40.918183,40.917933,40.924067,40.921667,40.92935,40.913883,40.938333,40.922783,40.943617,40.936383,40.900217,40.911667,41.00195,41.008883,40.975833,40.942783,40.955267,41.027717,41.052717,41.059117,40.9941,40.99625,41.05,41.076383,41.082217,41.013333,41.045283,41.063583,41.0055,41.00778,41.106267,41.077983,41.010367,41.0275,41.1144,41.081383,41.13445,41.02055,41.098017,41.025,41.010283,41.064167],[-72.655567,-72.65115,-72.645583,-72.63891,-72.639241,-72.631917,-72.63225,-72.61945,-72.6199,-72.615,-72.618617,-72.587217,-72.570833,-72.512217,-72.459083,-72.443617,-72.460283,-72.460283,-72.42945,-72.414717,-72.399483,-72.433367,-72.414,-72.414233,-72.367833,-72.349817,-72.376667,-72.40055,-72.4025,-72.34445,-72.347217,-72.359317,-72.3074,-72.2955,-72.354867,-72.311617,-72.252517,-72.26,-72.317483,-72.27305,-72.271383,-72.18195,-72.203667,-72.139167,-72.054167,-71.927783],6,null,"Bay segment",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"point","stroke":true,"color":"#333333","weight":2,"opacity":[0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9,0.9],"fill":true,"fillColor":["#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#440154","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#21908C","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725","#FDE725"],"fillOpacity":[0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6]},null,null,["<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>1&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60280&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>2&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60275&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>3&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60270&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>4&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60265&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>5&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60266&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>6&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60260&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>7&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60250&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Sawmill Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>8&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60240&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River Mouth&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>9&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60230&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Terrys Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>10&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60210&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Reeves Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>11&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60220&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Meetinghouse Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>12&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60170&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Flanders Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>13&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60101&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>East Creek (South Jamesport)&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>14&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60130&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Great Peconic Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>15&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60290&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Cold Spring Pond&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>16&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60148&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Bullhead Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>17&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60102&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Cutchogue Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>18&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60103&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>East Creek (Cutchogue)&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>19&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60113&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Little Peconic Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>20&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60104&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>North Sea Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>21&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60300&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Wooley Pond&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>22&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60105&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Hog Neck Bay North&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>23&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60106&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Goose Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>24&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60107&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Town Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>25&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60310&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Noyac Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>26&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60320&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Mill Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>27&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60114&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Paradise Point&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>28&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60109&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Mill Creek (Hashamomuck Pond)&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>29&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60340&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Hashamomuck Pond 1&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>30&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60121&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Noyac Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>31&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60124&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>West Neck Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>32&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60119&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>West Neck Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>33&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60127&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Sag Harbor Cove&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>34&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60126&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Sag Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>35&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60111&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Greenport Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>36&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60122&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Coecles Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>37&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60131&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Northwest Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>38&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60118&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Northwest Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>39&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60115&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Orient Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>40&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60116&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Gardiner's Bay West&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>41&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60330&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Hallocks Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>42&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60132&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Three Mile Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>43&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60137&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Gardiner's Bay Central&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>44&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60133&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Acabonac Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>45&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60134&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Napeague Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>46&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60135&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Lake Montauk&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>"],{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["Western","Western","Western","Western","Western","Western","Western","Western","Western","Western","Western","Western","Western","Western","Western","Western","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Central","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern","Eastern"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addHomeButton","args":[-72.655567,40.900217,-71.927783,41.13445,"Bay segment","Zoom to Bay segment","<strong> Bay segment <\/strong>","bottomright"]},{"method":"addLayersControl","args":[["CartoDB.Positron","CartoDB.DarkMatter","OpenStreetMap","Esri.WorldImagery","OpenTopoMap"],"Bay segment",{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"addLegend","args":[{"colors":["#440154","#21908C","#FDE725"],"labels":["Central","Eastern","Western"],"na_color":null,"na_label":"NA","opacity":1,"position":"topright","type":"factor","title":"Bay segment","extra":null,"layerId":null,"className":"info legend","group":"Bay segment"}]}],"limits":{"lat":[40.900217,41.13445],"lng":[-72.655567,-71.927783]}},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\n      'position': 'relative',\n      'bottomleft':  '0px',\n      'background-color': 'rgba(255, 255, 255, 0.7)',\n      'box-shadow': '0 0 2px #bbb',\n      'background-clip': 'padding-box',\n      'margin': '0',\n      'padding-left': '5px',\n      'color': '#333',\n      'font': '9px/1.5 \"Helvetica Neue\", Arial, Helvetica, sans-serif',\n      'z-index': '700',\n      });\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+
+---
+
+class: left, top
+
+.center[
+## EXISTING DATA
+]
+
+
+```r
+show_sitemappep(dat, yrsel = 2019, param = 'sd')
+```
+
+<div id="htmlwidget-4e8591c442c78c89cad8" style="width:100%;height:400px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-4e8591c442c78c89cad8">{"x":{"options":{"minZoom":1,"maxZoom":52,"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"preferCanvas":false,"bounceAtZoomLimits":false,"maxBounds":[[[-90,-370]],[[90,370]]]},"calls":[{"method":"addProviderTiles","args":["CartoDB.Positron",1,"CartoDB.Positron",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["CartoDB.DarkMatter",2,"CartoDB.DarkMatter",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["OpenStreetMap",3,"OpenStreetMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["Esri.WorldImagery",4,"Esri.WorldImagery",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addProviderTiles","args":["OpenTopoMap",5,"OpenTopoMap",{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"createMapPane","args":["point",440]},{"method":"addCircleMarkers","args":[[40.917283,40.917,40.9176,40.91776,40.917933,40.924067,40.921667,40.92935,40.913883,40.938333,40.922783,40.936383,40.900217,41.00195,41.008883,40.975833,40.942783,40.955267,41.027717,41.052717,41.059117,40.9941,40.99625,41.05,41.082217,41.013333,41.045283,41.063583,41.00778,41.106267,41.077983,41.010367,41.0275,41.1144,41.081383,41.13445,41.02055,41.098017,41.025],[-72.655567,-72.65115,-72.645583,-72.63891,-72.631917,-72.63225,-72.61945,-72.6199,-72.615,-72.618617,-72.587217,-72.512217,-72.459083,-72.460283,-72.460283,-72.42945,-72.414717,-72.399483,-72.433367,-72.414,-72.414233,-72.367833,-72.349817,-72.376667,-72.4025,-72.34445,-72.347217,-72.359317,-72.2955,-72.354867,-72.311617,-72.252517,-72.26,-72.317483,-72.27305,-72.271383,-72.18195,-72.203667,-72.139167],6,null,"locs",{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}},"pane":"point","stroke":true,"color":"#333333","weight":2,"opacity":0.9,"fill":true,"fillColor":"#6666FF","fillOpacity":0.6},null,null,["<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>1&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60280&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 2.25&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 2.25&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>16.59375&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>2&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60275&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 2.25&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 2.25&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>16.59375&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>3&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60270&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 2.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 2.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>17.00000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>4&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60265&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 2.25&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 2.25&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>16.59375&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>5&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60260&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 3.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 3.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>15.37500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>6&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60250&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Sawmill Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 4.50&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 4.50&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>12.93750&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>7&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60240&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Peconic River Mouth&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 4.25&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 4.25&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>13.34375&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>8&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60230&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Terrys Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.50000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>9&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60210&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Reeves Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 8.87500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>10&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60220&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Meetinghouse Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 5.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 5.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>12.12500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>11&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60170&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Flanders Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 5.75&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 5.75&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.90625&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>12&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60130&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Great Peconic Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.75&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.75&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 9.28125&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>13&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60290&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Cold Spring Pond&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Western&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.50000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>14&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60102&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Cutchogue Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.50&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.50&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 9.68750&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>15&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60103&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>East Creek (Cutchogue)&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.50000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>16&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60113&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Little Peconic Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 4.00000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>17&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60104&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>North Sea Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.50000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>18&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60300&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Wooley Pond&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 8.87500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>19&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60105&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Hog Neck Bay North&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 4.00000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>20&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60106&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Goose Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 5.50&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 5.50&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>11.31250&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>21&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60107&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Town Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 8.87500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>22&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60310&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Noyac Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.50000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>23&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60320&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Mill Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 7.25000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>24&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60114&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Paradise Point&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 4.00000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>25&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60340&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Hashamomuck Pond 1&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.50000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>26&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60121&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Noyac Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 4.00000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>27&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60124&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>West Neck Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 4.00000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>28&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60119&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>West Neck Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Central&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td>10.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 4.00000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>29&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60126&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Sag Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 7.25000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>30&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60111&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Greenport Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 7.25000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>31&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60122&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Coecles Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 9.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 9.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 5.62500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>32&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60131&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Northwest Creek&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 7.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 8.87500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>33&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60118&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Northwest Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 9.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 9.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 5.62500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>34&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60115&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Orient Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 7.75&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 7.75&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 7.65625&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>35&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60116&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Gardiner's Bay West&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 7.25000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>36&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60330&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Hallocks Bay&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 6.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td>10.50000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>37&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60132&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Three Mile Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 9.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 9.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 5.62500&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>38&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60137&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Gardiner's Bay Central&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 8.50&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 8.50&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 6.43750&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>","<div class='scrollableContainer'><table class= id='popup'><tr class='coord'><td><\/td><th><b>Feature ID&emsp;<\/b><\/th><td>39&emsp;<\/td><\/tr><tr><td>1<\/td><th>BayStation&emsp;<\/th><td>60133&emsp;<\/td><\/tr><tr><td>2<\/td><th>StationName&emsp;<\/th><td>Acabonac Harbor&emsp;<\/td><\/tr><tr><td>3<\/td><th>bay_segment&emsp;<\/th><td>Eastern&emsp;<\/td><\/tr><tr><td>4<\/td><th>yr&emsp;<\/th><td>2019&emsp;<\/td><\/tr><tr><td>5<\/td><th>val&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>6<\/td><th>val2&emsp;<\/th><td> 8.00&emsp;<\/td><\/tr><tr><td>7<\/td><th>cexs&emsp;<\/th><td> 7.25000&emsp;<\/td><\/tr><tr><td>8<\/td><th>geometry&emsp;<\/th><td>sfc_POINT&emsp;<\/td><\/tr><\/table><\/div>"],{"maxWidth":800,"minWidth":50,"autoPan":true,"keepInView":false,"closeButton":true,"closeOnClick":true,"className":""},["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addScaleBar","args":[{"maxWidth":100,"metric":true,"imperial":true,"updateWhenIdle":true,"position":"bottomleft"}]},{"method":"addLayersControl","args":[["CartoDB.Positron","CartoDB.DarkMatter","OpenStreetMap","Esri.WorldImagery","OpenTopoMap"],"locs",{"collapsed":true,"autoZIndex":true,"position":"topleft"}]},{"method":"clearMarkers","args":[]},{"method":"addCircleMarkers","args":[[40.917283,40.917,40.9176,40.91776,40.917933,40.924067,40.921667,40.92935,40.913883,40.938333,40.922783,40.936383,40.900217,41.00195,41.008883,40.975833,40.942783,40.955267,41.027717,41.052717,41.059117,40.9941,40.99625,41.05,41.082217,41.013333,41.045283,41.063583,41.00778,41.106267,41.077983,41.010367,41.0275,41.1144,41.081383,41.13445,41.02055,41.098017,41.025],[-72.655567,-72.65115,-72.645583,-72.63891,-72.631917,-72.63225,-72.61945,-72.6199,-72.615,-72.618617,-72.587217,-72.512217,-72.459083,-72.460283,-72.460283,-72.42945,-72.414717,-72.399483,-72.433367,-72.414,-72.414233,-72.367833,-72.349817,-72.376667,-72.4025,-72.34445,-72.347217,-72.359317,-72.2955,-72.354867,-72.311617,-72.252517,-72.26,-72.317483,-72.27305,-72.271383,-72.18195,-72.203667,-72.139167],[16.59375,16.59375,17,16.59375,15.375,12.9375,13.34375,10.5,8.875,12.125,10.90625,9.28125,10.5,9.6875,10.5,4,10.5,8.875,4,11.3125,8.875,10.5,7.25,4,10.5,4,4,4,7.25,7.25,5.625,8.875,5.625,7.65625,7.25,10.5,5.625,6.4375,7.25],null,null,{"interactive":true,"className":"","stroke":true,"color":"black","weight":1,"opacity":0.5,"fill":true,"fillColor":["#B41427","#B41427","#A50026","#B41427","#DE422E","#FEB467","#FCA25B","#FFFFBF","#D3ECF4","#FED484","#FFF5B0","#E2F4F4","#FFFFBF","#EDF7E3","#FFFFBF","#313695","#FFFFBF","#D3ECF4","#313695","#FFECA2","#D3ECF4","#FFFFBF","#90C3DD","#313695","#FFFFBF","#313695","#313695","#313695","#90C3DD","#90C3DD","#5283BB","#D3ECF4","#5283BB","#A1D1E4","#90C3DD","#FFFFBF","#5283BB","#6FA6CD","#90C3DD"],"fillOpacity":0.8},null,null,null,null,["Bay station  60280 ,  secchi (ft)   2.25","Bay station  60275 ,  secchi (ft)   2.25","Bay station  60270 ,  secchi (ft)   2","Bay station  60265 ,  secchi (ft)   2.25","Bay station  60260 ,  secchi (ft)   3","Bay station  60250 ,  secchi (ft)   4.5","Bay station  60240 ,  secchi (ft)   4.25","Bay station  60230 ,  secchi (ft)   6","Bay station  60210 ,  secchi (ft)   7","Bay station  60220 ,  secchi (ft)   5","Bay station  60170 ,  secchi (ft)   5.75","Bay station  60130 ,  secchi (ft)   6.75","Bay station  60290 ,  secchi (ft)   6","Bay station  60102 ,  secchi (ft)   6.5","Bay station  60103 ,  secchi (ft)   6","Bay station  60113 ,  secchi (ft)   10","Bay station  60104 ,  secchi (ft)   6","Bay station  60300 ,  secchi (ft)   7","Bay station  60105 ,  secchi (ft)   10","Bay station  60106 ,  secchi (ft)   5.5","Bay station  60107 ,  secchi (ft)   7","Bay station  60310 ,  secchi (ft)   6","Bay station  60320 ,  secchi (ft)   8","Bay station  60114 ,  secchi (ft)   10","Bay station  60340 ,  secchi (ft)   6","Bay station  60121 ,  secchi (ft)   10","Bay station  60124 ,  secchi (ft)   10","Bay station  60119 ,  secchi (ft)   10","Bay station  60126 ,  secchi (ft)   8","Bay station  60111 ,  secchi (ft)   8","Bay station  60122 ,  secchi (ft)   9","Bay station  60131 ,  secchi (ft)   7","Bay station  60118 ,  secchi (ft)   9","Bay station  60115 ,  secchi (ft)   7.75","Bay station  60116 ,  secchi (ft)   8","Bay station  60330 ,  secchi (ft)   6","Bay station  60132 ,  secchi (ft)   9","Bay station  60137 ,  secchi (ft)   8.5","Bay station  60133 ,  secchi (ft)   8"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLegend","args":[{"colors":["#A50026 , #A50026 0%, #DE422E 12.5%, #F98F52 25%, #FED484 37.5%, #FFFFBF 50%, #D3ECF4 62.5%, #90C3DD 75%, #5283BB 87.5%, #313695 100%, #313695 "],"labels":["2","3","4","5","6","7","8","9","10"],"na_color":null,"na_label":"NA","opacity":0.5,"position":"bottomright","type":"numeric","title":"2019 secchi (ft)","extra":{"p_1":0,"p_n":1},"layerId":null,"className":"info legend","group":null}]}],"limits":{"lat":[40.900217,41.13445],"lng":[-72.655567,-72.139167]}},"evals":[],"jsHooks":{"render":[{"code":"function(el, x, data) {\n  return (\n      function(el, x, data) {\n      // get the leaflet map\n      var map = this; //HTMLWidgets.find('#' + el.id);\n      // we need a new div element because we have to handle\n      // the mouseover output separately\n      // debugger;\n      function addElement () {\n      // generate new div Element\n      var newDiv = $(document.createElement('div'));\n      // append at end of leaflet htmlwidget container\n      $(el).append(newDiv);\n      //provide ID and style\n      newDiv.addClass('lnlt');\n      newDiv.css({\n      'position': 'relative',\n      'bottomleft':  '0px',\n      'background-color': 'rgba(255, 255, 255, 0.7)',\n      'box-shadow': '0 0 2px #bbb',\n      'background-clip': 'padding-box',\n      'margin': '0',\n      'padding-left': '5px',\n      'color': '#333',\n      'font': '9px/1.5 \"Helvetica Neue\", Arial, Helvetica, sans-serif',\n      'z-index': '700',\n      });\n      return newDiv;\n      }\n\n\n      // check for already existing lnlt class to not duplicate\n      var lnlt = $(el).find('.lnlt');\n\n      if(!lnlt.length) {\n      lnlt = addElement();\n\n      // grab the special div we generated in the beginning\n      // and put the mousmove output there\n\n      map.on('mousemove', function (e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                           ' lon: ' + (e.latlng.lng).toFixed(5) +\n                           ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                           ' | zoom: ' + map.getZoom() +\n                           ' | x: ' + L.CRS.EPSG3857.project(e.latlng).x.toFixed(0) +\n                           ' | y: ' + L.CRS.EPSG3857.project(e.latlng).y.toFixed(0) +\n                           ' | epsg: 3857 ' +\n                           ' | proj4: +proj=merc +a=6378137 +b=6378137 +lat_ts=0.0 +lon_0=0.0 +x_0=0.0 +y_0=0 +k=1.0 +units=m +nadgrids=@null +no_defs ');\n      } else {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      }\n      });\n\n      // remove the lnlt div when mouse leaves map\n      map.on('mouseout', function (e) {\n      var strip = document.querySelector('.lnlt');\n      if( strip !==null) strip.remove();\n      });\n\n      };\n\n      //$(el).keypress(67, function(e) {\n      map.on('preclick', function(e) {\n      if (e.originalEvent.ctrlKey) {\n      if (document.querySelector('.lnlt') === null) lnlt = addElement();\n      lnlt.text(\n                      ' lon: ' + (e.latlng.lng).toFixed(5) +\n                      ' | lat: ' + (e.latlng.lat).toFixed(5) +\n                      ' | zoom: ' + map.getZoom() + ' ');\n      var txt = document.querySelector('.lnlt').textContent;\n      console.log(txt);\n      //txt.innerText.focus();\n      //txt.select();\n      setClipboardText('\"' + txt + '\"');\n      }\n      });\n\n      }\n      ).call(this.getMap(), el, x, data);\n}","data":null}]}}</script>
+
+---
+
+class: left, top
+
+.center[
+## ESTIMATE SEGMENT MEDIANS
+]
+
+* All segment annual values based on medians, account for censored data (secchi on bottom)
+
+
+```r
+medpep &lt;- anlz_medpep(dat)
+medpep$ann
+```
+
+```
+## # A tibble: 792 x 5
+##    bay_segment    yr   val est    var  
+##    &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;
+##  1 Western      2019  3.03 lwr.ci chla 
+##  2 Western      2019  4.22 medv   chla 
+##  3 Western      2019  6.26 upr.ci chla 
+##  4 Western      2018  3.89 lwr.ci chla 
+##  5 Western      2018  4.82 medv   chla 
+##  6 Western      2018  6    upr.ci chla 
+##  7 Western      2017  3.58 lwr.ci chla 
+##  8 Western      2017  5.29 medv   chla 
+##  9 Western      2017  7.04 upr.ci chla 
+## 10 Western      2016  3.14 lwr.ci chla 
+## # ... with 782 more rows
+```
+
+---
+
+.center[
+## REPORTING
+]
+
+* Provisional targets ([Suffolk Co 2019 SWP](https://suffolkcountyny.gov/Departments/Health-Services/Environmental-Quality#SubWWPlan)) for water clarity and secchi depth
+
+
+```r
+peptargets
+```
+
+```
+## # A tibble: 3 x 4
+##   bay_segment name    sd_thresh chla_thresh
+##   &lt;fct&gt;       &lt;chr&gt;       &lt;dbl&gt;       &lt;dbl&gt;
+## 1 Western     Western       6.5         5.5
+## 2 Central     Central       6.5         5.5
+## 3 Eastern     Eastern       6.5         5.5
+```
+
+---
+
+.center[
+## REPORTING
+]
+
+* Apply targets to annual medians
+
+
+```r
+anlz_attainpep(medpep)
+```
+
+```
+## # A tibble: 132 x 4
+##    bay_segment    yr chla_sd outcome
+##    &lt;fct&gt;       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  
+##  1 Western      2019 2_3     red    
+##  2 Western      2018 2_3     red    
+##  3 Western      2017 2_3     red    
+##  4 Western      2016 0_3     yellow 
+##  5 Western      2015 0_2     yellow 
+##  6 Western      2014 0_0     green  
+##  7 Western      2013 1_1     yellow 
+##  8 Western      2012 1_2     yellow 
+##  9 Western      2011 1_2     yellow 
+## 10 Western      2010 3_3     red    
+## # ... with 122 more rows
+```
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+* Jointly considers chlorophyll and water clarity endpoints
+* Annual categories depend on both a __duration__ and __magnitude__ of exceedance
+--
+
+&lt;img src="figure/outints.png" width="90%" style="display: block; margin: auto;" /&gt;
+
+.center[
+.footnote[[TBEP tech report #04-00](https://drive.google.com/file/d/1juhfptqA4R-Bq_XfW6nOhqFxJSorGkfq/view?usp=drivesdk)]
+]
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+* Jointly considers chlorophyll and water clarity endpoints
+* Annual categories depend on both a __duration__ and __magnitude__ of exceedance
+
+&lt;img src="figure/matrixcats.png" width="80%" style="display: block; margin: auto;" /&gt;
+
+.center[
+.footnote[[TBEP tech report #04-00](https://drive.google.com/file/d/1juhfptqA4R-Bq_XfW6nOhqFxJSorGkfq/view?usp=drivesdk)]
+]
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+* Translate segment water quality conditions into annual reporting categories to inform/prioritize management actions towards CCMP goals
+--
+
+* In Tampa...
+
+&lt;span style="color:#33FF3B; text-shadow: 0 0 3px #333;"&gt;__Stay the Course__&lt;/span&gt;: Continue planned projects. Report data via annual progress reports and Baywide Environmental Monitoring Report. 
+
+&lt;span style="color:#F9FF33; text-shadow: 0 0 3px #333;"&gt;__Caution__&lt;/span&gt;: Review monitoring data and nitrogen loading estimates. Begin/continue TAC and Management Board development of specific management recommendations.
+
+&lt;span style="color:#FF3333; text-shadow: 0 0 3px #333;"&gt;__On Alert__&lt;/span&gt;: Finalize development and implement appropriate management actions to get back on track.
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+
+```r
+show_matrixpep(dat, asreact = TRUE, nrows = 8)
+```
+
+<div id="htmlwidget-5d7c8e14021442a07f35" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-5d7c8e14021442a07f35">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"yr":[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"Western":["yellow","red","yellow","yellow","yellow","red","red","red","yellow","yellow","yellow","yellow","yellow","red","yellow","yellow","red","red","red","red","red","yellow","yellow","yellow","green","yellow","yellow","red","red","red"],"Central":["yellow","yellow","yellow","yellow","green","yellow","green","green","green","green","green","green","green","green","green","green","green","green","green","green","yellow","green","yellow","green","green","green","yellow","yellow","yellow","green"],"Eastern":["green","yellow","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green","green"]},"columns":[{"accessor":"yr","name":"Year","type":"numeric","style":[{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null}]},{"accessor":"Western","name":"Western","type":"character","style":[{"background":"#F9FF33"},{"background":"#FF3333"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#FF3333"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#FF3333"}]},{"accessor":"Central","name":"Central","type":"character","style":[{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"}]},{"accessor":"Eastern","name":"Eastern","type":"character","style":[{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"}]}],"defaultPageSize":8,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"00fa5d5f0593efdb159097a67669e050","key":"00fa5d5f0593efdb159097a67669e050"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+
+---
+
+class: left, top
+
+.center[
+## REPORTING
+]
+
+
+```r
+show_plotlypep(rawdat, bay_segment = 'Western')
+```
+
+<div id="htmlwidget-91989ddce842d58e1fe6" style="width:100%;height:440px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-91989ddce842d58e1fe6">{"x":{"data":[{"x":[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"y":[4,4.7,3.7,3.55,2.8,5.3,5.725,6.255,3.18,3.15,2.31,2.9224,3.0368,3.9208,3.64,3.952,3.9624,3.8116,3.7856,4.0768,6.24,3.7804,4.0404,5.125,2.98,2.47,3.12,4.22,4.05,3.98],"text":["yr: 1990<br />medv: 4.0000<br />colour: Annual Median","yr: 1991<br />medv: 4.7000<br />colour: Annual Median","yr: 1992<br />medv: 3.7000<br />colour: Annual Median","yr: 1993<br />medv: 3.5500<br />colour: Annual Median","yr: 1994<br />medv: 2.8000<br />colour: Annual Median","yr: 1995<br />medv: 5.3000<br />colour: Annual Median","yr: 1996<br />medv: 5.7250<br />colour: Annual Median","yr: 1997<br />medv: 6.2550<br />colour: Annual Median","yr: 1998<br />medv: 3.1800<br />colour: Annual Median","yr: 1999<br />medv: 3.1500<br />colour: Annual Median","yr: 2000<br />medv: 2.3100<br />colour: Annual Median","yr: 2001<br />medv: 2.9224<br />colour: Annual Median","yr: 2002<br />medv: 3.0368<br />colour: Annual Median","yr: 2003<br />medv: 3.9208<br />colour: Annual Median","yr: 2004<br />medv: 3.6400<br />colour: Annual Median","yr: 2005<br />medv: 3.9520<br />colour: Annual Median","yr: 2006<br />medv: 3.9624<br />colour: Annual Median","yr: 2007<br />medv: 3.8116<br />colour: Annual Median","yr: 2008<br />medv: 3.7856<br />colour: Annual Median","yr: 2009<br />medv: 4.0768<br />colour: Annual Median","yr: 2010<br />medv: 6.2400<br />colour: Annual Median","yr: 2011<br />medv: 3.7804<br />colour: Annual Median","yr: 2012<br />medv: 4.0404<br />colour: Annual Median","yr: 2013<br />medv: 5.1250<br />colour: Annual Median","yr: 2014<br />medv: 2.9800<br />colour: Annual Median","yr: 2015<br />medv: 2.4700<br />colour: Annual Median","yr: 2016<br />medv: 3.1200<br />colour: Annual Median","yr: 2017<br />medv: 4.2200<br />colour: Annual Median","yr: 2018<br />medv: 4.0500<br />colour: Annual Median","yr: 2019<br />medv: 3.9800<br />colour: Annual Median"],"type":"scatter","mode":"markers+lines","marker":{"autocolorscale":false,"color":"rgba(255,0,0,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,0,0,1)"}},"hoveron":"points","name":"Annual Median","legendgroup":"Annual Median","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","line":{"width":2.83464566929134,"color":"rgba(255,0,0,1)","dash":"solid"},"frame":null},{"x":[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"y":[4.1,4.75,3.65,3.55,2.975,5.4,5.76666666666667,6.26,3.28,3.1,2.345,2.9588,2.9432,4.2224,3.6712,3.9962,4.0768,3.8324,3.9988,4.524,6.4974,3.9312,4.0404,4.77,2.825,2.395,3.28,4.46,4.26,4.08],"text":["yr: 1990<br />lwr.ci: 3.5000<br />upr.ci: 4.700000<br />colour: Annual Median","yr: 1991<br />lwr.ci: 4.0000<br />upr.ci: 5.500000<br />colour: Annual Median","yr: 1992<br />lwr.ci: 3.3000<br />upr.ci: 4.000000<br />colour: Annual Median","yr: 1993<br />lwr.ci: 3.3000<br />upr.ci: 3.800000<br />colour: Annual Median","yr: 1994<br />lwr.ci: 2.6500<br />upr.ci: 3.300000<br />colour: Annual Median","yr: 1995<br />lwr.ci: 4.7000<br />upr.ci: 6.100000<br />colour: Annual Median","yr: 1996<br />lwr.ci: 5.2000<br />upr.ci: 6.333333<br />colour: Annual Median","yr: 1997<br />lwr.ci: 5.7200<br />upr.ci: 6.800000<br />colour: Annual Median","yr: 1998<br />lwr.ci: 2.8700<br />upr.ci: 3.690000<br />colour: Annual Median","yr: 1999<br />lwr.ci: 2.7200<br />upr.ci: 3.480000<br />colour: Annual Median","yr: 2000<br />lwr.ci: 1.8800<br />upr.ci: 2.810000<br />colour: Annual Median","yr: 2001<br />lwr.ci: 2.4440<br />upr.ci: 3.473600<br />colour: Annual Median","yr: 2002<br />lwr.ci: 2.6416<br />upr.ci: 3.244800<br />colour: Annual Median","yr: 2003<br />lwr.ci: 3.2968<br />upr.ci: 5.148000<br />colour: Annual Median","yr: 2004<br />lwr.ci: 2.7872<br />upr.ci: 4.555200<br />colour: Annual Median","yr: 2005<br />lwr.ci: 3.4944<br />upr.ci: 4.498000<br />colour: Annual Median","yr: 2006<br />lwr.ci: 3.4840<br />upr.ci: 4.669600<br />colour: Annual Median","yr: 2007<br />lwr.ci: 3.3124<br />upr.ci: 4.352400<br />colour: Annual Median","yr: 2008<br />lwr.ci: 3.3072<br />upr.ci: 4.690400<br />colour: Annual Median","yr: 2009<br />lwr.ci: 3.4528<br />upr.ci: 5.595200<br />colour: Annual Median","yr: 2010<br />lwr.ci: 4.5864<br />upr.ci: 8.408400<br />colour: Annual Median","yr: 2011<br />lwr.ci: 3.1720<br />upr.ci: 4.690400<br />colour: Annual Median","yr: 2012<br />lwr.ci: 3.4008<br />upr.ci: 4.680000<br />colour: Annual Median","yr: 2013<br />lwr.ci: 4.0900<br />upr.ci: 5.450000<br />colour: Annual Median","yr: 2014<br />lwr.ci: 2.4100<br />upr.ci: 3.240000<br />colour: Annual Median","yr: 2015<br />lwr.ci: 1.9400<br />upr.ci: 2.850000<br />colour: Annual Median","yr: 2016<br />lwr.ci: 2.8000<br />upr.ci: 3.760000<br />colour: Annual Median","yr: 2017<br />lwr.ci: 3.0300<br />upr.ci: 5.890000<br />colour: Annual Median","yr: 2018<br />lwr.ci: 3.4500<br />upr.ci: 5.070000<br />colour: Annual Median","yr: 2019<br />lwr.ci: 3.0300<br />upr.ci: 5.130000<br />colour: Annual Median"],"type":"scatter","mode":"lines","opacity":1,"line":{"color":"transparent"},"error_y":{"array":[0.600000000000001,0.75,0.35,0.25,0.325,0.699999999999999,0.566666666666666,0.54,0.41,0.38,0.465,0.5148,0.3016,0.925599999999999,0.884,0.5018,0.5928,0.52,0.6916,1.0712,1.911,0.7592,0.6396,0.680000000000001,0.415,0.455,0.48,1.43,0.81,1.05],"arrayminus":[0.6,0.75,0.35,0.25,0.325,0.7,0.566666666666666,0.539999999999999,0.41,0.38,0.465,0.5148,0.3016,0.9256,0.884,0.5018,0.5928,0.52,0.6916,1.0712,1.911,0.7592,0.6396,0.68,0.415,0.455,0.48,1.43,0.81,1.05],"type":"data","width":11.6240451677183,"symmetric":false,"color":"rgba(255,0,0,1)"},"name":"Annual Median","legendgroup":"Annual Median","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1989.445,2019.555],"y":[5.5,5.5],"text":"thrnum: 5.5<br />colour: Threshold","type":"scatter","mode":"lines","line":{"width":2.83464566929134,"color":"rgba(0,0,255,1)","dash":"dot"},"hoveron":"points","name":"Threshold","legendgroup":"Threshold","showlegend":true,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[2018.5,2019.5,2019.5,2018.5,2018.5,null,2017.5,2018.5,2018.5,2017.5,2017.5],"y":[2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5],"text":"Result: 0, Exceedance: none (size), NA (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,255,0,1)","hoveron":"fills","name":"green","legendgroup":"green","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2012.5,2013.5,2013.5,2012.5,2012.5,null,2011.5,2012.5,2012.5,2011.5,2011.5,null,2010.5,2011.5,2011.5,2010.5,2010.5,null,2004.5,2005.5,2005.5,2004.5,2004.5,null,2003.5,2004.5,2004.5,2003.5,2003.5,null,2002.5,2003.5,2003.5,2002.5,2002.5,null,2001.5,2002.5,2002.5,2001.5,2001.5,null,2000.5,2001.5,2001.5,2000.5,2000.5,null,1999.5,2000.5,2000.5,1999.5,1999.5,null,1998.5,1999.5,1999.5,1998.5,1998.5,null,1997.5,1998.5,1998.5,1997.5,1997.5,null,1990.5,1991.5,1991.5,1990.5,1990.5,null,1989.5,1990.5,1990.5,1989.5,1989.5],"y":[2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5],"text":"Result: 0, Exceedance: none (size), none (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,255,0,1)","hoveron":"fills","name":"green","legendgroup":"green","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2015.5,2016.5,2016.5,2015.5,2015.5,null,2014.5,2015.5,2015.5,2014.5,2014.5,null,2013.5,2014.5,2014.5,2013.5,2013.5,null,2007.5,2008.5,2008.5,2007.5,2007.5,null,2006.5,2007.5,2007.5,2006.5,2006.5,null,2005.5,2006.5,2006.5,2005.5,2005.5,null,1993.5,1994.5,1994.5,1993.5,1993.5,null,1992.5,1993.5,1993.5,1992.5,1992.5,null,1991.5,1992.5,1992.5,1991.5,1991.5,null,2013.5,2014.5,2014.5,2013.5,2013.5],"y":[2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,0.5,0.5,1.5,1.5,0.5],"text":"Result: 0, Exceedance: none (size), short (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,255,0,1)","hoveron":"fills","name":"green","legendgroup":"green","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2008.5,2009.5,2009.5,2008.5,2008.5,null,1994.5,1995.5,1995.5,1994.5,1994.5,null,2012.5,2013.5,2013.5,2012.5,2012.5],"y":[2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5,null,0.5,0.5,1.5,1.5,0.5],"text":"Result: 1, Exceedance: small (size), short (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,255,0,1)","hoveron":"fills","name":"green","legendgroup":"green","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2006.5,2007.5,2007.5,2006.5,2006.5,null,2005.5,2006.5,2006.5,2005.5,2005.5,null,1997.5,1998.5,1998.5,1997.5,1997.5],"y":[0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5],"text":"Result: 2, Exceedance: small (size), long (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,255,0,1)","hoveron":"fills","name":"green","legendgroup":"green","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2016.5,2017.5,2017.5,2016.5,2016.5],"y":[2.5,2.5,3.5,3.5,2.5],"text":"Result: 2, Exceedance: small (size), NA (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,255,0,1)","hoveron":"fills","name":"green","legendgroup":"green","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2013.5,2014.5,2014.5,2013.5,2013.5],"y":[1.5,1.5,2.5,2.5,1.5],"text":"Result: Stay the Course (chla: 0, sd: 0)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(0,255,0,1)","hoveron":"fills","name":"green","legendgroup":"green","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2009.5,2010.5,2010.5,2009.5,2009.5,null,1995.5,1996.5,1996.5,1995.5,1995.5],"y":[2.5,2.5,3.5,3.5,2.5,null,2.5,2.5,3.5,3.5,2.5],"text":"Result: 1, Exceedance: small (size), short (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1996.5,1997.5,1997.5,1996.5,1996.5,null,2011.5,2012.5,2012.5,2011.5,2011.5,null,2010.5,2011.5,2011.5,2010.5,2010.5],"y":[2.5,2.5,3.5,3.5,2.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5],"text":"Result: 2, Exceedance: large (size), short (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2014.5,2015.5,2015.5,2014.5,2014.5,null,2003.5,2004.5,2004.5,2003.5,2003.5,null,2001.5,2002.5,2002.5,2001.5,2001.5,null,2000.5,2001.5,2001.5,2000.5,2000.5,null,1998.5,1999.5,1999.5,1998.5,1998.5,null,1993.5,1994.5,1994.5,1993.5,1993.5],"y":[0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5],"text":"Result: 2, Exceedance: small (size), long (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2018.5,2019.5,2019.5,2018.5,2018.5],"y":[0.5,0.5,1.5,1.5,0.5],"text":"Result: 2, Exceedance: small (size), NA (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2015.5,2016.5,2016.5,2015.5,2015.5,null,2009.5,2010.5,2010.5,2009.5,2009.5,null,2008.5,2009.5,2009.5,2008.5,2008.5,null,2007.5,2008.5,2008.5,2007.5,2007.5,null,2004.5,2005.5,2005.5,2004.5,2004.5,null,2002.5,2003.5,2003.5,2002.5,2002.5,null,1999.5,2000.5,2000.5,1999.5,1999.5,null,1996.5,1997.5,1997.5,1996.5,1996.5,null,1995.5,1996.5,1996.5,1995.5,1995.5,null,1994.5,1995.5,1995.5,1994.5,1994.5,null,1992.5,1993.5,1993.5,1992.5,1992.5,null,1991.5,1992.5,1992.5,1991.5,1991.5,null,1990.5,1991.5,1991.5,1990.5,1990.5,null,1989.5,1990.5,1990.5,1989.5,1989.5],"y":[0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5],"text":"Result: 3, Exceedance: large (size), long (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2017.5,2018.5,2018.5,2017.5,2017.5,null,2016.5,2017.5,2017.5,2016.5,2016.5],"y":[0.5,0.5,1.5,1.5,0.5,null,0.5,0.5,1.5,1.5,0.5],"text":"Result: 3, Exceedance: large (size), NA (length)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2009.5,2010.5,2010.5,2009.5,2009.5,null,2008.5,2009.5,2009.5,2008.5,2008.5,null,1995.5,1996.5,1996.5,1995.5,1995.5,null,1994.5,1995.5,1995.5,1994.5,1994.5],"y":[1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5],"text":"Result: On Alert (chla: 1, sd: 3)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2016.5,2017.5,2017.5,2016.5,2016.5,null,1996.5,1997.5,1997.5,1996.5,1996.5],"y":[1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5],"text":"Result: On Alert (chla: 2, sd: 3)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,0,0,1)","hoveron":"fills","name":"red","legendgroup":"red","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2012.5,2013.5,2013.5,2012.5,2012.5],"y":[1.5,1.5,2.5,2.5,1.5],"text":"Result: Caution (chla: 0, sd: 1)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,255,0,1)","hoveron":"fills","name":"yellow","legendgroup":"yellow","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2018.5,2019.5,2019.5,2018.5,2018.5,null,2014.5,2015.5,2015.5,2014.5,2014.5,null,2011.5,2012.5,2012.5,2011.5,2011.5,null,2010.5,2011.5,2011.5,2010.5,2010.5,null,2006.5,2007.5,2007.5,2006.5,2006.5,null,2005.5,2006.5,2006.5,2005.5,2005.5,null,2003.5,2004.5,2004.5,2003.5,2003.5,null,2001.5,2002.5,2002.5,2001.5,2001.5,null,2000.5,2001.5,2001.5,2000.5,2000.5,null,1998.5,1999.5,1999.5,1998.5,1998.5,null,1997.5,1998.5,1998.5,1997.5,1997.5,null,1993.5,1994.5,1994.5,1993.5,1993.5],"y":[1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5],"text":"Result: Caution (chla: 0, sd: 2)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,255,0,1)","hoveron":"fills","name":"yellow","legendgroup":"yellow","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[2017.5,2018.5,2018.5,2017.5,2017.5,null,2015.5,2016.5,2016.5,2015.5,2015.5,null,2007.5,2008.5,2008.5,2007.5,2007.5,null,2004.5,2005.5,2005.5,2004.5,2004.5,null,2002.5,2003.5,2003.5,2002.5,2002.5,null,1999.5,2000.5,2000.5,1999.5,1999.5,null,1992.5,1993.5,1993.5,1992.5,1992.5,null,1991.5,1992.5,1992.5,1991.5,1991.5,null,1990.5,1991.5,1991.5,1990.5,1990.5,null,1989.5,1990.5,1990.5,1989.5,1989.5],"y":[1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5,null,1.5,1.5,2.5,2.5,1.5],"text":"Result: Caution (chla: 0, sd: 3)","type":"scatter","mode":"lines","line":{"width":0.377952755905512,"color":"rgba(0,0,0,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(255,255,0,1)","hoveron":"fills","name":"yellow","legendgroup":"yellow","showlegend":false,"xaxis":"x","yaxis":"y2","hoverinfo":"text","frame":null},{"x":[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"y":[5.5,4.5,4.75,5,6,5.5,6,6,6.5,6,5.5,6,6,5.5,6,6,7,7,6,5.5,5.25,5.5,5,7,8,6,5,5,5.5,6],"text":["yr: 1990<br />medv: 5.50<br />colour: Annual Median","yr: 1991<br />medv: 4.50<br />colour: Annual Median","yr: 1992<br />medv: 4.75<br />colour: Annual Median","yr: 1993<br />medv: 5.00<br />colour: Annual Median","yr: 1994<br />medv: 6.00<br />colour: Annual Median","yr: 1995<br />medv: 5.50<br />colour: Annual Median","yr: 1996<br />medv: 6.00<br />colour: Annual Median","yr: 1997<br />medv: 6.00<br />colour: Annual Median","yr: 1998<br />medv: 6.50<br />colour: Annual Median","yr: 1999<br />medv: 6.00<br />colour: Annual Median","yr: 2000<br />medv: 5.50<br />colour: Annual Median","yr: 2001<br />medv: 6.00<br />colour: Annual Median","yr: 2002<br />medv: 6.00<br />colour: Annual Median","yr: 2003<br />medv: 5.50<br />colour: Annual Median","yr: 2004<br />medv: 6.00<br />colour: Annual Median","yr: 2005<br />medv: 6.00<br />colour: Annual Median","yr: 2006<br />medv: 7.00<br />colour: Annual Median","yr: 2007<br />medv: 7.00<br />colour: Annual Median","yr: 2008<br />medv: 6.00<br />colour: Annual Median","yr: 2009<br />medv: 5.50<br />colour: Annual Median","yr: 2010<br />medv: 5.25<br />colour: Annual Median","yr: 2011<br />medv: 5.50<br />colour: Annual Median","yr: 2012<br />medv: 5.00<br />colour: Annual Median","yr: 2013<br />medv: 7.00<br />colour: Annual Median","yr: 2014<br />medv: 8.00<br />colour: Annual Median","yr: 2015<br />medv: 6.00<br />colour: Annual Median","yr: 2016<br />medv: 5.00<br />colour: Annual Median","yr: 2017<br />medv: 5.00<br />colour: Annual Median","yr: 2018<br />medv: 5.50<br />colour: Annual Median","yr: 2019<br />medv: 6.00<br />colour: Annual Median"],"type":"scatter","mode":"markers+lines","marker":{"autocolorscale":false,"color":"rgba(255,0,0,1)","opacity":1,"size":11.3385826771654,"symbol":"circle","line":{"width":1.88976377952756,"color":"rgba(255,0,0,1)"}},"hoveron":"points","name":"Annual Median","legendgroup":"Annual Median","showlegend":false,"xaxis":"x","yaxis":"y3","hoverinfo":"text","line":{"width":2.83464566929134,"color":"rgba(255,0,0,1)","dash":"solid"},"frame":null},{"x":[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"y":[5.75,4.75,4.625,4.875,6.5,5.5,5.875,6,6.5,6.5,5.5,6.25,6.5,5.75,6,5.5,7,7,5.75,5.5,5.5,5.5,5.25,7,8.75,6.5,5,5.25,5.5,6],"text":["yr: 1990<br />lwr.ci: 5.00<br />upr.ci:  6.5<br />colour: Annual Median","yr: 1991<br />lwr.ci: 4.00<br />upr.ci:  5.5<br />colour: Annual Median","yr: 1992<br />lwr.ci: 4.25<br />upr.ci:  5.0<br />colour: Annual Median","yr: 1993<br />lwr.ci: 4.75<br />upr.ci:  5.0<br />colour: Annual Median","yr: 1994<br />lwr.ci: 6.00<br />upr.ci:  7.0<br />colour: Annual Median","yr: 1995<br />lwr.ci: 5.00<br />upr.ci:  6.0<br />colour: Annual Median","yr: 1996<br />lwr.ci: 5.75<br />upr.ci:  6.0<br />colour: Annual Median","yr: 1997<br />lwr.ci: 5.50<br />upr.ci:  6.5<br />colour: Annual Median","yr: 1998<br />lwr.ci: 6.00<br />upr.ci:  7.0<br />colour: Annual Median","yr: 1999<br />lwr.ci: 6.00<br />upr.ci:  7.0<br />colour: Annual Median","yr: 2000<br />lwr.ci: 5.00<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2001<br />lwr.ci: 5.50<br />upr.ci:  7.0<br />colour: Annual Median","yr: 2002<br />lwr.ci: 6.00<br />upr.ci:  7.0<br />colour: Annual Median","yr: 2003<br />lwr.ci: 5.00<br />upr.ci:  6.5<br />colour: Annual Median","yr: 2004<br />lwr.ci: 5.00<br />upr.ci:  7.0<br />colour: Annual Median","yr: 2005<br />lwr.ci: 5.00<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2006<br />lwr.ci: 6.50<br />upr.ci:  7.5<br />colour: Annual Median","yr: 2007<br />lwr.ci: 6.00<br />upr.ci:  8.0<br />colour: Annual Median","yr: 2008<br />lwr.ci: 5.50<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2009<br />lwr.ci: 5.00<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2010<br />lwr.ci: 5.00<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2011<br />lwr.ci: 5.00<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2012<br />lwr.ci: 5.00<br />upr.ci:  5.5<br />colour: Annual Median","yr: 2013<br />lwr.ci: 6.00<br />upr.ci:  8.0<br />colour: Annual Median","yr: 2014<br />lwr.ci: 7.00<br />upr.ci: 10.5<br />colour: Annual Median","yr: 2015<br />lwr.ci: 6.00<br />upr.ci:  7.0<br />colour: Annual Median","yr: 2016<br />lwr.ci: 4.50<br />upr.ci:  5.5<br />colour: Annual Median","yr: 2017<br />lwr.ci: 4.50<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2018<br />lwr.ci: 5.00<br />upr.ci:  6.0<br />colour: Annual Median","yr: 2019<br />lwr.ci: 5.00<br />upr.ci:  7.0<br />colour: Annual Median"],"type":"scatter","mode":"lines","opacity":1,"line":{"color":"transparent"},"error_y":{"array":[0.75,0.75,0.375,0.125,0.5,0.5,0.125,0.5,0.5,0.5,0.5,0.75,0.5,0.75,1,0.5,0.5,1,0.25,0.5,0.5,0.5,0.25,1,1.75,0.5,0.5,0.75,0.5,1],"arrayminus":[0.75,0.75,0.375,0.125,0.5,0.5,0.125,0.5,0.5,0.5,0.5,0.75,0.5,0.75,1,0.5,0.5,1,0.25,0.5,0.5,0.5,0.25,1,1.75,0.5,0.5,0.75,0.5,1],"type":"data","width":11.6240451677183,"symmetric":false,"color":"rgba(255,0,0,1)"},"name":"Annual Median","legendgroup":"Annual Median","showlegend":false,"xaxis":"x","yaxis":"y3","hoverinfo":"text","frame":null},{"x":[1989.445,2019.555],"y":[6.5,6.5],"text":"thrnum: 6.5<br />colour: Threshold","type":"scatter","mode":"lines","line":{"width":2.83464566929134,"color":"rgba(0,0,255,1)","dash":"dot"},"hoveron":"points","name":"Threshold","legendgroup":"Threshold","showlegend":false,"xaxis":"x","yaxis":"y3","hoverinfo":"text","frame":null}],"layout":{"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[1989.445,2019.555],"tickmode":"array","ticktext":["1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019"],"tickvals":[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"categoryorder":"array","categoryarray":["1990","1991","1992","1993","1994","1995","1996","1997","1998","1999","2000","2001","2002","2003","2004","2005","2006","2007","2008","2009","2010","2011","2012","2013","2014","2015","2016","2017","2018","2019"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":9.29846409298464},"tickangle":-45,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"y3","title":{"text":"","font":{"color":null,"family":null,"size":0}},"hoverformat":".2f"},"yaxis3":{"domain":[0,0.38],"automargin":true,"type":"linear","autorange":false,"range":[3.675,10.825],"tickmode":"array","ticktext":["4","6","8","10"],"tickvals":[4,6,8,10],"categoryorder":"array","categoryarray":["4","6","8","10"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"Median Secchi (ft)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"yaxis2":{"domain":[0.42,0.58],"automargin":true,"type":"linear","autorange":false,"range":[0.5,3.5],"tickmode":"array","ticktext":["Secchi","Outcome","Chlorophyll-a"],"tickvals":[1,2,3],"categoryorder":"array","categoryarray":["Secchi","Outcome","Chlorophyll-a"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":15.9402241594022},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176,"zeroline":false,"anchor":"x","title":{"text":"","font":{"color":null,"family":null,"size":0}},"hoverformat":".2f"},"yaxis":{"domain":[0.62,1],"automargin":true,"type":"linear","autorange":false,"range":[1.55358,8.73482],"tickmode":"array","ticktext":["2","4","6","8"],"tickvals":[2,4,6,8],"categoryorder":"array","categoryarray":["2","4","6","8"],"nticks":null,"ticks":"outside","tickcolor":"rgba(51,51,51,1)","ticklen":3.65296803652968,"tickwidth":0.66417600664176,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716895},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":false,"gridcolor":null,"gridwidth":0,"zeroline":false,"anchor":"x","title":{"text":"Median Chl-a (ug/L)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187}},"hoverformat":".2f"},"annotations":[],"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0.62,"y1":1},{"type":"rect","fillcolor":"transparent","line":{"color":"rgba(51,51,51,1)","width":0.66417600664176,"linetype":"solid"},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0.42,"y1":0.58},{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":0.38}],"images":[],"margin":{"t":23.3059360730594,"r":7.30593607305936,"b":21.881397744462,"l":37.2602739726027},"plot_bgcolor":"rgba(236,236,236,1)","paper_bgcolor":"rgba(255,255,255,1)","font":{"color":"rgba(0,0,0,1)","family":"","size":14.6118721461187},"showlegend":true,"legend":{"bgcolor":"transparent","bordercolor":"transparent","borderwidth":1.88976377952756,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.689497716895},"y":1},"hovermode":"closest","barmode":"relative"},"attrs":{"49e04cb84cc4":{"x":{},"y":{},"colour":{},"type":"scatter"},"49e069a024f6":{"x":{},"y":{},"colour":{}},"49e056e97268":{"x":{},"ymin":{},"ymax":{},"colour":{}},"49e02d3d6347":{"yintercept":{},"colour":{}},"49e07c0c6519":{"x":{},"y":{},"fill":{},"type":"scatter"},"49e07ac62301":{"x":{},"y":{},"colour":{},"type":"scatter"},"49e07b7f1615":{"x":{},"y":{},"colour":{}},"49e046807b0":{"x":{},"ymin":{},"ymax":{},"colour":{}},"49e022c455d3":{"yintercept":{},"colour":{}}},"source":"A","config":{"doubleClick":"reset","showSendToCloud":false},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.2,"selected":{"opacity":1},"debounce":0},"subplot":true,"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+
+---
+
+class: left, top
+
+.center[
+## EXPLORING ALTERNATIVES
+]
+
+* Future discussions may involve additional decisions on appropriate targets 
+* AND if the targets vary by estuary segments, e.g., by salinity gradients
+--
+
+* The `peptools` package was built with this in mind...
+
+```r
+segs &lt;- c('Western', 'Central', 'Eastern')
+newtrgs &lt;- tibble(
+  bay_segment = factor(segs, levels = segs),
+  name = factor(segs, levels = segs),
+  sd_thresh = c(5.5, 6.5, 7.5),
+  chla_thresh = c(6, 5.5, 5)
+)
+```
+
+---
+
+class: left, top
+
+.center[
+## EXPLORING ALTERNATIVES
+]
+
+
+```r
+show_matrixpep(dat, trgs = newtrgs, asreact = T, nrow = 8)
+```
+
+<div id="htmlwidget-02e774adca663fb8009d" class="reactable html-widget" style="width:auto;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-02e774adca663fb8009d">{"x":{"tag":{"name":"Reactable","attribs":{"data":{"yr":[1990,1991,1992,1993,1994,1995,1996,1997,1998,1999,2000,2001,2002,2003,2004,2005,2006,2007,2008,2009,2010,2011,2012,2013,2014,2015,2016,2017,2018,2019],"Western":["yellow","yellow","yellow","yellow","green","yellow","yellow","yellow","green","yellow","yellow","yellow","green","yellow","yellow","yellow","yellow","red","red","red","yellow","yellow","yellow","yellow","green","yellow","yellow","red","yellow","red"],"Central":["yellow","yellow","yellow","yellow","green","yellow","green","green","green","green","green","green","green","green","green","green","green","green","green","green","yellow","green","yellow","green","green","green","yellow","yellow","yellow","green"],"Eastern":["green","yellow","yellow","yellow","green","yellow","green","green","green","green","green","green","green","yellow","green","green","green","green","green","green","green","green","green","green","green","green","yellow","green","yellow","green"]},"columns":[{"accessor":"yr","name":"Year","type":"numeric","style":[{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null},{"background":null}]},{"accessor":"Western","name":"Western","type":"character","style":[{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#FF3333"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#FF3333"},{"background":"#F9FF33"},{"background":"#FF3333"}]},{"accessor":"Central","name":"Central","type":"character","style":[{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"}]},{"accessor":"Eastern","name":"Eastern","type":"character","style":[{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"},{"background":"#F9FF33"},{"background":"#33FF3B"}]}],"defaultPageSize":8,"paginationType":"numbers","showPageInfo":true,"minRows":1,"dataKey":"a6cfdaa43c9bd7c6a13df5294ee4e507","key":"a6cfdaa43c9bd7c6a13df5294ee4e507"},"children":[]},"class":"reactR_markup"},"evals":[],"jsHooks":[]}</script>
+
+---
+
+class: left, top
+
+.center[
+## RESOURCES
+]
+
+* `peptools` package website: [link](https://tbep-tech.github.io/peptools/)
+* `peptools` GitHub source: [link](https://github.com/tbep-tech/peptools)
+* Alternative thresholds example: [link](https://tbep-tech.github.io/peptools/articles/Introduction.html#testing-different-thresholds)
+* `tbeptools` package website: [link](https://tbep-tech.github.io/tbeptools/)
+* TBEP open science subcommittee: [link](https://tbep.org/our-work/boards-committees/technical-advisory-committee/)
+
+---
+
+class: left, top
+
+.center[
+## GOALS FOR TODAY
+]
+
+1. Vibe check: do we like these approaches? 
+
+1. Are there additional tools to add? 
+
+1. How could the Monitoring Collaborative use these tools?
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(figure/TBEP_logo_web.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 94px;
+  height: 107px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

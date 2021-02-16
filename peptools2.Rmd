@@ -16,7 +16,7 @@ output:
 
 ```{r, message = F, echo = F, warning = F}
 library(knitr)
-library(pepreporting)
+library(peptools)
 library(tidyverse)
 library(lubridate)
 library(extrafont)
@@ -42,7 +42,7 @@ class: left, top
 ## AGENDA FOR TODAY
 ]
 
-1. Brief review of PEP reporting tools: `pepreporting` R package
+1. Brief review of PEP reporting tools: `peptools` R package
 
 1. Development of beach pathogen reporting
 
@@ -66,19 +66,19 @@ class: left, top
 
 class: center, top
 
-## `pepreporting` R PACKAGE
+## `peptools` R PACKAGE
 
 ```{r}
 knitr::include_graphics('figure/pepintro.PNG')
 ```
 
-.footnote[[https://tbep-tech.github.io/pepreporting/](https://tbep-tech.github.io/pepreporting/)]
+.footnote[[https://tbep-tech.github.io/peptools/](https://tbep-tech.github.io/peptools/)]
 
 ---
 
 class: center, top
 
-## `pepreporting` R PACKAGE
+## `peptools` R PACKAGE
 
 ```{r, out.width = '90%'}
 knitr::include_graphics('figure/pepfuncs2.png')
@@ -112,7 +112,7 @@ class: left, top
 ]
 
 ```{r, echo = T, fig.height = 3.5, fig.width = 7, out.width = '100%', message = F, warning = F, fig.align = 'center'}
-library(pepreporting)
+library(peptools)
 dat <- read_pepwq('data/currentdata.xlsx')
 show_thrpep(dat, bay_segment = "Western", param = "chla")
 ```
@@ -260,7 +260,7 @@ class: left, top
 --
 
 .center[
-.footnote[[https://tbep-tech.github.io/pepreporting/articles/pathogens.html](https://tbep-tech.github.io/pepreporting/articles/pathogens.html)]
+.footnote[[https://tbep-tech.github.io/peptools/articles/pathogens.html](https://tbep-tech.github.io/peptools/articles/pathogens.html)]
 ]
 
 ---
@@ -285,11 +285,11 @@ class: left, top
 ## PATHOGENS: IMPORT
 ]
 
-* Import the data with [`read_pepent()`](https://tbep-tech.github.io/pepreporting/reference/read_pepent.html)
+* Import the data with [`read_pepent()`](https://tbep-tech.github.io/peptools/reference/read_pepent.html)
 
 ```{r, echo = T}
 path <- system.file('extdata', 'enterodata.xlsx', 
-                    package = 'pepreporting')
+                    package = 'peptools')
 entdat <- read_pepent(path)
 head(entdat)
 ```
@@ -302,7 +302,7 @@ class: left, top
 ## PATHOGENS: SUMMARIZE
 ]
 
-* Summarize the data with [`anlz_entpep()`](https://tbep-tech.github.io/pepreporting/reference/anlz_entpep.html)
+* Summarize the data with [`anlz_entpep()`](https://tbep-tech.github.io/peptools/reference/anlz_entpep.html)
 * This creates a count of exceedances in each 24 hour period for each year and each beach
 --
 
@@ -319,7 +319,7 @@ class: left, top
 ## PATHOGENS: PLOT
 ]
 
-* Plot the results with [`show_entmatrix()`](https://tbep-tech.github.io/pepreporting/reference/show_entmatrix.html)
+* Plot the results with [`show_entmatrix()`](https://tbep-tech.github.io/peptools/reference/show_entmatrix.html)
 
 ```{r, echo = T, fig.height = 4, fig.width = 9, out.height = '60%'}
 show_entmatrix(entdat)
@@ -339,9 +339,6 @@ class: left, top
 * Exceedances based on concentrations above 104 cfu/100 mL
 --
 
-* Color categories based on zero (green), one (yellow), and two or more (red)
---
-
 * We can change this...
 
 ---
@@ -355,7 +352,7 @@ class: left, top
 * Changing the default arguments...
 
 ```{r, echo = T, fig.height = 4, fig.width = 9, out.height = '60%'}
-show_entmatrix(entdat, thr = 35, cats = c(0, 1, 3))
+show_entmatrix(entdat, thr = 35)
 ```
 
 ---
@@ -376,7 +373,7 @@ class: left, top
 --
 
 .center[
-.footnote[[https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html](https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html)]
+.footnote[[https://tbep-tech.github.io/peptools/articles/dissolvedoxygen.html](https://tbep-tech.github.io/peptools/articles/dissolvedoxygen.html)]
 ]
 
 ---
@@ -387,7 +384,7 @@ class: left, top
 ## DO: IMPORT
 ]
 
-* Data can be downloaded directly from USGS data source with [`read_pepdo()`](https://tbep-tech.github.io/pepreporting/reference/read_pepdo.html)
+* Data can be downloaded directly from USGS data source with [`read_pepdo()`](https://tbep-tech.github.io/peptools/reference/read_pepdo.html)
 
 ```{r, eval = F, echo = T}
 exdat <- read_pepdo(site = c('01304562', '01304200'), 
@@ -466,7 +463,7 @@ class: left, top
 ## DO: SUMMARIZE
 ]
 
-* Summarize the data with [`anlz_domopep()`](https://tbep-tech.github.io/pepreporting/reference/anlz_domopep.html)
+* Summarize the data with [`anlz_domopep()`](https://tbep-tech.github.io/peptools/reference/anlz_domopep.html)
 --
 
 * Gets the following for each month:
@@ -482,7 +479,7 @@ class: left, top
 ## DO: SUMMARIZE
 ]
 
-* Summarize the data with [`anlz_domopep()`](https://tbep-tech.github.io/pepreporting/reference/anlz_domopep.html)
+* Summarize the data with [`anlz_domopep()`](https://tbep-tech.github.io/peptools/reference/anlz_domopep.html)
 
 ```{r, echo = T}
 anlz_domopep(dodat, thr = 3)
@@ -496,7 +493,7 @@ class: left, top
 ## DO: PLOT
 ]
 
-* Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/pepreporting/reference/show_domatrix.html)
+* Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/peptools/reference/show_domatrix.html)
 
 ```{r, echo = T, fig.height = 4, fig.width = 9}
 show_domatrix(dodat, thr = 3, show = 'below_ave')
@@ -510,7 +507,7 @@ class: left, top
 ## DO: PLOT
 ]
 
-* Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/pepreporting/reference/show_domatrix.html)
+* Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/peptools/reference/show_domatrix.html)
 
 ```{r, echo = T, fig.height = 4, fig.width = 9}
 show_domatrix(dodat, thr = 3, show = 'below_maxrun')
@@ -524,7 +521,7 @@ class: left, top
 ## DO: PLOT
 ]
 
-* Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/pepreporting/reference/show_domatrix.html)
+* Plot the results with [`show_domatrix()`](https://tbep-tech.github.io/peptools/reference/show_domatrix.html)
 
 ```{r, echo = T, fig.height = 4, fig.width = 9}
 show_domatrix(dodat, thr = 4.8, show = 'below_ave')
@@ -557,11 +554,11 @@ class: left, top
 ## RESOURCES
 ]
 
-* Pathogens vignette: [link](https://tbep-tech.github.io/pepreporting/articles/pathogens.html)
-* Dissolved oxygen vignette: [link](https://tbep-tech.github.io/pepreporting/articles/dissolvedoxygen.html)
-* Package overview vignette: [link](https://tbep-tech.github.io/pepreporting/articles/Introduction.html)
-* `pepreporting` package website: [link](https://tbep-tech.github.io/pepreporting/)
-* `pepreporting` GitHub source: [link](https://github.com/tbep-tech/pepreporting)
+* Pathogens vignette: [link](https://tbep-tech.github.io/peptools/articles/pathogens.html)
+* Dissolved oxygen vignette: [link](https://tbep-tech.github.io/peptools/articles/dissolvedoxygen.html)
+* Package overview vignette: [link](https://tbep-tech.github.io/peptools/articles/Introduction.html)
+* `peptools` package website: [link](https://tbep-tech.github.io/peptools/)
+* `peptools` GitHub source: [link](https://github.com/tbep-tech/peptools)
 
 ---
 

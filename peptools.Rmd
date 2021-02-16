@@ -46,7 +46,7 @@ class: left, top
 
 1. Tech transfer to other NEPs
 
-1. PEP reporting tools: `pepreporting` R package
+1. PEP reporting tools: `peptools` R package
 
 1. Discussion, next steps
 
@@ -275,19 +275,19 @@ class: left, top
 
 class: center, top
 
-## `pepreporting` R PACKAGE
+## `peptools` R PACKAGE
 
 ```{r}
 knitr::include_graphics('figure/pepintro.PNG')
 ```
 
-.footenote[[https://tbep-tech.github.io/pepreporting/](https://tbep-tech.github.io/pepreporting/)]
+.footenote[[https://tbep-tech.github.io/peptools/](https://tbep-tech.github.io/peptools/)]
 
 ---
 
 class: center, top
 
-## `pepreporting` R PACKAGE
+## `peptools` R PACKAGE
 
 ```{r, out.width = '90%'}
 knitr::include_graphics('figure/pepfuncs.PNG')
@@ -321,7 +321,7 @@ class: left, top
 ]
 
 ```{r, echo = T, fig.height = 3.5, fig.width = 7, out.width = '100%', message = F, warning = F, fig.align = 'center'}
-library(pepreporting)
+library(peptools)
 dat <- read_pepwq('data/currentdata.xlsx')
 show_thrpep(dat, bay_segment = "Western", param = "chla")
 ```
@@ -484,7 +484,7 @@ class: left, top
 * AND if the targets vary by estuary segments, e.g., by salinity gradients
 --
 
-* The `pepreporting` package was built with this in mind...
+* The `peptools` package was built with this in mind...
 ```{r, echo = T}
 segs <- c('Western', 'Central', 'Eastern')
 newtrgs <- tibble(
@@ -515,9 +515,9 @@ class: left, top
 ## RESOURCES
 ]
 
-* `pepreporting` package website: [link](https://tbep-tech.github.io/pepreporting/)
-* `pepreporting` GitHub source: [link](https://github.com/tbep-tech/pepreporting)
-* Alternative thresholds example: [link](https://tbep-tech.github.io/pepreporting/articles/Introduction.html#testing-different-thresholds)
+* `peptools` package website: [link](https://tbep-tech.github.io/peptools/)
+* `peptools` GitHub source: [link](https://github.com/tbep-tech/peptools)
+* Alternative thresholds example: [link](https://tbep-tech.github.io/peptools/articles/Introduction.html#testing-different-thresholds)
 * `tbeptools` package website: [link](https://tbep-tech.github.io/tbeptools/)
 * TBEP open science subcommittee: [link](https://tbep.org/our-work/boards-committees/technical-advisory-committee/)
 
