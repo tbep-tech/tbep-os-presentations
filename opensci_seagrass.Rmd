@@ -289,7 +289,7 @@ class: middle, center
 ]
 
 ```{r, fig.align = 'center', out.width = '95%'}
-knitr::include_graphics('figure/seagrasscoverdash.PNG')
+knitr::include_graphics('figure/seagrasscoverdash.png')
 ```
 
 ---
