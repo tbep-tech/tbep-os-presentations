@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Tampa Bay Annual Water Quality Assessments: 2020 Update</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Ed Sherwood \bullet tbep.org \bullet #TampaBayOpensci" />
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Tampa Bay Annual Water Quality Assessments:<br>2020 Update
+### <a href="mailto:esherwood@tbep.org">Ed Sherwood</a> <span class="math inline">•</span> <a href="https://tbep.org">tbep.org</a> <span class="math inline">•</span> <a href="https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click">#TampaBayOpensci</a>
+### TAMPA BAY ESTUARY PROGRAM
+### 5/17/2021
+
+---
+
+
+
+class: top, center
+## TBEP &amp; TBNMC Activities to Address WQ Issues
+&lt;img src="figure/TBEP-TBNMC_WQ_Timeline.png" width="100%" /&gt;
+
+---
+
+class: top, center
+## Nitrogen Management Paradigm
+&lt;img src="figure/TBEP_N_Paradigm.png" width="100%" /&gt;
+
+---
+
+class: top, center
+## Annual Water Quality Report Card
+.pull-left[
+&lt;img src="figure/wq-static-2020-page1.png" width="70%" /&gt;
+
+(programmatic)
+]
+.pull-right[
+&lt;img src="figure/wq-static-2020-page2.png" width="70%" /&gt;
+
+(regulatory)
+]
+
+---
+
+class: top, center
+## Implications to Permitted Entities
+&lt;img src="figure/TBNMC_Assess_Framewrok_2020.png" width="100%" /&gt;
+
+---
+
+class: top, center
+## Recent Seagrass Results
+&lt;img src="figure/seagrasscov2020.png" width="85%" /&gt;
+
+---
+
+class: middle, center
+# DEEPER DIVE INTO WQ RESULTS
+
+---
+
+class: top, center
+## Water Quality Dashboard
+&lt;img src="figure/wqdash2020.png" width="90%" /&gt;
+[https://shiny.tbep.org/wq-dash/](https://shiny.tbep.org/wq-dash/)
+
+---
+
+class: top, center
+## OTB Annual Average Chl-a Trends
+&lt;img src="wq_report_card_2020_updates_files/figure-html/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: top, center
+## Recent OTB Monthly Chl-a Observations
+&lt;img src="wq_report_card_2020_updates_files/figure-html/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+class: top, center
+## OTB WQ Assessment Timeline
+&lt;img src="wq_report_card_2020_updates_files/figure-html/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+---
+
+class: top, center
+## Addressing Other OTB Priority Actions
+&lt;img src="figure/TBEP_N_Paradigm_wOTB.png" width="100%" /&gt;
+
+---
+
+class: top, left
+## Tampa Bay Water Quality Take Home 
+- Bay segment water quality generally improving, except for OTB 
+- OTB chlorophyll-a exceedances recently driven by summertime P. bahamense blooms
+  - Sixth consecutive year not meeting TBEP chlorophyll management target
+  - Recent 2020 seagrass estimates reflect OTB water quality issues
+  - Corroborated by annual seagrass transect surveys [(Dashboard)](https://shiny.tbep.org/seagrasstransect-dash)
+- **AND** ... interim to longer-term impacts of Piney Point still unknown
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+<style>
+.logo {
+  background-image: url(figure/TBEP_logo_web.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 94px;
+  height: 107px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
