@@ -51,18 +51,19 @@ pth <- 'D:/data/EPCHC_WQ/epchc.xlsx'
 epcdata <- read_importwq(pth, download_latest = TRUE, na = "")
 
 ```
-class: top, center
-## TBEP & TBNMC Activities to Address WQ Issues
-```{r, out.width="100%"}
-knitr::include_graphics('figure/TBEP-TBNMC_WQ_Timeline.png')
-```
-
----
 
 class: top, center
 ## Nitrogen Management Paradigm
 ```{r, out.width="100%"}
 knitr::include_graphics('figure/TBEP_N_Paradigm.png')
+```
+
+---
+
+class: top, center
+## TBEP & TBNMC Activities to Address WQ Issues
+```{r, out.width="100%"}
+knitr::include_graphics('figure/TBEP-TBNMC_WQ_Timeline.png')
 ```
 
 ---
@@ -117,6 +118,25 @@ knitr::include_graphics('figure/wqdash2020.png')
 ---
 
 class: top, center
+## Addressing Other OTB Priority Actions
+```{r, out.width="100%"}
+knitr::include_graphics('figure/TBEP_N_Paradigm_wOTB.png')
+```
+
+---
+
+class: top, left
+## Tampa Bay Water Quality Take Home 
+- Bay segment water quality generally improving, except for OTB 
+- OTB chlorophyll-a exceedances recently driven by summertime P. bahamense blooms
+  - Sixth consecutive year not meeting TBEP chlorophyll management target
+  - Recent 2020 seagrass estimates reflect OTB water quality issues
+  - Corroborated by annual seagrass transect surveys [(Dashboard)](https://shiny.tbep.org/seagrasstransect-dash)
+- **AND** ... interim to longer-term impacts of Piney Point still unknown 
+
+---
+
+class: top, center
 ## OTB Annual Average Chl-a Trends
 ```{r, fig.height=4, fig.width=8, fig.align='center', out.width='100%'}
 show_thrplot(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), family = fml)
@@ -157,21 +177,3 @@ p3 <- show_segmatrix(epcdata, bay_segment = 'OTB', yrrng = c(1975, maxyr), txtsz
 
 p1 + p3 + p2 + plot_layout(ncol = 1, heights = c(1, 0.25, 1))
 ```
----
-
-class: top, center
-## Addressing Other OTB Priority Actions
-```{r, out.width="100%"}
-knitr::include_graphics('figure/TBEP_N_Paradigm_wOTB.png')
-```
-
----
-
-class: top, left
-## Tampa Bay Water Quality Take Home 
-- Bay segment water quality generally improving, except for OTB 
-- OTB chlorophyll-a exceedances recently driven by summertime P. bahamense blooms
-  - Sixth consecutive year not meeting TBEP chlorophyll management target
-  - Recent 2020 seagrass estimates reflect OTB water quality issues
-  - Corroborated by annual seagrass transect surveys [(Dashboard)](https://shiny.tbep.org/seagrasstransect-dash)
-- **AND** ... interim to longer-term impacts of Piney Point still unknown 
