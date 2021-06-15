@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Piney Point Data and Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Dr. Marcus Beck \bullet @fawda123 \bullet #TampaBayOpensci" />
+    <script src="libs/header-attrs-2.8/header-attrs.js"></script>
+    <link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet" />
+    <script src="libs/panelset-0.2.6/panelset.js"></script>
+    <link rel="stylesheet" href="styles.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Piney Point Data and Analysis
+### <a href="mailto:mbeck@tbep.org">Dr. Marcus Beck</a> <span class="math inline">•</span> <a href="https://twitter.com/fawda123">@fawda123</a> <span class="math inline">•</span> <a href="https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click">#TampaBayOpensci</a>
+### Tampa Bay Estuary Program
+### 6/15/2021
+
+---
+
+
+
+
+class: left, top
+
+.center[
+# Goals for today
+]
+
+* Understand the available data
+* Understand how to access the available data
+* Analyses to date
+* Develop analysis goals and plan of attack
+* Meeting notes [here](https://docs.google.com/document/d/1gWFnNe5kPj5rLmgmrLbVlt2UsxfE4pX1v6Gfdh8HbZc/edit)
+
+---
+
+class: left, top
+
+.center[
+# Data in hand
+]
+
+* All raw data from partners are here (spreadsheet, GoogleDrive): https://bit.ly/3wtC5gz
+* All compiled/formatted data are here (.RData, GitHub): https://github.com/tbep-tech/piney-point/tree/main/data)
+
+---
+
+class: left, top
+
+.center[
+# Data in hand
+]
+
+* __Water quality__: 17 parameters
+* __Phytoplankton__: qualitative, quantitative
+* __Seagrass, macroalgae__: Freq. occurrence by species, groups
+* __Contaminants__: mostly metals
+* __Baseline__: water quality and seagrass
+* __Spatial__: monitoring stations by type 
+
+---
+
+class: left, top
+
+.center[
+# Data in hand
+]
+
+* All data pulled from GoogleDrive and synthesized using [this](https://github.com/tbep-tech/piney-point/blob/main/R/dat_proc.R) R script 
+     * Compile by source (e.g., DEP, Manatee Co., etc.)
+     * Standardize names, units, etc.
+     * Organize in tidy format for ease of analysis
+* Each time data are updated, several automated [tests](https://github.com/tbep-tech/piney-point/tree/main/tests/testthat) are run to check accuracy, e.g., 
+     * Are the units, names correct?
+     * Are the station names matching between files?
+     * Are their duplicates, missing values?
+
+---
+
+class: left, top
+
+.center[
+# Getting the data
+]
+
+* All files are in .RData binary formats, access in R (I can make csv if needed)
+* Files follow a loose naming convention, e.g.,
+   * `rswqdat`: response water quality data
+   * `bswqdat`: baseline water quality data
+   * `rstrndatsav`: response SAV transect data
+   * `rsphydat`: response phytoplankton data
+   * `rstrnpts`: response transect spatial data (points)
+   
+---
+
+class: left, top
+
+.center[
+# Getting the data
+]
+
+* All files are "tidy" and able to join by station, source and/or date
+
+
+```r
+load(url('https://tbep-tech.github.io/piney-point/data/rswqdat.RData'))
+rswqdat
+```
+
+```
+## # A tibble: 7,065 x 12
+##    station date       source var   uni     val qual  bswqstation lbs     nrmrng 
+##    &lt;chr&gt;   &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;  
+##  1 16      2021-03-23 epchc  do    mgl    6.62 &lt;NA&gt;  16          DO (mg~ 6.07-6~
+##  2 19      2021-03-23 epchc  do    mgl    6.56 &lt;NA&gt;  19          DO (mg~ 6.08-6~
+##  3 21      2021-03-23 epchc  do    mgl    6.56 &lt;NA&gt;  202         DO (mg~ 6.29-7~
+##  4 22      2021-03-23 epchc  do    mgl    7.7  &lt;NA&gt;  362         DO (mg~ 6.92-7~
+##  5 23      2021-03-23 epchc  do    mgl    6.5  &lt;NA&gt;  23          DO (mg~ 6.01-6~
+##  6 24      2021-03-23 epchc  do    mgl    6.82 &lt;NA&gt;  24          DO (mg~ 5.87-6~
+##  7 25      2021-03-23 epchc  do    mgl    7.32 &lt;NA&gt;  25          DO (mg~ 6.34-8~
+##  8 28      2021-03-23 epchc  do    mgl    6.66 &lt;NA&gt;  28          DO (mg~ 6.03-7~
+##  9 82      2021-03-23 epchc  do    mgl    6.92 &lt;NA&gt;  82          DO (mg~ 6.17-7~
+## 10 84      2021-03-23 epchc  do    mgl    6.64 &lt;NA&gt;  84          DO (mg~ 5.83-6~
+## # ... with 7,055 more rows, and 2 more variables: lbunis &lt;chr&gt;, inrng &lt;chr&gt;
+```
+
+---
+
+class: left, top
+
+.center[
+# Analyses to date
+]
+
+* Some preliminary stuff: [https://github.com/tbep-tech/piney-point-analysis](https://github.com/tbep-tech/piney-point-analysis)
+     * [Interpolation example](https://tbep-tech.github.io/piney-point-analysis/chlinterp): chlorophyll response
+     * [Trends synthesis](https://tbep-tech.github.io/piney-point-analysis/trends): poor attempt at broad analysis
+     * [Seasonal analysis](https://tbep-tech.github.io/piney-point-analysis/seasonal): deviation from baseline
+* The data folder in this repo is synced daily with the source data on the Piney Point dashboard repo
+* Open for GitHub Pull Requests
+
+---
+
+class: left, top
+
+.center[
+# Analysis goals
+]
+
+* We know there was an initial water column algal response
+* We need to show other responses, the nutrients did not go away: 
+     * Nutrient recycling between parts of the bay
+     * Broad vs local changes
+     * Deviation from baseline
+     * Link to modelling data
+* Immediate concern is documenting impacts, but long-term plan is publication
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:9"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+<style>
+.logo {
+  background-image: url(figure/TBEP_logo_web.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  width: 94px;
+  height: 107px;
+  z-index: 0;
+}
+</style>
+
+<script>
+document
+  .querySelectorAll(
+    '.remark-slide-content' +
+    ':not(.title-slide)' +
+    // add additional classes to exclude here, e.g.
+    // ':not(.inverse)' +
+    ':not(.hide-logo)'
+  )
+  .forEach(el => {
+    el.innerHTML += '<div class="logo"></div>';
+  });
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

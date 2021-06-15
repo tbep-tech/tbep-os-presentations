@@ -1,0 +1,153 @@
+---
+title: "Piney Point Data and Analysis"
+author: "[Dr. Marcus Beck](mailto:mbeck@tbep.org) $\\bullet$ [\\@fawda123](https://twitter.com/fawda123)	$\\bullet$ [#TampaBayOpensci](https://twitter.com/hashtag/TampaBayOpenSci?src=hashtag_click)"
+institute: "Tampa Bay Estuary Program"
+date: "6/15/2021"
+output:
+  xaringan::moon_reader:
+    nature:
+      highlightLines: true
+      countIncrementalSlides: false
+      ratio: '16:9'
+    lib_dir: libs
+    css: styles.css
+    includes: 
+      after_body: insert-logo-tbep.html
+---
+
+```{r, message = F, echo = F, warning = F}
+library(knitr)
+library(tidyverse)
+library(lubridate)
+library(extrafont)
+library(xaringanExtra)
+library(sf)
+
+use_panelset()
+
+source(file = "https://raw.githubusercontent.com/EvaMaeRey/little_flipbooks_library/master/xaringan_reveal_parenthetical.R")
+
+loadfonts(device = 'win', quiet = T)
+
+fml <- 'Lato Light'
+
+# global knitr options
+opts_chunk$set(message = FALSE, dev.args = list(family = fml), dpi = 300, dev = 'png', echo = F, warning = F, fig.align = 'center', out.width = '100%')
+```
+
+class: left, top
+
+.center[
+# Goals for today
+]
+
+* Understand the available data
+* Understand how to access the available data
+* Analyses to date
+* Develop analysis goals and plan of attack
+* Meeting notes [here](https://docs.google.com/document/d/1gWFnNe5kPj5rLmgmrLbVlt2UsxfE4pX1v6Gfdh8HbZc/edit)
+
+---
+
+class: left, top
+
+.center[
+# Data in hand
+]
+
+* All raw data from partners are here (spreadsheet, GoogleDrive): https://bit.ly/3wtC5gz
+* All compiled/formatted data are here (.RData, GitHub): https://github.com/tbep-tech/piney-point/tree/main/data)
+
+---
+
+class: left, top
+
+.center[
+# Data in hand
+]
+
+* __Water quality__: 17 parameters
+* __Phytoplankton__: qualitative, quantitative
+* __Seagrass, macroalgae__: Freq. occurrence by species, groups
+* __Contaminants__: mostly metals
+* __Baseline__: water quality and seagrass
+* __Spatial__: monitoring stations by type 
+
+---
+
+class: left, top
+
+.center[
+# Data in hand
+]
+
+* All data pulled from GoogleDrive and synthesized using [this](https://github.com/tbep-tech/piney-point/blob/main/R/dat_proc.R) R script 
+     * Compile by source (e.g., DEP, Manatee Co., etc.)
+     * Standardize names, units, etc.
+     * Organize in tidy format for ease of analysis
+* Each time data are updated, several automated [tests](https://github.com/tbep-tech/piney-point/tree/main/tests/testthat) are run to check accuracy, e.g., 
+     * Are the units, names correct?
+     * Are the station names matching between files?
+     * Are their duplicates, missing values?
+
+---
+
+class: left, top
+
+.center[
+# Getting the data
+]
+
+* All files are in .RData binary formats, access in R (I can make csv if needed)
+* Files follow a loose naming convention, e.g.,
+   * `rswqdat`: response water quality data
+   * `bswqdat`: baseline water quality data
+   * `rstrndatsav`: response SAV transect data
+   * `rsphydat`: response phytoplankton data
+   * `rstrnpts`: response transect spatial data (points)
+   
+---
+
+class: left, top
+
+.center[
+# Getting the data
+]
+
+* All files are "tidy" and able to join by station, source and/or date
+
+```{r, echo = T}
+load(url('https://tbep-tech.github.io/piney-point/data/rswqdat.RData'))
+rswqdat
+```
+
+---
+
+class: left, top
+
+.center[
+# Analyses to date
+]
+
+* Some preliminary stuff: [https://github.com/tbep-tech/piney-point-analysis](https://github.com/tbep-tech/piney-point-analysis)
+     * [Interpolation example](https://tbep-tech.github.io/piney-point-analysis/chlinterp): chlorophyll response
+     * [Trends synthesis](https://tbep-tech.github.io/piney-point-analysis/trends): poor attempt at broad analysis
+     * [Seasonal analysis](https://tbep-tech.github.io/piney-point-analysis/seasonal): deviation from baseline
+* The data folder in this repo is synced daily with the source data on the Piney Point dashboard repo
+* Open for GitHub Pull Requests
+
+---
+
+class: left, top
+
+.center[
+# Analysis goals
+]
+
+* We know there was an initial water column algal response
+* We need to show other responses, the nutrients did not go away: 
+     * Nutrient recycling between parts of the bay
+     * Broad vs local changes
+     * Deviation from baseline
+     * Link to modelling data
+* Immediate concern is documenting impacts, but long-term plan is publication
