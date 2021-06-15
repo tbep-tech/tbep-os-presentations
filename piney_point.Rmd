@@ -102,7 +102,7 @@ class: left, top
 * Files follow a loose naming convention, e.g.,
    * `rswqdat`: response water quality data
    * `bswqdat`: baseline water quality data
-   * `rstrndatsav`: response SAV transect data
+   * `rstrndat`: response SAV, macroalgae transect data
    * `rsphydat`: response phytoplankton data
    * `rstrnpts`: response transect spatial data (points)
    
