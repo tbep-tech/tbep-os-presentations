@@ -132,7 +132,7 @@ class: left, top
 * Some preliminary stuff: [https://github.com/tbep-tech/piney-point-analysis](https://github.com/tbep-tech/piney-point-analysis)
      * [Interpolation example](https://tbep-tech.github.io/piney-point-analysis/chlinterp): chlorophyll response
      * [Trends synthesis](https://tbep-tech.github.io/piney-point-analysis/trends): poor attempt at broad analysis
-     * [Seasonal analysis](https://tbep-tech.github.io/piney-point-analysis/seasonal): deviation from baseline
+     * [Seasonal analysis](https://tbep-tech.github.io/piney-point-analysis/seasonal): deviation from baseline relative to hydrology
 * The data folder in this repo is synced daily with the source data on the Piney Point dashboard repo
 * Open for GitHub Pull Requests
 
