@@ -132,7 +132,7 @@ class: top, left
 ]
 
 * [Joint Aquatic Sciences Meeting](https://jasm2022.aquaticsocieties.org/), May 14-20
-* [BASIS7](https://tbep.org/estuary/basis/basis7/) Oct. 18-22
+* [BASIS7](https://tbep.org/estuary/basis/basis7/) Feb 28-Mar 4
 * 2022 OS Subcommittee
      * May 3rd
      * Aug 2nd
