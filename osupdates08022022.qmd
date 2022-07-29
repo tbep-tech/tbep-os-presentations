@@ -1,0 +1,77 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: "[Dr. Marcus Beck](mailto:marcusb@sccwrp.org)"
+institute: "Tampa Bay Estuary Program"
+date: "08/02/2022"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+execute:
+  echo: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit){style="text-align: center;"}
+
+------------------------------------------------------------------------
+
+## PRESENTER QUESTION FORM
+
+------------------------------------------------------------------------
+
+## TBEPTOOLS UPDATES
+
+-   v2.0.1 released on July 1st, [Release notes](https://github.com/tbep-tech/tbeptools/releases/tag/v2.0.1)
+
+![](figure/colorscheme.png){width="537"}
+
+## STATE OF THE BAY
+
+------------------------------------------------------------------------
+
+## DISCUSSION
+
+-   No Code/Low Code apps, [what if all workers wrote software, not just the geek elite?](https://www.economist.com/business/2022/01/29/what-if-all-workers-wrote-software-not-just-the-geek-elite)
+-   Is this an emerging trend?
+-   What is the future of app development?\
+-   What are the tradeoffs?
+
+------------------------------------------------------------------------
+
+## DISCUSSION
+
+-   [Gartner Forecasts Worldwide Low-Code Development Technologies Market to Grow 23% in 2021](https://www.gartner.com/en/newsroom/press-releases/2021-02-15-gartner-forecasts-worldwide-low-code-development-technologies-market-to-grow-23-percent-in-2021)
+-   [The no code generation is arriving](https://techcrunch.com/2020/10/26/the-no-code-generation-is-arriving/)
+-   [What is no-code, and is it the future of tech?](https://www.howtogeek.com/768170/what-is-no-code-and-is-it-the-future-of-tech/)
+-   Example platforms: [Saltcorn](https://saltcorn.com/), [Pineapple](https://www.pineapple.build/)
+
+------------------------------------------------------------------------
+
+## DISCUSSION
+
+![](figure/htmlpsychopath.PNG){fig-align="center"}
+
+------------------------------------------------------------------------
+
+## 2022 MEETINGS
+
+-   2022 OS Subcommittee
+    -   Nov 1st
+-   Open Science training - early 2023

@@ -1,0 +1,77 @@
+/* Frutiger Light approximate */
+@import url("//fonts.googleapis.com/css?family=Lato:100,200,300,400,500,600,700,800,900"); 
+
+/* DIN condensed approximate */
+@import url("//fonts.googleapis.com/css?family=Roboto+Condensed:300,700,900");
+
+/*-- scss:rules --*/
+
+/* header styles */
+
+.reveal h1 {
+  font-family: 'Roboto Condensed';
+  font-weight: 700;
+  color: #5C4A42;
+  letter-spacing: -0.05em;
+}
+.reveal h2 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #00806E;
+  letter-spacing: -0.05em;
+}
+.reveal h3 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #00806E;
+  letter-spacing: -0.05em;
+}
+.reveal h4 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+}
+.reveal h5 {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+}
+.reveal .slide a {
+  font-family: 'Roboto Condensed';
+  font-weight: 400;
+  color: #00806E;
+  text-align: center;
+}
+.reveal p {
+  font-family: 'Lato';
+  font-weight: 300;
+  color: #958984;
+  font-style: italic;
+  letter-spacing: -0.05em;
+}
+
+.reveal ul {
+  list-style: none; /* Remove default bullets */
+}
+
+.reveal ul li::before {
+  content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
+  color: #958984; /* Change the color */
+  display: inline-block; /* Needed to add space between the bullet and the text */
+  width: 1em; /* Also needed for space (tweak if needed) */
+  margin-left: -1em; /* Also needed for space (tweak if needed) */
+}
+
+.reveal ol {  
+  font-family: 'Lato';
+  font-weight: 300;
+  font-size: 36px; /* roughly h3 font size */
+  color: #958984; /* Change the color */
+}
+
+.reveal ul {  
+  font-family: 'Lato';
+  font-weight: 300;
+  font-size: 36px; /* roughly h3 font size */
+  color: #958984; /* Change the color */
+}
