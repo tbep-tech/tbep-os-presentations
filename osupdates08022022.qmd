@@ -1,6 +1,7 @@
 ---
 title: "OPEN SCIENCE UPDATES"
-author: "[Dr. Marcus Beck](mailto:marcusb@sccwrp.org)"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
 institute: "Tampa Bay Estuary Program"
 date: "08/02/2022"
 format:
@@ -9,6 +10,9 @@ format:
     transition: slide
     footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
     theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
 execute:
   echo: false
 ---
@@ -28,11 +32,14 @@ library(knitr)
 
 3.  Facilitate training activities
 
-[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit){style="text-align: center;"}
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
 
 ------------------------------------------------------------------------
 
 ## PRESENTER QUESTION FORM
+
+-   Enter your questions or comments using this form: <https://forms.gle/4SgHxyN7U7UMMqwv9>
+-   You don't need to use the form, but we're hoping it encourages engagement
 
 ------------------------------------------------------------------------
 
@@ -42,20 +49,34 @@ library(knitr)
 
 ![](figure/colorscheme.png){width="537"}
 
+------------------------------------------------------------------------
+
 ## STATE OF THE BAY
+
+![](figure/sob2022.png){fig-align="center" width="500"}
+
+<https://tbep.org/estuary/state-of-the-bay/>
 
 ------------------------------------------------------------------------
 
-## DISCUSSION
+## NITROGEN LOADING DASHBOARD
 
--   No Code/Low Code apps, [what if all workers wrote software, not just the geek elite?](https://www.economist.com/business/2022/01/29/what-if-all-workers-wrote-software-not-just-the-geek-elite)
+![](figure/TN-summary.png){fig-align="center"}
+
+<https://tbep.org/tampa-bay-nitrogen-loads/>
+
+------------------------------------------------------------------------
+
+## NO CODE/LOW CODE APPS
+
+-   [What if all workers wrote software, not just the geek elite?](https://www.economist.com/business/2022/01/29/what-if-all-workers-wrote-software-not-just-the-geek-elite)
 -   Is this an emerging trend?
--   What is the future of app development?\
+-   What is the future of app development?
 -   What are the tradeoffs?
 
 ------------------------------------------------------------------------
 
-## DISCUSSION
+## ADDITIONAL LINKS
 
 -   [Gartner Forecasts Worldwide Low-Code Development Technologies Market to Grow 23% in 2021](https://www.gartner.com/en/newsroom/press-releases/2021-02-15-gartner-forecasts-worldwide-low-code-development-technologies-market-to-grow-23-percent-in-2021)
 -   [The no code generation is arriving](https://techcrunch.com/2020/10/26/the-no-code-generation-is-arriving/)
@@ -64,9 +85,15 @@ library(knitr)
 
 ------------------------------------------------------------------------
 
-## DISCUSSION
+## SHINY DASHBOARD BUILDER
 
-![](figure/htmlpsychopath.PNG){fig-align="center"}
+-   YouTube Demo: <https://youtu.be/oOKJLMAkEiw>
+-   GitHub: <https://github.com/petergandenberger/dashboard-builder>
+-   Online Demo: <https://pega.shinyapps.io/dashboard-builder/>
+
+------------------------------------------------------------------------
+
+![](figure/htmlpsychopath.PNG){fig-align="center" width="411"}
 
 ------------------------------------------------------------------------
 

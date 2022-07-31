@@ -9,7 +9,7 @@
 <link href="osupdates08022022_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
   <meta name="generator" content="quarto-1.0.36">
 
-  <meta name="author" content="Dr.&nbsp;Marcus Beck">
+  <meta name="author" content="Dr.&nbsp;Marcus Beck, mbeck@tbep.org">
   <meta name="dcterms.date" content="2022-08-02">
   <title>OPEN SCIENCE UPDATES</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -321,7 +321,7 @@
 
 <section id="title-slide" class="center">
   <h1 class="title">OPEN SCIENCE UPDATES</h1>
-  <p class="author"><a href="mailto:marcusb@sccwrp.org">Dr.&nbsp;Marcus Beck</a></p>
+  <p class="author">Dr.&nbsp;Marcus Beck, <a href="mailto:mbeck@tbep.org" class="email">mbeck@tbep.org</a></p>
   <p class="institute">Tampa Bay Estuary Program</p>
   <p class="date">08/02/2022</p>
 </section>
@@ -333,10 +333,14 @@
 <li><p>Rank priority research areas for developing open science products</p></li>
 <li><p>Facilitate training activities</p></li>
 </ol>
-<p><a href="https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit" style="text-align: center;">Guiding Document</a></p>
+<p><a href="https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit">Guiding Document</a></p>
 </section>
 <section id="presenter-question-form" class="slide level2">
 <h2>PRESENTER QUESTION FORM</h2>
+<ul>
+<li>Enter your questions or comments using this form: <a href="https://forms.gle/4SgHxyN7U7UMMqwv9" class="uri">https://forms.gle/4SgHxyN7U7UMMqwv9</a></li>
+<li>You don’t need to use the form, but we’re hoping it encourages engagement</li>
+</ul>
 </section>
 <section id="tbeptools-updates" class="slide level2">
 <h2>TBEPTOOLS UPDATES</h2>
@@ -347,19 +351,25 @@
 <img data-src="figure/colorscheme.png" width="537" class="r-stretch"></section>
 <section id="state-of-the-bay" class="slide level2">
 <h2>STATE OF THE BAY</h2>
+
+<img data-src="figure/sob2022.png" width="500" class="r-stretch quarto-figure-center"><p><a href="https://tbep.org/estuary/state-of-the-bay/" class="uri">https://tbep.org/estuary/state-of-the-bay/</a></p>
 </section>
-<section id="discussion" class="slide level2">
-<h2>DISCUSSION</h2>
+<section id="nitrogen-loading-dashboard" class="slide level2">
+<h2>NITROGEN LOADING DASHBOARD</h2>
+
+<img data-src="figure/TN-summary.png" class="r-stretch quarto-figure-center"><p><a href="https://tbep.org/tampa-bay-nitrogen-loads/" class="uri">https://tbep.org/tampa-bay-nitrogen-loads/</a></p>
+</section>
+<section id="no-codelow-code-apps" class="slide level2">
+<h2>NO CODE/LOW CODE APPS</h2>
 <ul>
-<li>No Code/Low Code apps, <a href="https://www.economist.com/business/2022/01/29/what-if-all-workers-wrote-software-not-just-the-geek-elite">what if all workers wrote software, not just the geek elite?</a></li>
+<li><a href="https://www.economist.com/business/2022/01/29/what-if-all-workers-wrote-software-not-just-the-geek-elite">What if all workers wrote software, not just the geek elite?</a></li>
 <li>Is this an emerging trend?</li>
-<li>What is the future of app development?<br>
-</li>
+<li>What is the future of app development?</li>
 <li>What are the tradeoffs?</li>
 </ul>
 </section>
-<section id="discussion-1" class="slide level2">
-<h2>DISCUSSION</h2>
+<section id="additional-links" class="slide level2">
+<h2>ADDITIONAL LINKS</h2>
 <ul>
 <li><a href="https://www.gartner.com/en/newsroom/press-releases/2021-02-15-gartner-forecasts-worldwide-low-code-development-technologies-market-to-grow-23-percent-in-2021">Gartner Forecasts Worldwide Low-Code Development Technologies Market to Grow 23% in 2021</a></li>
 <li><a href="https://techcrunch.com/2020/10/26/the-no-code-generation-is-arriving/">The no code generation is arriving</a></li>
@@ -367,10 +377,18 @@
 <li>Example platforms: <a href="https://saltcorn.com/">Saltcorn</a>, <a href="https://www.pineapple.build/">Pineapple</a></li>
 </ul>
 </section>
-<section id="discussion-2" class="slide level2">
-<h2>DISCUSSION</h2>
+<section id="shiny-dashboard-builder" class="slide level2">
+<h2>SHINY DASHBOARD BUILDER</h2>
+<ul>
+<li>YouTube Demo: <a href="https://youtu.be/oOKJLMAkEiw" class="uri">https://youtu.be/oOKJLMAkEiw</a></li>
+<li>GitHub: <a href="https://github.com/petergandenberger/dashboard-builder" class="uri">https://github.com/petergandenberger/dashboard-builder</a></li>
+<li>Online Demo: <a href="https://pega.shinyapps.io/dashboard-builder/" class="uri">https://pega.shinyapps.io/dashboard-builder/</a></li>
+</ul>
+</section>
+<section class="slide level2">
 
-<img data-src="figure/htmlpsychopath.PNG" class="r-stretch quarto-figure-center"></section>
+
+<img data-src="figure/htmlpsychopath.PNG" width="411" class="r-stretch quarto-figure-center"></section>
 <section id="meetings" class="slide level2">
 <h2>2022 MEETINGS</h2>
 <ul>
@@ -732,6 +750,22 @@
           return popup.innerHTML;
         });
       }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var filterRegex = new RegExp('/' + window.location.host + '/');
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+        var links = window.document.querySelectorAll('a:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+              // target, if specified
+              link.setAttribute("target", "_blank");
+              // default icon
+              link.classList.add("external");
+          }
+        }
     });
     </script>
     
