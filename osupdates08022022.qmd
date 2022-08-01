@@ -67,6 +67,20 @@ library(knitr)
 
 ------------------------------------------------------------------------
 
+## PARTICIPATORY SCIENCE
+
+-   [EPA Vision for Participatory Science](https://www.epa.gov/participatory-science/epa-vision-participatory-science)
+
+::: callout-note
+## Vision Statement
+
+***EPA envisions a future where all parts of society are increasingly engaged and empowered to help advance scientific knowledge that informs environmental protection actions on local, regional, and national scales. In this vision, participatory science projects will provide accessible, actionable information that improves environmental awareness and decision making.***
+:::
+
+-   [A cautionary tale...](https://pubs.acs.org/doi/abs/10.1021/es980711l)
+
+------------------------------------------------------------------------
+
 ## NO CODE/LOW CODE APPS
 
 -   [What if all workers wrote software, not just the geek elite?](https://www.economist.com/business/2022/01/29/what-if-all-workers-wrote-software-not-just-the-geek-elite)
