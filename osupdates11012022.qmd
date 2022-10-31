@@ -1,0 +1,146 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "11/01/2022"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+
+------------------------------------------------------------------------
+
+## USEPA ARCHIVE GUIDANCE
+
+::: columns
+::: {.column width="60%"}
+-   Last meeting: [Demistifying Data Repositories](https://drive.google.com/drive/u/0/folders/1EyX5a4IXf-qHVnUnLr-3GuB8_9nK9hmW)
+-   Using Data Repositories for Ocean and Coastal Acidification Monitoring Data
+-   Tampa Bay OA monitoring [![](figure/tboa.jpg)](https://www.usgs.gov/centers/spcmsc/news/tampa-bay-coastal-acidification-research-featured-epa-national-estuary-program)
+:::
+
+::: {.column width="40%"}
+[![](figure/archiveoa.jpg)](https://epa.gov/system/files/documents/2022-09/12065_NEP%20Report_051622.pdf)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## The Openscapes Flywheel
+
+* New preprint describing a framework for managers to facilitate/scale OS practices: [link](https://eartharxiv.org/repository/view/4560/)
+* Useful examples and metaphor for adopting OS at the institutional level
+     * Engage bright spots
+     * Empower a learning culture
+     * Amplify Open science leaders
+* Slow down to speed up!
+
+------------------------------------------------------------------------
+
+## TRASH FREE WATERS (TFW)
+
+-   An EPA initiative to reduce trash entering surface waters by preventing waste at its source
+-   TBEP has been implementing a [TFW initiative](https://tbep.org/our-work/education/trash-free-waters/) since 2019 with five partners
+-   Will result in a [Litter Management Plan](https://tbep.org/our-work/education/trash-free-waters/#plan)
+
+![](figure/litterdevices.jpg)
+
+------------------------------------------------------------------------
+
+## TRASH FREE WATERS (TFW)
+
+-   Data website in development: [link](https://tbep-tech.github.io/trash-free-waters/)
+
+![](figure/tfwdata.jpg){fig-align="center"}
+
+------------------------------------------------------------------------
+
+## CCHA UPDATES
+
+::: columns
+::: {.column width="60%"}
+-   Assess long-term effects of sea level rise on emergent tidal wetlands
+-   Monitor transition zones from shoreline to uplands at ten locations
+-   Repeat surveys every 3-5 years for next few decades
+:::
+
+::: {.column width="40%"}
+![](figure/sitemap.jpg)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## CCHA UPDATES
+
+-   Provide recommendations on redued sampling effort for vegetation transects
+
+![](figure/transectdesign.jpg){fig-aling="center"}
+
+------------------------------------------------------------------------
+
+## CCHA UPDATES
+
+-   Analysis of reduced effort: [link](https://tbep-tech.github.io/ccha-sampling-effort/)
+-   Why OS is important for this project:
+    -   Need transparency with partners
+    -   Need replicable analyses
+    -   Need record of the changes
+
+------------------------------------------------------------------------
+
+## QUARTO
+
+-   An open-source scientific and technical publishing system
+-   Recently unveiled earlier this year
+    -   [We don't talk about Quarto](https://www.apreshill.com/blog/2022-04-we-dont-talk-about-quarto/)
+    -   [Quarto at RStudio Conference](https://quarto.org/docs/blog/posts/2022-06-21-rstudio-conf-2022-quarto/)
+-   A successor to RMarkdown - language agnostic (works with R, Python, Julia, and Observable)
+<br>
+<br>
+[![](figure/quarto.png)](https://quarto.org/)
+
+------------------------------------------------------------------------
+
+## OPEN SCIENCE TRAINING
+
+[![](figure/2023 Open Science Workshop.png)](https://tbep-tech.github.io/tbep-os-workshop/)
+
+[Register](http://events.constantcontact.com/register/event?llr=e6budacab&oeidk=a07ejgibn3w5d1be2fc) (email forthcoming)
+
+------------------------------------------------------------------------
+
+## 2023 MEETINGS
+
+-   Proposed schedule
+    -   Feb
+    -   May
+    -   Aug
+    -   Nov
+-   Send me or Meagan ideas for speakers and topics!
