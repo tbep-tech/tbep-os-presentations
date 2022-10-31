@@ -52,7 +52,7 @@ library(knitr)
 
 ------------------------------------------------------------------------
 
-## The Openscapes Flywheel
+## THE OPENSCAPES FLYWHEEL
 
 * New preprint describing a framework for managers to facilitate/scale OS practices: [link](https://eartharxiv.org/repository/view/4560/)
 * Useful examples and metaphor for adopting OS at the institutional level
