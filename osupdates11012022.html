@@ -7,7 +7,7 @@
 <link href="osupdates11012022_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="osupdates11012022_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet" data-mode="light">
 <link href="osupdates11012022_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.1.251">
+  <meta name="generator" content="quarto-1.0.37">
 
   <meta name="author" content="Dr.&nbsp;Marcus Beck, mbeck@tbep.org">
   <meta name="dcterms.date" content="2022-11-01">
@@ -20,15 +20,10 @@
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: auto; overflow-x: auto;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
     ul.task-list{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
   </style>
   <link rel="stylesheet" href="osupdates11012022_files/libs/revealjs/dist/theme/quarto.css" id="theme">
   <link href="osupdates11012022_files/libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
@@ -404,7 +399,7 @@
 <section id="ccha-updates-1" class="slide level2">
 <h2>CCHA UPDATES</h2>
 <ul>
-<li>Provide recommendations on redued sampling effort for vegetation transects</li>
+<li>Provide recommendations on reduced sampling effort for vegetation transects</li>
 </ul>
 
 <img data-src="figure/transectdesign.jpg" class="r-stretch quarto-figure-center"></section>
@@ -775,8 +770,7 @@
       for (var i=0; i<noterefs.length; i++) {
         const ref = noterefs[i];
         tippyHover(ref, function() {
-          // use id or data attribute instead here
-          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          let href = ref.getAttribute('href');
           try { href = new URL(href).hash; } catch {}
           const id = href.replace(/^#\/?/, "");
           const note = window.document.getElementById(id);

@@ -99,7 +99,7 @@ library(knitr)
 
 ## CCHA UPDATES
 
--   Provide recommendations on redued sampling effort for vegetation transects
+-   Provide recommendations on reduced sampling effort for vegetation transects
 
 ![](figure/transectdesign.jpg){fig-aling="center"}
 
