@@ -1,0 +1,240 @@
+---
+title: "2022 PROVISIONAL WATER QUALITY REPORT CARD"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "11/15/2022"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Nitrogen Management Consortium"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+library(ggplot2)
+library(patchwork)
+library(gridExtra)
+
+maxyr <- 2022
+partialyr <- T
+
+# get legend from an existing ggplot object
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+```
+
+------------------------------------------------------------------------
+
+## RA FRAMEWORK
+
+::: columns
+::: {.column width="50%"}
+-   Each year, assess attainment of chlorophyll threshold in each segment
+-   Follow NMC actions for segments that don't meet threshold
+-   Annual reporting to FDEP
+:::
+
+::: {.column width="50%"}
+![](figure/decisionframework.png){width="450" fig-align="center"}
+:::
+:::
+
+------------------------------------------------------------------------
+
+## HILLSBOROUGH BAY
+
+![](figure/hbra.jpg)
+
+------------------------------------------------------------------------
+
+## OLD TAMPA BAY
+
+![](figure/otbra.jpg)
+
+------------------------------------------------------------------------
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::::: {.columns style='display: flex !important; height: 80%;'}
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Management](figure/wq2022prov1.jpg){width="360"} 
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Regulatory](figure/wq2022prov2.jpg){width="360"} 
+:::
+
+:::::
+
+
+------------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+* Each bay segment assigned a management action
+
+![](figure/wqactions.jpg)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT RESULTS
+
+![](figure/wq2022seg.jpg)
+
+* Oct, Nov, Dec based on average from five years prior
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+```{r}
+show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = T) +
+  scale_y_continuous(expand = c(0,0), breaks = sort(unique(epcdata$yr))) + 
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9))
+```
+
+------------------------------------------------------------------------
+
+## OLD TAMPA BAY DETAILS
+
+```{r}
+show_segplotly(epcdata, yrrng = c(1975, maxyr), bay_segment = 'OTB', partialyr = T, height = 600)
+```
+
+------------------------------------------------------------------------
+
+## REGULATORY OUTCOMES
+
+```{r}
+show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = T) +
+  scale_y_continuous(expand = c(0,0), breaks = sort(unique(epcdata$yr))) + 
+  coord_flip() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9))
+```
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5)
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.positio = 'none')
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+------------------------------------------------------------------------
+
+## SEASONAL TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5)
+  )
+
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.position = 'none')
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none')
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none')
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none')
+
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+------------------------------------------------------------------------
+
+## CONCLUSIONS
+
+* All segments provisionally meet management targets and regulatory thresholds in 2022
+* First year of 2022 - 2026 RA period
+* [Draft 2022 RA Update](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc) to be submitted to FDEP next month
+
+------------------------------------------------------------------------
+
+## TAKE HOME
+
+* Water quality is variable, one good year does not mean a long-term improvement
+* Seagrasses continue to decline - other stressors?
+* Stick to nitrogen paradigm, but are there other management actions to consider? 
+
+![](figure/seagrasscov.png){width="550" fig-align="center"}  
