@@ -4,6 +4,7 @@ author:
    - name: Dr. Marcus Beck, <mbeck@tbep.org>, Kerry Flaherty-Walia <kfwalia@tbep.org>
 institute: "Tampa Bay Estuary Program"
 date: "February, 2023"
+date-format: "MMM, YYYY"
 format:
   revealjs:
     logo: figure/TBEP_logo.png
@@ -188,7 +189,7 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
 
 ------------------------------------------------------------------------
 
-## TARGET ATTAINMENT VS WORST CASE
+## TARGET ATTAINMENT vs WORST CASE
 
 <br>
 
