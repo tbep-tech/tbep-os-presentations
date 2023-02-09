@@ -523,23 +523,39 @@ dat <- bind_rows(datall, dat2021, dat2022) %>%
   ) %>% 
   left_join(wqatt, by = 'yr')
 
+yrmd <- dat %>%
+  mutate(pyro = ifelse(pyro == 0, NA, pyro)) %>% 
+  summarise(medv = median(pyro, na.rm = T), .by = c('yr', 'outcome'))
+gndave <- yrmd %>% 
+  summarise(gndave = mean(medv)) %>% 
+  pull(gndave)
+
 ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, color = outcome))  + 
-  geom_boxplot(alpha = 0.7) + 
-  geom_point(position = position_jitter(width = 0.2)) + 
+  # geom_boxplot(alpha = 0.7) +
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.25) + 
+  stat_summary(fun = median, geom = 'point', size = 6) + 
+
+  geom_segment(data = yrmd,
+    aes(x = factor(yr), xend = factor(yr),
+        y = gndave, yend = medv),
+    size = 1
+  ) +
+  geom_hline(aes(yintercept = gndave), color = "black", size = 0.6) +
   scale_y_log10(breaks = c(1e4, 1e5, 1e6), labels = c('Low (1e4)', 'Medium (1e5)', 'High (1e6)')) + 
   theme_minimal() + 
   theme(
     panel.grid.major.x = element_blank(), 
     panel.grid.minor.x = element_blank(), 
     panel.grid.minor.y = element_blank(),
-    legend.position = 'none'
+    legend.position = 'none', 
+    axis.text.x = element_text(size = 12)
   ) +
   scale_fill_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
   scale_color_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
   labs(
     x = NULL, 
     y = expression(paste(italic('P. bahamense'), ' (cells/L)')), 
-    title = 'OTB cell counts by year colored by water quality outcomes',
+    title = 'Median OTB cell counts by year colored by water quality outcomes',
     caption = 'Data from FWC routine monitoring stations',
     fill = NULL
   )
