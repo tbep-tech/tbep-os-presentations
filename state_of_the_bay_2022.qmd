@@ -563,7 +563,7 @@ ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, 
 
 ------------------------------------------------------------------------
 
-## PYRO VS WATER QUALITY SAMPLING
+## PYRO vs WATER QUALITY SAMPLING
 
 ```{r}
 dat <- bind_rows(datall, dat2021, dat2022) %>% 
