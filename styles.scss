@@ -44,7 +44,7 @@
 }
 .reveal p {
   font-family: 'Lato';
-  font-weight: 300;
+  font-weight: 350;
   color: #958984;
   font-style: italic;
   letter-spacing: -0.05em;
@@ -57,6 +57,8 @@
 .reveal ul li::before {
   content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
   color: #958984; /* Change the color */
+  font-family: 'Lato';
+  font-weight: 400;
   display: inline-block; /* Needed to add space between the bullet and the text */
   width: 1em; /* Also needed for space (tweak if needed) */
   margin-left: -1em; /* Also needed for space (tweak if needed) */
@@ -64,14 +66,14 @@
 
 .reveal ol {  
   font-family: 'Lato';
-  font-weight: 300;
+  font-weight: 400;
   font-size: 36px; /* roughly h3 font size */
   color: #958984; /* Change the color */
 }
 
 .reveal ul {  
   font-family: 'Lato';
-  font-weight: 300;
+  font-weight: 400;
   font-size: 36px; /* roughly h3 font size */
   color: #958984; /* Change the color */
 }

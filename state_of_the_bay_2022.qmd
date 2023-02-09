@@ -63,71 +63,50 @@ segworst <- tibble(
 ## 2022 SEAGRASS RESULTS
 
 * Baywide loss of 4,161 acres from 2020 to 2022
+* Third straight reporting period with loss
 
 ```{r}
-#| fig-align: "right"
+#| fig-align: "center"
+#| fig-width: 6
+#| fig-height: 3
 show_seagrasscoverage(seagrass, lastlab = 'acres (provisional)')
 ```
 
 ------------------------------------------------------------------------
 
-## 2022 SEAGRASS RESULTS
-
-::: {.columns}
-::: {.column width="50%"}
-* Third reporting period showing a baywide loss
-* Current loss is less than the previous
-:::
-
-::: {.column width="50%"}
-```{r}
-seagrass %>%
-  select(-Hectares) %>%
-  mutate(
-    difv = c(NA, diff(Acres)),
-    perc = paste0(round(100 * difv / lag(Acres), 0), '%'),
-    Acres = as.integer(round(Acres, 0))
-  ) %>%
-  select(Year, Acres, `Change` = difv, `% change` = perc) %>%
-  filter(Year > 2009) %>%
-  knitr::kable() %>%
-  kableExtra::kable_styling(font_size = 30)
-```
-:::
-:::
-
-------------------------------------------------------------------------
-
-## SEAGRASS RATE OF RECOVERY
-
-![](figure/sgrecovrate.PNG)
-
-------------------------------------------------------------------------
-
 ## 2022 SEAGRASS RESULTS: SEGMENT
 
-* Most losses in OTB and HB, OTB shows lowest coverage on record
+* Most losses in OTB and HB, OTB is lowest coverage on record
 
 ```{r}
-#| fig-align: "right"
+#| fig-align: "center"
+#| fig-height: 4.5
+#| fig-width: 9
 toplo <- sgsegest %>%
   filter(segment %in% c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')) %>%
   mutate(acres = acres / 1000) %>%
   mutate(segment = forcats::fct_drop(segment))
 
-hline <- toplo %>%
-  filter(year == 1988) %>%
-  mutate(
-    acres = ifelse(segment == 'Old Tampa Bay', acres, NA)
-  )
-
 subsegtrgs <- segtrgs %>%
   filter(segment %in% levels(toplo$segment))
 
+arrdf <- tibble(
+  segment = factor('Old Tampa Bay', levels = levels(toplo$segment)), 
+  x = factor(2022), 
+  xend = factor(2022), 
+  y = 8, 
+  yend =  5
+)
+
 ggplot(toplo, aes(x = factor(year), y = acres)) +
   geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
-  geom_hline(data = hline, aes(yintercept = acres), linetype = 'dotted') +
   geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
+  geom_segment(
+    data = arrdf,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(length = grid::unit(0.5, "cm")), 
+    size = 2, lineend = 'round', linejoin = 'round', col = 'red'
+  ) + 
   scale_color_manual(values = 'red') +
   facet_wrap(~segment, ncol = 2, scales = 'free') +
   theme(panel.grid.minor=element_blank(),
@@ -139,7 +118,7 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
         axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
         strip.background = element_blank(),
         strip.text = element_text(hjust = 0, size = 13),
-        legend.position = 'bottom'
+        legend.position = 'none'
   ) +
   labs(
     y = 'Seagrass Coverage (x1,000 acres)',
@@ -152,10 +131,12 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
 
 ## 2022 SEAGRASS RESULTS: SEGMENT
 
-* Boca Ciega Bay, Terra Ceia Bay, Manatee River
+* Lower bay segments relatively stable
 
 ```{r}
-#| fig-align: "right"
+#| fig-align: "center"
+#| fig-height: 4.25
+#| fig-width: 9
 toplo <- sgsegest %>%
   filter(segment %in% c('Boca Ciega Bay', 'Terra Ceia Bay', 'Manatee River')) %>%
   mutate(acres = acres / 1000) %>%
@@ -178,7 +159,7 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
         axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
         strip.background = element_blank(),
         strip.text = element_text(hjust = 0, size = 13),
-        legend.position = 'bottom'
+        legend.position = 'none'
   ) +
   labs(
     y = 'Seagrass Coverage (x1,000 acres)',
@@ -191,10 +172,10 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
 
 ## TARGET ATTAINMENT vs WORST CASE
 
-<br>
-
 ```{r}
-
+#| fig-align: "center"
+#| fig-width: 9
+#| fig-height: 5
 levs <- c(levels(sgsegest$segment), 'Total')
 
 # segment coverage targets in 1k acres
@@ -265,12 +246,13 @@ ggplot(toplo, aes(x = segment, y = attain)) +
 
 ```{r}
 #| fig-align: 'center'
+#| fig-width: 9
+#| fig-height: 4
 transectocc <- anlz_transectocc(transect)
-show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
-  labs(title = NULL)
+show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), plotly = T, width = 1000, height = 450) 
 ```
 
-* Transects results are similar, slight uptick from 2021 - 2022
+* Transects results are similar, losses mostly from *H. wrightii*
 * More info at <https://shiny.tbep.org/seagrasstransect-dash/>
 
 ------------------------------------------------------------------------
@@ -316,7 +298,7 @@ show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
 ::: columns
 ::: {.column width="50%"}
 -   Matrix shows attainment of chlorophyll threshold
--   All segments in 2022 met the annual threshold
+-   All segments in 2022 as "Stay the Course"
 -   More info at <https://shiny.tbep.org/wq-dash/>
 :::
 
@@ -325,7 +307,9 @@ show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
 #| fig-height: 6
 #| fig-width: 3
 #| fig-align: "center"
-show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr)
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) + 
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
 ```
 :::
 :::
@@ -336,7 +320,7 @@ show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr)
 
 ::: columns
 ::: {.column width="50%"}
--   Matrix shows attainment of chlorophyll threshold
+-   Matrix shows attainment of chlorophyll threshold (red/green only)
 -   All segments in 2022 met the annual threshold
 -   More info at <https://shiny.tbep.org/wq-dash/>
 :::
@@ -346,16 +330,105 @@ show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr)
 #| fig-height: 6
 #| fig-width: 3
 #| fig-align: "center"
-show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr)
+p <- show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) + 
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
 ```
 :::
 :::
 
 ------------------------------------------------------------------------
 
-## SEASONAL TRENDS
+## CHLOROPHYLL TRENDS
 
--   *K. brevis* observed in middle/lower Tampa Bay late 2022
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5)
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.positio = 'none')
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+
+------------------------------------------------------------------------
+
+## LIGHT ATTENUATION TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5)
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.positio = 'none')
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL BY SEASON
+
+-   *K. brevis* observed in lower Tampa Bay late 2022
 
 ```{r}
 #| fig-align: "center"
@@ -374,12 +447,7 @@ p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, p
 p1leg <- g_legend(p1)
 p1 <- p1 + theme(legend.position = 'none')
 p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none')
-p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none') +
-  geom_segment(
-    aes(x = 11, xend = 11, y = 25, yend =  15),
-    arrow = arrow(length = grid::unit(0.5, "cm")), 
-    size = 2, lineend = 'round', linejoin = 'round', col = 'red'
-  )
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none')
 p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none') +
   geom_segment(
     aes(x = 11, xend = 11, y = 16, yend =  11),
@@ -417,7 +485,7 @@ grid.arrange(
 -   Past exceedances have been linked eutrophic conditions, sometimes caused by harmful algal blooms
 -   *Pyrodinium bahamense* in Old Tampa Bay, red tide from Gulf
 
-![](figure/TBEP_N_Paradigm.png){fig-align="center"}
+![](figure/TBEP_N_Paradigm.png){fig-align="center" width=60%}
 
 ------------------------------------------------------------------------
 
@@ -563,6 +631,188 @@ ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, 
 
 ------------------------------------------------------------------------
 
+## TAKE HOME
+
+-   Hopeful that preliminary 2022 water quality is a beginning to longer-term improvements
+-   Water quality in OTB has been highly variable, one good year does not mean a long-term improvement, key HAB events may have been missed
+-   Seagrasses may continue to decline - What other stressors are at play?
+-   Stick to our nitrogen load reduction efforts, but investigate other management actions to kickstart seagrass recovery
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Nekton index reports on the health of fish and inverts
+-   Responds to water quality and habitat degradation
+-   2021 results show all but LTB as intermediate
+-   More info at <https://shiny.tbep.org/nekton-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+tbniscr <- anlz_tbniscr(fimdata)
+p <- show_tbnimatrix(tbniscr, txtsz = NULL) + 
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+-   2021 drop in scores likely from red tide effects
+
+```{r}
+tbniscr <- anlz_tbniscr(fimdata)
+show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
+```
+
+------------------------------------------------------------------------
+
+## BENTHIC RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Benthic index reports on the health of aquatic organisms in or near the bay bottom
+-   Responds to pollutants that can accumulate in the sediment
+-   2021 results similar to previous years
+-   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-width: 3
+#| fig-height: 6
+#| fig-align: "center"
+tbbiscr <- anlz_tbbiscr(benthicdata)
+p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) + 
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## 2022 HABITAT RESTORATION
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/bar2022.png)
+
+------------------------------------------------------------------------
+
+## NUMBER OF PROJECTS: 2020-2022
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/totalpie.png)
+
+
+------------------------------------------------------------------------
+
+## HABITAT REPORT CARD
+
+* Newly developed habitat report card, uses land use/cover data
+
+![](figure/hmpureporcriteria.PNG)
+
+------------------------------------------------------------------------
+
+## HABITAT REPORT CARD
+
+```{r}
+p <- show_hmpreport(acres, subtacres, hmptrgs, typ = 'targets') + 
+  labs(title = NULL) +
+  theme(
+    axis.text.y = element_text(size = 8)
+  )
+
+collev <- p$data$metric
+
+ax2 <- list(
+      tickfont = list(size=12),
+      overlaying = "x",
+      nticks = length(collev),
+      side = "top",
+      tickangle = 335,
+      ticktext = collev,
+      ticklabelposition = 'outside right'
+      )
+
+show_matrixplotly(p, hmp = T, width = 800, height = 550) %>% 
+      plotly::layout(xaxis2 = ax2)
+```
+
+------------------------------------------------------------------------
+
+## HABITAT RESTORATION PRIORITIES
+
+<br>
+
+::: {.columns style="display: flex !important; height: 20%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa arrows-up-to-line size=3x >}} 
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa shield-halved size=3x >}} 
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa thumbs-up size=3x >}} 
+:::
+:::
+
+::: {.columns style="display: flex !important; height: 30%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Focus on seagrass, oysters, salt marsh, freshwater wetlands
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Uplands - protect existing habitat!
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Mangroves expected to expand
+:::
+:::
+
+* Additional info at <https://tbep-tech.github.io/tbeptools/articles/habitatmasterplan>
+
+------------------------------------------------------------------------
+
+## EXTRA SLIDES
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS RESULTS
+
+```{r}
+seagrass %>%
+  select(-Hectares) %>%
+  mutate(
+    difv = c(NA, diff(Acres)),
+    perc = paste0(round(100 * difv / lag(Acres), 0), '%'),
+    Acres = as.integer(round(Acres, 0))
+  ) %>%
+  select(Year, Acres, `Change` = difv, `% change` = perc) %>%
+  filter(Year > 2009) %>%
+  knitr::kable() %>%
+  kableExtra::kable_styling(font_size = 30)
+```
+
+------------------------------------------------------------------------
+
+## SEAGRASS RATE OF RECOVERY
+
+![](figure/sgrecovrate.PNG)
+
+------------------------------------------------------------------------
+
 ## PYRO vs WATER QUALITY SAMPLING
 
 ```{r}
@@ -619,132 +869,3 @@ ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
     caption = 'Data from FWC routine monitoring stations, dotted lines are bridge locations'
   )
 ```
-
-------------------------------------------------------------------------
-
-## NEKTON RESULTS
-
-::: columns
-::: {.column width="50%"}
--   Nekton index reports on the health of fish and inverts
--   Responds to water quality and habitat degradation
--   2021 results show all but LTB as intermediate
--   More info at <https://shiny.tbep.org/nekton-dash/>
-:::
-
-::: {.column width="50%"}
-```{r}
-#| fig-height: 6
-#| fig-width: 3
-#| fig-align: "center"
-tbniscr <- anlz_tbniscr(fimdata)
-show_tbnimatrix(tbniscr, txtsz = NULL)
-```
-:::
-:::
-
-------------------------------------------------------------------------
-
-## NEKTON RESULTS
-
--   2021 drop in scores likely from red tide effects
-
-```{r}
-tbniscr <- anlz_tbniscr(fimdata)
-show_tbniscr(tbniscr)
-```
-
-------------------------------------------------------------------------
-
-## BENTHIC RESULTS
-
-::: columns
-::: {.column width="50%"}
--   Benthic index reports on the health of aquatic organisms in or near the bay bottom
--   Responds to pollutants that can accumulate in the sediment
--   2021 results similar to previous years
--   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
-:::
-
-::: {.column width="50%"}
-```{r}
-#| fig-width: 3
-#| fig-height: 6
-#| fig-align: "center"
-tbbiscr <- anlz_tbbiscr(benthicdata)
-show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB'))
-```
-:::
-:::
-
-------------------------------------------------------------------------
-
-## 2022 HABITAT RESTORATION
-
-![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/bar2022.png)
-
-------------------------------------------------------------------------
-
-## 2022 HABITAT RESTORATION
-
-![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/totalpie.png)
-
-
-------------------------------------------------------------------------
-
-## HABITAT REPORT CARD
-
-* Newly developed habitat report card, based on land use/cover data
-
-![](figure/hmpureporcriteria.PNG)
-
-------------------------------------------------------------------------
-
-## HABITAT REPORT CARD
-
-```{r}
-show_hmpreport(acres, subtacres, hmptrgs, typ = 'targets') + labs(title = NULL)
-```
-
-------------------------------------------------------------------------
-
-## HABITAT RESTORATION PRIORITIES
-
-::: {.columns style="display: flex !important; height: 20%;"}
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
-{{< fa arrows-up-to-line size=3x >}} 
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
-{{< fa shield-halved size=3x >}} 
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
-{{< fa thumbs-up size=3x >}} 
-:::
-:::
-
-::: {.columns style="display: flex !important; height: 40%;"}
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-Focus on oysters, intertidal wetlands (salt marsh), non-forested wetlands
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-Uplands - protect existing habitat!
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-Mangroves expected to expand
-:::
-:::
-
-* Additional info at <https://tbep-tech.github.io/tbeptools/articles/habitatmasterplan>
-
-------------------------------------------------------------------------
-
-## TAKE HOME
-
--   Hopeful that preliminary 2022 water quality is a beginning to longer-term improvements
--   Water quality in OTB has been highly variable, one good year does not mean a long-term improvement, key HAB events may have been missed
--   Seagrasses may continue to decline - What other stressors are at play?
--   Stick to our nitrogen load reduction efforts, but investigate other management actions to kickstart seagrass recovery
