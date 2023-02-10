@@ -297,7 +297,7 @@ show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB
 
 ::: columns
 ::: {.column width="50%"}
--   Matrix shows attainment of chlorophyll threshold
+-   Matrix shows attainment of chlorophyll and light attenuation threshold
 -   All segments in 2022 as "Stay the Course"
 -   More info at <https://shiny.tbep.org/wq-dash/>
 :::
