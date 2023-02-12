@@ -74,6 +74,10 @@ show_seagrasscoverage(seagrass, lastlab = 'acres (provisional)')
 
 ------------------------------------------------------------------------
 
+## {background-image="figure/sgcovani.gif" background-size="contain"}
+
+------------------------------------------------------------------------
+
 ## 2022 SEAGRASS RESULTS: SEGMENT
 
 * Most losses in OTB and HB, OTB is lowest coverage on record
@@ -91,10 +95,10 @@ subsegtrgs <- segtrgs %>%
   filter(segment %in% levels(toplo$segment))
 
 arrdf <- tibble(
-  segment = factor('Old Tampa Bay', levels = levels(toplo$segment)), 
-  x = factor(2022), 
-  xend = factor(2022), 
-  y = 8, 
+  segment = factor('Old Tampa Bay', levels = levels(toplo$segment)),
+  x = factor(2022),
+  xend = factor(2022),
+  y = 8,
   yend =  5
 )
 
@@ -104,9 +108,9 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
   geom_segment(
     data = arrdf,
     aes(x = x, xend = xend, y = y, yend = yend),
-    arrow = arrow(length = grid::unit(0.5, "cm")), 
+    arrow = arrow(length = grid::unit(0.5, "cm")),
     size = 2, lineend = 'round', linejoin = 'round', col = 'red'
-  ) + 
+  ) +
   scale_color_manual(values = 'red') +
   facet_wrap(~segment, ncol = 2, scales = 'free') +
   theme(panel.grid.minor=element_blank(),
@@ -249,7 +253,7 @@ ggplot(toplo, aes(x = segment, y = attain)) +
 #| fig-width: 9
 #| fig-height: 4
 transectocc <- anlz_transectocc(transect)
-show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), plotly = T, width = 1000, height = 450) 
+show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), plotly = T, width = 1000, height = 450)
 ```
 
 * Transects results are similar, losses mostly from *H. wrightii*
@@ -307,7 +311,7 @@ show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB
 #| fig-height: 6
 #| fig-width: 3
 #| fig-align: "center"
-p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) + 
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) +
   theme(axis.text.y = element_text(size = 8))
 show_matrixplotly(p, height = 600, width = 300)
 ```
@@ -330,7 +334,7 @@ show_matrixplotly(p, height = 600, width = 300)
 #| fig-height: 6
 #| fig-width: 3
 #| fig-align: "center"
-p <- show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) + 
+p <- show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) +
   theme(axis.text.y = element_text(size = 8))
 show_matrixplotly(p, height = 600, width = 300)
 ```
@@ -451,7 +455,7 @@ p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, p
 p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none') +
   geom_segment(
     aes(x = 11, xend = 11, y = 16, yend =  11),
-    arrow = arrow(length = grid::unit(0.5, "cm")), 
+    arrow = arrow(length = grid::unit(0.5, "cm")),
     size = 2, lineend = 'round', linejoin = 'round', col = 'red'
   )
 
@@ -494,81 +498,81 @@ grid.arrange(
 ```{r}
 
 bridges <- tibble(
-  brdg = c('Gandy', 'HF', 'CC'), 
+  brdg = c('Gandy', 'HF', 'CC'),
   Latitude = c(27.880486, 27.922358652608654, 27.965458)
 )
 
 # https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
-datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>% 
+datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
   select(
-    yr = Year, 
-    date = Sample_Date, 
-    Latitude, 
-    Longitude, 
+    yr = Year,
+    date = Sample_Date,
+    Latitude,
+    Longitude,
     pyro = P..bahamense.Abundance..cells.L.
-  ) %>% 
+  ) %>%
   mutate(date = mdy(date))
 
 # 2021 only
-dat2021 <- read.csv(here('data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>% 
+dat2021 <- read.csv(here('data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
   select(
-    date = Sample_Date, 
-    Latitude, 
-    Longitude, 
+    date = Sample_Date,
+    Latitude,
+    Longitude,
     pyro = Pbahamense..cells.L.
-  ) %>% 
+  ) %>%
   mutate(
     date = case_when(
-      grepl('[a-z]', date) ~ dmy(date), 
+      grepl('[a-z]', date) ~ dmy(date),
       T ~ mdy(date)
     )
   )
-  
+
 # 2022 only
-dat2022 <- read.csv(here('data/Pyrodinium_Chla_OTBMP_2022.csv')) %>% 
+dat2022 <- read.csv(here('data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
   select(
-    date = Date, 
-    Latitude, 
-    Longitude, 
+    date = Date,
+    Latitude,
+    Longitude,
     pyro = Pyrodinium..Cells.L.
-  ) %>% 
+  ) %>%
   mutate(date = mdy(date))
 
 brks <- c(-Inf, 1e4, 1e5, 1e6, Inf)
 labs <- c('No bloom', 'Low', 'Medium', 'High')
 
-dat <- bind_rows(datall, dat2021, dat2022) %>% 
+dat <- bind_rows(datall, dat2021, dat2022) %>%
   mutate(
-    yr = year(date), 
-    doy = yday(date), 
-    pyro = ifelse(pyro == 0, NA, pyro), 
-    pyrocat = cut(pyro, breaks = brks, labels = labs), 
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
     pyro = pmin(3e6, pyro)
   )
 
-ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) + 
+ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
   geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
-  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') + 
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
   geom_point(data = subset(dat, is.na(pyro)), aes(shape = "No cells"),
              size = 1, color = "lightgrey") +
-  scale_x_continuous(limits = c(0, 365)) + 
+  scale_x_continuous(limits = c(0, 365)) +
   scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
   scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
-  facet_wrap(~yr, ncol = 4) + 
-  theme_bw() + 
+  facet_wrap(~yr, ncol = 4) +
+  theme_bw() +
   theme(
-    strip.background = element_blank(), 
+    strip.background = element_blank(),
     panel.grid = element_blank(),
     legend.spacing.y = unit(-0.2, "cm")
-  ) + 
-  guides(fill = guide_legend(override.aes = list(size = 3), order = 2), 
+  ) +
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
          size = guide_legend(order = 3),
          shape = guide_legend(order = 1)) +
   labs(
-    x = 'Day of Year', 
+    x = 'Day of Year',
     shape = NULL,
-    fill = 'Bloom intensity\n', 
-    size = 'Cells/L\n', 
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
     subtitle = expression(paste(italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
     caption = 'Data from FWC routine monitoring stations, dotted lines are bridge locations'
   )
@@ -580,28 +584,28 @@ ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
 ## PYRODINIUM ANNUAL TRENDS
 
 ```{r}
-wqatt <- anlz_avedat(epcdata) %>% 
-  anlz_attain()%>% 
-  filter(bay_segment == 'OTB') %>% 
+wqatt <- anlz_avedat(epcdata) %>%
+  anlz_attain()%>%
+  filter(bay_segment == 'OTB') %>%
   mutate(outcome = factor(outcome, levels = c('red', 'yellow', 'green')))
-dat <- bind_rows(datall, dat2021, dat2022) %>% 
+dat <- bind_rows(datall, dat2021, dat2022) %>%
   mutate(
-    yr = year(date), 
+    yr = year(date),
     doy = yday(date)
-  ) %>% 
+  ) %>%
   left_join(wqatt, by = 'yr')
 
 yrmd <- dat %>%
-  mutate(pyro = ifelse(pyro == 0, NA, pyro)) %>% 
+  mutate(pyro = ifelse(pyro == 0, NA, pyro)) %>%
   summarise(medv = median(pyro, na.rm = T), .by = c('yr', 'outcome'))
-gndave <- yrmd %>% 
-  summarise(gndave = mean(medv)) %>% 
+gndave <- yrmd %>%
+  summarise(gndave = mean(medv)) %>%
   pull(gndave)
 
-ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, color = outcome))  + 
+ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, color = outcome))  +
   # geom_boxplot(alpha = 0.7) +
-  geom_point(position = position_jitter(width = 0.2), alpha = 0.25) + 
-  stat_summary(fun = median, geom = 'point', size = 6) + 
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.25) +
+  stat_summary(fun = median, geom = 'point', size = 6) +
 
   geom_segment(data = yrmd,
     aes(x = factor(yr), xend = factor(yr),
@@ -609,20 +613,20 @@ ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, 
     size = 1
   ) +
   geom_hline(aes(yintercept = gndave), color = "black", size = 0.6) +
-  scale_y_log10(breaks = c(1e4, 1e5, 1e6), labels = c('Low (1e4)', 'Medium (1e5)', 'High (1e6)')) + 
-  theme_minimal() + 
+  scale_y_log10(breaks = c(1e4, 1e5, 1e6), labels = c('Low (1e4)', 'Medium (1e5)', 'High (1e6)')) +
+  theme_minimal() +
   theme(
-    panel.grid.major.x = element_blank(), 
-    panel.grid.minor.x = element_blank(), 
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
     panel.grid.minor.y = element_blank(),
-    legend.position = 'none', 
+    legend.position = 'none',
     axis.text.x = element_text(size = 12)
   ) +
   scale_fill_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
   scale_color_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
   labs(
-    x = NULL, 
-    y = expression(paste(italic('P. bahamense'), ' (cells/L)')), 
+    x = NULL,
+    y = expression(paste(italic('P. bahamense'), ' (cells/L)')),
     title = 'Median OTB cell counts by year colored by water quality outcomes',
     caption = 'Data from FWC routine monitoring stations',
     fill = NULL
@@ -656,7 +660,7 @@ ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, 
 #| fig-width: 3
 #| fig-align: "center"
 tbniscr <- anlz_tbniscr(fimdata)
-p <- show_tbnimatrix(tbniscr, txtsz = NULL) + 
+p <- show_tbnimatrix(tbniscr, txtsz = NULL) +
   theme(axis.text.y = element_text(size = 8))
 show_matrixplotly(p, height = 600, width = 300)
 ```
@@ -692,7 +696,7 @@ show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
 #| fig-height: 6
 #| fig-align: "center"
 tbbiscr <- anlz_tbbiscr(benthicdata)
-p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) + 
+p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
   theme(axis.text.y = element_text(size = 8))
 show_matrixplotly(p, height = 600, width = 300)
 ```
@@ -725,7 +729,7 @@ show_matrixplotly(p, height = 600, width = 300)
 ## HABITAT REPORT CARD
 
 ```{r}
-p <- show_hmpreport(acres, subtacres, hmptrgs, typ = 'targets') + 
+p <- show_hmpreport(acres, subtacres, hmptrgs, typ = 'targets') +
   labs(title = NULL) +
   theme(
     axis.text.y = element_text(size = 8)
@@ -743,7 +747,7 @@ ax2 <- list(
       ticklabelposition = 'outside right'
       )
 
-show_matrixplotly(p, hmp = T, width = 800, height = 550) %>% 
+show_matrixplotly(p, hmp = T, width = 800, height = 550) %>%
       plotly::layout(xaxis2 = ax2)
 ```
 
@@ -755,15 +759,15 @@ show_matrixplotly(p, hmp = T, width = 800, height = 550) %>%
 
 ::: {.columns style="display: flex !important; height: 20%;"}
 ::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
-{{< fa arrows-up-to-line size=3x >}} 
+{{< fa arrows-up-to-line size=3x >}}
 :::
 
 ::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
-{{< fa shield-halved size=3x >}} 
+{{< fa shield-halved size=3x >}}
 :::
 
 ::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
-{{< fa thumbs-up size=3x >}} 
+{{< fa thumbs-up size=3x >}}
 :::
 :::
 
@@ -785,7 +789,7 @@ Mangroves expected to expand
 
 ------------------------------------------------------------------------
 
-## 
+##
 
 <br>
 
@@ -831,42 +835,42 @@ seagrass %>%
 ## PYRO vs WATER QUALITY SAMPLING
 
 ```{r}
-dat <- bind_rows(datall, dat2021, dat2022) %>% 
+dat <- bind_rows(datall, dat2021, dat2022) %>%
   mutate(
-    yr = year(date), 
-    doy = yday(date), 
-    pyro = ifelse(pyro == 0, NA, pyro), 
-    pyrocat = cut(pyro, breaks = brks, labels = labs), 
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
     pyro = pmin(1e6, pyro)
-  ) %>% 
+  ) %>%
   filter(yr == 2022)
 
-epcdts <- epcdata %>% 
-  filter(yr == 2022 & bay_segment == 'OTB') %>% 
+epcdts <- epcdata %>%
+  filter(yr == 2022 & bay_segment == 'OTB') %>%
   mutate(
-    doy = yday(SampleTime), 
+    doy = yday(SampleTime),
     date = format(as.Date(SampleTime), '%b %d')
-  ) %>% 
+  ) %>%
   select(date, doy, Latitude, Longitude)
 
-ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) + 
+ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
   geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
-  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') + 
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
   geom_point(data = subset(dat, is.na(pyro)), aes(shape = "No cells"),
              size = 1, color = "lightgrey", fill = 'lightgrey') +
-  scale_x_continuous(limits = c(150, 275)) + 
+  scale_x_continuous(limits = c(150, 275)) +
   geom_point(data = epcdts, aes(x = doy, y = Latitude, shape = 'EPC chl samples')) +
   scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
   scale_size_continuous(range = c(1, 5), breaks = c(1e5, 5e5, 1e6), labels = c('100k', '500k', '> 1e6')) +
-  scale_shape_manual(values = c(17, 21)) + 
-  theme_bw() + 
+  scale_shape_manual(values = c(17, 21)) +
+  theme_bw() +
   theme(
-    strip.background = element_blank(), 
+    strip.background = element_blank(),
     panel.grid = element_blank(),
     legend.spacing.y = unit(-0.2, "cm")
-  ) + 
+  ) +
   geom_text(data = epcdts, aes(x = doy, y = min(dat$Latitude), label = date), angle = 90, hjust = 0.2) +
-  guides(fill = guide_legend(override.aes = list(size = 3), order = 2), 
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
          size = guide_legend(order = 3),
          shape = guide_legend(order = 1,
                               override.aes = list(
@@ -874,13 +878,13 @@ ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
                                 fill = c('black', 'lightgrey')
                                 )
                               )
-         ) + 
+         ) +
   labs(
-    x = 'Day of Year', 
+    x = 'Day of Year',
     shape = NULL,
-    fill = 'Bloom intensity\n', 
-    size = 'Cells/L\n', 
-    subtitle = expression(paste('2022 ', italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')), 
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
+    subtitle = expression(paste('2022 ', italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
     caption = 'Data from FWC routine monitoring stations, dotted lines are bridge locations'
   )
 ```
