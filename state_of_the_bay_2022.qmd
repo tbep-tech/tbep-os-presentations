@@ -76,6 +76,10 @@ show_seagrasscoverage(seagrass, lastlab = 'acres (provisional)')
 
 ## {background-image="figure/sgcovani.gif" background-size="contain"}
 
+<!-- ------------------------------------------------------------------------ -->
+
+<!-- <img src="figure/sgcovani.gif" width="1200px"/>  -->
+
 ------------------------------------------------------------------------
 
 ## 2022 SEAGRASS RESULTS: SEGMENT
