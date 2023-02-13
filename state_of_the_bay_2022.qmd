@@ -133,6 +133,10 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
 
 ------------------------------------------------------------------------
 
+## {background-image="figure/otbsgcovani.gif" background-size="contain"}
+
+------------------------------------------------------------------------
+
 ## 2022 SEAGRASS RESULTS: SEGMENT
 
 * Lower bay segments relatively stable
