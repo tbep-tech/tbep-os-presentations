@@ -485,3 +485,145 @@ seagrass %>%
 ## SEAGRASS RATE OF RECOVERY
 
 ![](figure/sgrecovrate.PNG)
+
+------------------------------------------------------------------------
+
+## PYRODINIUM IN 2022?
+
+```{r}
+
+bridges <- tibble(
+  brdg = c('Gandy', 'HF', 'CC'),
+  Latitude = c(27.880486, 27.922358652608654, 27.965458)
+)
+
+# https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
+datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
+  select(
+    yr = Year,
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = P..bahamense.Abundance..cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2021 only
+dat2021 <- read.csv(here('data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
+  select(
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = Pbahamense..cells.L.
+  ) %>%
+  mutate(
+    date = case_when(
+      grepl('[a-z]', date) ~ dmy(date),
+      T ~ mdy(date)
+    )
+  )
+
+# 2022 only
+dat2022 <- read.csv(here('data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
+  select(
+    date = Date,
+    Latitude,
+    Longitude,
+    pyro = Pyrodinium..Cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+brks <- c(-Inf, 1e4, 1e5, 1e6, Inf)
+labs <- c('No bloom', 'Low', 'Medium', 'High')
+
+dat <- bind_rows(datall, dat2021, dat2022) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
+    pyro = pmin(3e6, pyro)
+  )
+
+ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
+  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
+  geom_point(data = subset(dat, is.na(pyro)), aes(shape = "No cells"),
+             size = 1, color = "lightgrey") +
+  scale_x_continuous(limits = c(0, 365)) +
+  scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
+  scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
+  facet_wrap(~yr, ncol = 4) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    legend.spacing.y = unit(-0.2, "cm")
+  ) +
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
+         size = guide_legend(order = 3),
+         shape = guide_legend(order = 1)) +
+  labs(
+    x = 'Day of Year',
+    shape = NULL,
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
+    subtitle = expression(paste(italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
+    caption = 'Data from FWC routine monitoring stations, dotted lines are bridge locations'
+  )
+
+```
+
+------------------------------------------------------------------------
+
+## PYRODINIUM ANNUAL TRENDS
+
+```{r}
+wqatt <- anlz_avedat(epcdata) %>%
+  anlz_attain()%>%
+  filter(bay_segment == 'OTB') %>%
+  mutate(outcome = factor(outcome, levels = c('red', 'yellow', 'green')))
+dat <- bind_rows(datall, dat2021, dat2022) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date)
+  ) %>%
+  left_join(wqatt, by = 'yr')
+
+yrmd <- dat %>%
+  mutate(pyro = ifelse(pyro == 0, NA, pyro)) %>%
+  summarise(medv = median(pyro, na.rm = T), .by = c('yr', 'outcome'))
+gndave <- yrmd %>%
+  summarise(gndave = mean(medv)) %>%
+  pull(gndave)
+
+ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, color = outcome))  +
+  # geom_boxplot(alpha = 0.7) +
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.25) +
+  stat_summary(fun = median, geom = 'point', size = 6) +
+
+  geom_segment(data = yrmd,
+    aes(x = factor(yr), xend = factor(yr),
+        y = gndave, yend = medv),
+    size = 1
+  ) +
+  geom_hline(aes(yintercept = gndave), color = "black", size = 0.6) +
+  scale_y_log10(breaks = c(1e4, 1e5, 1e6), labels = c('Low (1e4)', 'Medium (1e5)', 'High (1e6)')) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = 'none',
+    axis.text.x = element_text(size = 12)
+  ) +
+  scale_fill_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
+  scale_color_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
+  labs(
+    x = NULL,
+    y = expression(paste(italic('P. bahamense'), ' (cells/L)')),
+    title = 'Median OTB cell counts by year colored by water quality outcomes',
+    caption = 'Data from FWC routine monitoring stations',
+    fill = NULL
+  )
+```
