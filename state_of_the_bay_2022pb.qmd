@@ -329,8 +329,8 @@ grid.arrange(
 
 -   Hopeful that preliminary 2022 water quality is a beginning to longer-term improvements
 -   Water quality in OTB has been highly variable, one good year does not mean a long-term improvement, key HAB events may have been missed
--   Seagrasses may continue to decline - What other stressors are at play?
--   Stick to our nitrogen load reduction efforts, but investigate other management actions to kickstart seagrass recovery
+-   Seagrasses may continue to decline - do we need to revisit our targets and thresholds? 
+-   Stick to our nitrogen load reduction efforts, but we need to act now and pursue other management actions
 
 ------------------------------------------------------------------------
 
