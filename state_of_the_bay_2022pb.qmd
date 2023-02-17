@@ -327,10 +327,12 @@ grid.arrange(
 
 ## TAKE HOME
 
+::: {.incremental}
 -   Hopeful that preliminary 2022 water quality is a beginning to longer-term improvements
--   Water quality in OTB has been highly variable, one good year does not mean a long-term improvement, key HAB events may have been missed
+-   Water quality in OTB has been highly variable, one good year does not mean a long-term improvement, key events may have been missed
 -   Seagrasses may continue to decline - do we need to revisit our targets and thresholds? 
 -   Stick to our nitrogen load reduction efforts, but we need to act now and pursue other management actions
+:::
 
 ------------------------------------------------------------------------
 
@@ -377,7 +379,7 @@ show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
 -   Benthic index reports on the health of aquatic organisms in or near the bay bottom
 -   Responds to pollutants that can accumulate in the sediment
 -   2021 results similar to previous years
--   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
+-   More info at <https://shiny.tbep.org/benthic-dash>
 :::
 
 ::: {.column width="50%"}
