@@ -1,0 +1,72 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "05/03/2023"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+
+------------------------------------------------------------------------
+
+## BENTHIC DASHBOARD
+
+[https://shiny.tbep.org/benthic-dash](https://shiny.tbep.org/benthic-dash)
+
+![](figure/benthicdash.png)
+
+------------------------------------------------------------------------
+
+## OS TRAINING SUMMARY
+
+[![](figure/2023 Open Science Workshop.png)](https://tbep-tech.github.io/tbep-os-workshop/)
+
+[https://tbep-tech.github.io/tbep-os-workshop/](https://tbep-tech.github.io/tbep-os-workshop/)
+
+------------------------------------------------------------------------
+
+## UPCOMING TRAININGS
+
+* [FL AFS OS workshop May 11th](https://tbep-tech.github.io/flafs-os-workshop/)
+* [Hacking Limnology DSOS-AEMONJ workshop](https://aquaticdatasciopensci.github.io/)
+
+------------------------------------------------------------------------
+
+## GITHUB RESOURCES
+
+-   [Git and GitHub in R for the casual user](https://masalmon.eu/2023/01/12/git-github-casual/)
+-   [Not just for programmers: How GitHub can accelerate collaborative and reproducible research in ecology and evolution](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.14108)
+
+------------------------------------------------------------------------
+
+## 2023 MEETINGS
+
+-   Next meeting Aug 2, 10:00 AM - 11:30 AM - topics?
+-   Final 2023 meeting, Nov 1, 10:00 AM - 11:30 AM
