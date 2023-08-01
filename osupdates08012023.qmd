@@ -1,0 +1,148 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "08/02/2023"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+
+------------------------------------------------------------------------
+
+## FIB TOOLS
+
+* Fecal Indicator Bacteria workflows being developed ([CCMP](https://tbep.org/about-tbep/what-guides-us/) PH-2, PH-4, PH-5)
+* Builds off of Hillsborough River [BMAP work](https://drive.google.com/file/d/1MZnK3cMzV7LRg6dTbCKX8AOZU0GNurJJ/view)
+* Extend baywide, integrated FIB report card
+
+------------------------------------------------------------------------
+
+## TBEPTOOLS FIB DOWNLOAD
+
+* Preliminary workflows described in [tbeptools vignette](https://tbep-tech.github.io/tbeptools/articles/fib.html)
+* Download data from all five counties in TB watershed
+
+```{r}
+#| eval: false
+library(tbeptools)
+
+# get EPC data
+fibdata <- read_importfib('epcfib.xlxs', download_latest = T)
+
+# get Pinellas County data
+pincodata <- read_importwqp(org = '21FLPDEM_WQX', type = 'fib')
+```
+
+------------------------------------------------------------------------
+
+## TBEPTOOLS FIB MAP
+
+* Map month/year results for EPC data by area
+```{r}
+#| out-width: 100%
+show_fibmap(fibdata, yrsel = 2022, mosel = 7, areasel = 'Hillsborough River')
+```
+
+## TBEPTOOLS FIB MATRIX
+
+:::: {.columns}
+
+::: {.column width="55%"}
+* Matrix methods adapted from [2013 report card](https://drive.google.com/file/d/1MZnK3cMzV7LRg6dTbCKX8AOZU0GNurJJ/view)
+* Currently at site-level, can expand to broader spatial units
+```{r}
+#| eval: false
+show_fibmatrix(fibdata)
+```
+:::
+
+::: {.column width="45%"}
+```{r}
+#| echo: false
+#| fig-height: 6
+#| fig-width: 4
+show_fibmatrix(fibdata)
+```
+:::
+
+::::
+
+------------------------------------------------------------------------
+
+## TBEV DASHBOARD DRAFT
+
+[![](figure/tbevex.PNG)](https://shiny.tbep.org/tbev-dash/)
+
+[https://shiny.tbep.org/tbev-dash/](https://shiny.tbep.org/tbev-dash/)
+
+------------------------------------------------------------------------
+
+## CHATGPT AS A CODING RESOURCE
+
+* What is ChatGPT? [What is it doing](https://writings.stephenwolfram.com/2023/02/what-is-chatgpt-doing-and-why-does-it-work/)?
+* How can it help you become a better coder?
+* What should you be aware of?
+
+------------------------------------------------------------------------
+
+## CHATGPT EXAMPLE QUESTIONS
+
+1. Write some R code... 
+1. Make me an R shiny app..
+1. Convert this SAS code to R...
+
+See full questions and answers [here](http://tbep-tech.github.io/tbep-os-presentations/chatgptex.html)
+
+------------------------------------------------------------------------
+
+## CHATGPT TAKEHOME
+
+* It will not replace you, but it will make you more efficient
+* Be very specific with your questions
+* Answers only current to 2021
+* Only as "correct" as the internet, reflects biases
+
+------------------------------------------------------------------------
+
+## UPCOMING TRAININGS
+
+* [Dashboards: Using R to Create Actionable Science](https://conference.cerf.science/2023-workshop--dashboards--using-r-to-create-actionable-science)
+
+------------------------------------------------------------------------
+
+## 2023 MEETINGS
+
+-   Final 2023 meeting, Nov 1, 10:00 AM - 11:30 AM
+     - Lindsay Mullins (MSU): Modernizing data workflows for marine resources
+     - Emma Jones (VDEQ): Open Science at the Virginia Department of Environmental Quality
+- 2024 meeting dates forthcoming

@@ -1,0 +1,192 @@
+---
+title: "ChatGPT examples and responses"
+date: "`r Sys.Date()`"
+format: html
+execute: 
+  eval: false
+---
+
+# Question 1
+
+Write me some R code using the mtcars dataset to plot a comparison of miles per gallon versus car model
+
+## Answer
+
+```{r}
+# Load the mtcars dataset (it should already be available in R)
+data(mtcars)
+
+# Plotting the comparison of miles per gallon (mpg) versus car model
+plot(mpg ~ as.factor(row.names(mtcars)), data = mtcars, 
+     xlab = "Car Model", ylab = "Miles per Gallon", 
+     main = "Comparison of Miles per Gallon by Car Model",
+     col = "blue", pch = 16, cex = 1.5)
+```
+
+# Question 2
+
+Make me an R shiny app with the following dataset to plot a time series of sd_m versus SampleTime with options to select by epchc_station
+
+$ bay_segment            <chr> …
+$ epchc_station          <dbl> …
+$ SampleTime             <dttm> …
+$ yr                     <dbl> …
+$ mo                     <dbl> …
+$ Latitude               <dbl> …
+$ Longitude              <dbl> …
+$ Total_Depth_m          <dbl> …
+$ Sample_Depth_m         <dbl> …
+$ tn                     <dbl> …
+$ tn_q                   <chr> …
+$ sd_m                   <dbl> …
+$ sd_raw_m               <dbl> …
+$ sd_q                   <chr> …
+$ chla                   <dbl> …
+$ chla_q                 <chr> …
+$ Sal_Top_ppth           <dbl> …
+$ Sal_Mid_ppth           <dbl> …
+$ Sal_Bottom_ppth        <dbl> …
+$ Temp_Water_Top_degC    <dbl> …
+$ Temp_Water_Mid_degC    <dbl> …
+$ Temp_Water_Bottom_degC <dbl> …
+$ `Turbidity_JTU-NTU`    <chr> …
+$ Turbidity_Q            <chr> …
+$ Color_345_F45_PCU      <chr> …
+$ Color_345_F45_Q        <chr> …
+
+## Answer
+
+```{r}
+library(shiny)
+library(ggplot2)
+
+# Replace 'your_data.csv' with the path to your dataset file
+dataset <- read.csv("your_data.csv")
+
+ui <- fluidPage(
+  titlePanel("Time Series Plot of sd_m vs SampleTime"),
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("station", "Select Station:", choices = unique(dataset$epchc_station)),
+      dateRangeInput("dateRange", "Select Date Range:",
+                     start = min(dataset$SampleTime), end = max(dataset$SampleTime))
+    ),
+    mainPanel(
+      plotOutput("timeSeriesPlot")
+    )
+  )
+)
+
+server <- function(input, output) {
+  filteredData <- reactive({
+    dataset %>%
+      filter(epchc_station == input$station,
+             SampleTime >= input$dateRange[1] & SampleTime <= input$dateRange[2])
+  })
+  
+  output$timeSeriesPlot <- renderPlot({
+    ggplot(filteredData(), aes(SampleTime, sd_m)) +
+      geom_line() +
+      labs(x = "Sample Time", y = "sd_m") +
+      theme_minimal()
+  })
+}
+
+shinyApp(ui, server)
+```
+
+# Question 3
+
+Convert this SAS code to R:
+
+/* Step 1: Import the dataset */
+/* Replace 'your_dataset.csv' with the path to your dataset file */
+/* If the dataset is in the same folder as your SAS program, you can use a simple filename */
+data work.your_data;
+   infile 'your_dataset.csv' delimiter=',' dsd firstobs=2;
+   input
+      bay_segment : $50.
+      epchc_station
+      SampleTime : datetime.
+      yr
+      mo
+      Latitude
+      Longitude
+      Total_Depth_m
+      Sample_Depth_m
+      tn
+      tn_q : $10.
+      sd_m
+      sd_raw_m
+      sd_q : $10.
+      chla
+      chla_q : $10.
+      Sal_Top_ppth
+      Sal_Mid_ppth
+      Sal_Bottom_ppth
+      Temp_Water_Top_degC
+      Temp_Water_Mid_degC
+      Temp_Water_Bottom_degC
+      Turbidity_JTU_NTU : $10.
+      Turbidity_Q : $10.
+      Color_345_F45_PCU : $10.
+      Color_345_F45_Q : $10.
+   ;
+   format SampleTime datetime20.;
+run;
+
+/* Step 2: Select specific columns */
+/* Here, we select the columns 'SampleTime' and 'sd_m' */
+data work.selected_data;
+   set work.your_data (keep=SampleTime sd_m);
+run;
+
+/* Step 3: Filter rows based on a condition */
+/* Here, we filter rows where 'sd_m' is greater than 0 */
+data work.filtered_data;
+   set work.selected_data;
+   where sd_m > 0;
+run;
+
+/* Step 4: Create a scatter plot of two variables */
+/* Here, we plot 'sd_m' against 'SampleTime' */
+/* Replace 'png' with other formats like 'gif', 'jpeg', or 'pdf' for the output file */
+ods graphics on;
+proc sgplot data=work.filtered_data;
+   scatter x=SampleTime y=sd_m;
+   xaxis label="Sample Time";
+   yaxis label="sd_m";
+run;
+ods graphics off;
+
+## Answer
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Step 1: Import the dataset
+# Replace 'your_dataset.csv' with the path to your dataset file
+# Use read.csv() to read the CSV file
+your_data <- read.csv('your_dataset.csv', header = TRUE)
+
+# Step 2: Select specific columns
+# Here, we select the columns 'SampleTime' and 'sd_m'
+selected_data <- your_data %>%
+  select(SampleTime, sd_m)
+
+# Step 3: Filter rows based on a condition
+# Here, we filter rows where 'sd_m' is greater than 0
+filtered_data <- selected_data %>%
+  filter(sd_m > 0)
+
+# Step 4: Create a scatter plot of two variables
+# Here, we plot 'sd_m' against 'SampleTime'
+# Replace 'png' with other formats like 'png', 'jpeg', or 'pdf' for the output file
+png('scatter_plot.png')
+ggplot(filtered_data, aes(x = SampleTime, y = sd_m)) +
+  geom_point() +
+  xlab("Sample Time") +
+  ylab("sd_m")
+dev.off()
+```
