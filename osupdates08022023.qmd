@@ -144,7 +144,7 @@ Ceate an image of seagrass in Tampa Bay ([from Bing Image Creator](https://www.b
 
 ## UPCOMING TRAININGS
 
--   [Dashboards: Using R to Create Actionable Science](https://conference.cerf.science/2023-workshop--dashboards--using-r-to-create-actionable-science)
+-   CERF 2023 biennial meeting, Nov. 12-16, Portland, OR: [Dashboards: Using R to Create Actionable Science](https://conference.cerf.science/2023-workshop--dashboards--using-r-to-create-actionable-science)
 
 ------------------------------------------------------------------------
 
