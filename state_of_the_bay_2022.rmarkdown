@@ -1,0 +1,932 @@
+---
+title: "2022 STATE OF THE BAY"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>, Kerry Flaherty-Walia <kfwalia@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "February, 2023"
+date-format: "MMM, YYYY"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program February Board Meetings"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+  fig-align: "center"
+  ft.keepnext: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+library(ggplot2)
+library(patchwork)
+library(gridExtra)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+
+maxyr <- 2022
+partialyr <- F
+
+# get legend from an existing ggplot object
+g_legend<-function(a.gplot){
+  tmp <- ggplot_gtable(ggplot_build(a.gplot))
+  leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+  legend <- tmp$grobs[[leg]]
+  return(legend)}
+
+load(file = here('data/sgsegest.RData'))
+load(file = url('https://github.com/tbep-tech/habitat-report-card/raw/main/tabs/tab2022.RData'))
+
+# segment coverage targets in 1k acres
+segtrgs <- tibble(
+  segment = factor(c(levels(sgsegest$segment), 'Total')), 
+  trgs = c(11.1, 1.751, 9.4, 7.4, 8.8, 1.1, 0.449, 40)
+)  
+
+# worst case coverage ests in 1k acres, 1982
+segworst <- tibble(
+  segment = factor(c(levels(sgsegest$segment), 'Total')), 
+  trgs = c(5.94, 0, 4.04, 5.02, 5.77, 0.75, 0.13, 21.65)
+) 
+```
+
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS RESULTS
+
+* Baywide loss of 4,161 acres from 2020 to 2022
+* Third straight reporting period with loss
+
+
+```{r}
+#| fig-align: "center"
+#| fig-width: 6
+#| fig-height: 3
+show_seagrasscoverage(seagrass, lastlab = 'acres (provisional)')
+```
+
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS RESULTS: SEGMENT
+
+* Most losses in OTB and HB, OTB is lowest coverage on record
+
+
+```{r}
+#| fig-align: "center"
+#| fig-height: 4.5
+#| fig-width: 9
+toplo <- sgsegest %>%
+  filter(segment %in% c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')) %>%
+  mutate(acres = acres / 1000) %>%
+  mutate(segment = forcats::fct_drop(segment))
+
+subsegtrgs <- segtrgs %>%
+  filter(segment %in% levels(toplo$segment))
+
+arrdf <- tibble(
+  segment = factor('Old Tampa Bay', levels = levels(toplo$segment)),
+  x = factor(2022),
+  xend = factor(2022),
+  y = 8,
+  yend =  5
+)
+
+ggplot(toplo, aes(x = factor(year), y = acres)) +
+  geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
+  geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
+  geom_segment(
+    data = arrdf,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(length = grid::unit(0.5, "cm")),
+    size = 2, lineend = 'round', linejoin = 'round', col = 'red'
+  ) +
+  scale_color_manual(values = 'red') +
+  facet_wrap(~segment, ncol = 2, scales = 'free') +
+  theme(panel.grid.minor=element_blank(),
+        panel.grid.major=element_blank(),
+        plot.background = element_rect(fill = NA, color = NA),
+        axis.text.y = element_text(colour = 'black'),
+        plot.title = element_text(size = 22, colour = 'black'),
+        legend.text = element_text(size = 16, colour = 'black'),
+        axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 13),
+        legend.position = 'none'
+  ) +
+  labs(
+    y = 'Seagrass Coverage (x1,000 acres)',
+    x = NULL,
+    color = NULL
+  )
+```
+
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS RESULTS: SEGMENT
+
+* Lower bay segments relatively stable
+
+
+```{r}
+#| fig-align: "center"
+#| fig-height: 4.25
+#| fig-width: 9
+toplo <- sgsegest %>%
+  filter(segment %in% c('Boca Ciega Bay', 'Terra Ceia Bay', 'Manatee River')) %>%
+  mutate(acres = acres / 1000) %>%
+  mutate(segment = forcats::fct_drop(segment))
+
+subsegtrgs <- segtrgs %>%
+  filter(segment %in% levels(toplo$segment))
+
+ggplot(toplo, aes(x = factor(year), y = acres)) +
+  geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
+  geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
+  scale_color_manual(values = 'red') +
+  facet_wrap(~segment, ncol = 2, scales = 'free') +
+  theme(panel.grid.minor=element_blank(),
+        panel.grid.major=element_blank(),
+        plot.background = element_rect(fill = NA, color = NA),
+        axis.text.y = element_text(colour = 'black'),
+        plot.title = element_text(size = 22, colour = 'black'),
+        legend.text = element_text(size = 16, colour = 'black'),
+        axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 13),
+        legend.position = 'none'
+  ) +
+  labs(
+    y = 'Seagrass Coverage (x1,000 acres)',
+    x = NULL,
+    color = NULL
+  )
+```
+
+
+------------------------------------------------------------------------
+
+## TARGET ATTAINMENT vs WORST CASE
+
+
+```{r}
+#| fig-align: "center"
+#| fig-width: 9
+#| fig-height: 5
+levs <- c(levels(sgsegest$segment), 'Total')
+
+# segment coverage targets in 1k acres
+segtrgs <- tibble(
+  segment = factor(levs, levels = levs),
+  trgs = c(11.1, 1.751, 9.4, 7.4, 8.8, 1.1, 0.449, 40)
+)
+
+# worst case coverage ests in 1k acres, 1982
+segworst <- tibble(
+  segment = factor(levs, levels = levs),
+  acres = c(5.94, 0, 4.04, 5.02, 5.77, 0.75, 0.13, 21.65)
+)
+
+totest <- seagrass %>%
+  select(-Hectares) %>%
+  mutate(segment = 'Total') %>%
+  rename(
+    year = Year,
+    acres = Acres
+    ) %>%
+  filter(year == 2022)
+
+toplo <- sgsegest %>%
+  filter(year == 2022) %>%
+  bind_rows(totest) %>%
+  mutate(acres = acres / 1000) %>%
+  pivot_wider(names_from = 'year', values_from = 'acres') %>%
+  bind_rows %>%
+  left_join(segworst, by = 'segment') %>%
+  rename(`1982` = acres) %>%
+  left_join(segtrgs, by = 'segment') %>%
+  pivot_longer(cols = c(`2022`, `1982`), names_to = 'Year', values_to = 'Acres') %>%
+  mutate(
+    attain = Acres / trgs,
+    segment = factor(segment, levels = levels(segtrgs$segment)),
+    Year = factor(Year, levels = c(1982, 2022), labels = c('1982 - Worst Case', '2022'))
+  )
+
+ggplot(toplo, aes(x = segment, y = attain)) +
+  coord_cartesian(ylim = c(0, 1.2)) +
+  scale_y_continuous(expand = c(0, 0), labels = scales::percent, breaks = c(0, .25, 0.5, 0.75, 1)) +
+  geom_text(aes(group = Year, label = scales::percent(round(attain, 2))), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) +
+  geom_text(data = segtrgs, aes(y = 1.15, label = paste(formatC(1000 * trgs, format = 'd', big.mark = ','), '\nacres'))) +
+  geom_col(position = 'dodge', aes(group = Year, fill = Year), color = 'black') +
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
+  scale_fill_manual(values = c('grey', '#00806E')) +
+  geom_vline(xintercept = 7.5, linetype = 'dashed') +
+  geom_segment(aes(x = 0.75, xend = 1.25, y = 0.7, yend = 0.54), arrow = arrow(length = unit(0.5, "cm")), size = 2, lineend = 'round', linejoin = 'round', col = 'red') +
+  geom_text(aes(x = 1.5, y = 0.65, label = '2022 OTB is now\nworst case'), size = 3, col = 'red') +
+  theme_minimal() +
+  theme(
+    legend.position = 'bottom',
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank()
+  ) +
+  labs(
+    y = '% Attainment of Target Acreage',
+    fill = NULL,
+    x = NULL
+  )
+```
+
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS TRANSECT RESULTS
+
+
+```{r}
+#| fig-align: 'center'
+#| fig-width: 9
+#| fig-height: 4
+transectocc <- anlz_transectocc(transect)
+show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), plotly = T, width = 1000, height = 450)
+```
+
+
+* Transects results are similar, losses mostly from *H. wrightii*
+* More info at <https://shiny.tbep.org/seagrasstransect-dash/>
+
+------------------------------------------------------------------------
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::: {.columns style="display: flex !important; height: 80%;"}
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+
+![Management](figure/wq2022prov1.jpg){width="360"}
+
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+
+![Regulatory](figure/wq2022prov2.jpg){width="360"}
+
+:::
+
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+-   Each bay segment assigned a management action
+
+![](figure/wqactions.jpg)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT RESULTS
+
+![](figure/wq2022segfinal.PNG)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+::: columns
+::: {.column width="50%"}
+-   Matrix shows attainment of chlorophyll and light attenuation *targets*
+-   All segments in 2022 as "Stay the Course"
+-   More info at <https://shiny.tbep.org/wq-dash/>
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## REGULATORY OUTCOMES
+
+::: columns
+::: {.column width="50%"}
+-   Matrix shows attainment of chlorophyll *threshold* (red/green only)
+-   All segments in 2022 met the annual threshold
+-   More info at <https://shiny.tbep.org/wq-dash/>
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+p <- show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 2022), partialyr = partialyr) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL TRENDS
+
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5)
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.positio = 'none')
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+
+
+------------------------------------------------------------------------
+
+## LIGHT ATTENUATION TRENDS
+
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5)
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.positio = 'none')
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + thrthm + theme(legend.position = 'none')
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL BY SEASON
+
+-   *K. brevis* observed in lower Tampa Bay late 2022
+
+
+```{r}
+#| fig-align: "center"
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5)
+  )
+
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm
+p1leg <- g_legend(p1)
+p1 <- p1 + theme(legend.position = 'none')
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none')
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none')
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + thrthm + theme(legend.position = 'none') +
+  geom_segment(
+    aes(x = 11, xend = 11, y = 16, yend =  11),
+    arrow = arrow(length = grid::unit(0.5, "cm")),
+    size = 2, lineend = 'round', linejoin = 'round', col = 'red'
+  )
+
+# align
+# Get the widths
+pA <- ggplot_gtable(ggplot_build(p1))
+pB <- ggplot_gtable(ggplot_build(p2))
+pC <- ggplot_gtable(ggplot_build(p3))
+pD <- ggplot_gtable(ggplot_build(p4))
+maxWidth = grid::unit.pmax(pA$widths[2:3], pB$widths[2:3], pD$widths[2:3], pD$widths[2:3])
+
+# Set the widths
+pA$widths[2:3] <- maxWidth
+pB$widths[2:3] <- maxWidth
+pC$widths[2:3] <- maxWidth
+pD$widths[2:3] <- maxWidth
+
+grid.arrange(
+  p1leg,
+  arrangeGrob(pA, pB, ncol = 2),
+  arrangeGrob(pC, pD, ncol = 2),
+  ncol = 1, heights = c(0.1, 1, 1)
+)
+```
+
+
+------------------------------------------------------------------------
+
+## WATER QUALITY DRIVERS
+
+-   The water quality outcomes are based on chlorophyll and light attenuation
+-   Past exceedances have been linked eutrophic conditions, sometimes caused by harmful algal blooms
+-   *Pyrodinium bahamense* in Old Tampa Bay, red tide from Gulf
+
+![](figure/TBEP_N_Paradigm.png){fig-align="center" width=60%}
+
+------------------------------------------------------------------------
+
+## PYRODINIUM IN 2022?
+
+
+```{r}
+
+bridges <- tibble(
+  brdg = c('Gandy', 'HF', 'CC'),
+  Latitude = c(27.880486, 27.922358652608654, 27.965458)
+)
+
+# https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
+datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
+  select(
+    yr = Year,
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = P..bahamense.Abundance..cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2021 only
+dat2021 <- read.csv(here('data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
+  select(
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = Pbahamense..cells.L.
+  ) %>%
+  mutate(
+    date = case_when(
+      grepl('[a-z]', date) ~ dmy(date),
+      T ~ mdy(date)
+    )
+  )
+
+# 2022 only
+dat2022 <- read.csv(here('data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
+  select(
+    date = Date,
+    Latitude,
+    Longitude,
+    pyro = Pyrodinium..Cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+brks <- c(-Inf, 1e4, 1e5, 1e6, Inf)
+labs <- c('No bloom', 'Low', 'Medium', 'High')
+
+dat <- bind_rows(datall, dat2021, dat2022) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
+    pyro = pmin(3e6, pyro)
+  )
+
+ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
+  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
+  geom_point(data = subset(dat, is.na(pyro)), aes(shape = "No cells"),
+             size = 1, color = "lightgrey") +
+  scale_x_continuous(limits = c(0, 365)) +
+  scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
+  scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
+  facet_wrap(~yr, ncol = 4) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    legend.spacing.y = unit(-0.2, "cm")
+  ) +
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
+         size = guide_legend(order = 3),
+         shape = guide_legend(order = 1)) +
+  labs(
+    x = 'Day of Year',
+    shape = NULL,
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
+    subtitle = expression(paste(italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
+    caption = 'Data from FWC routine monitoring stations, dotted lines are bridge locations'
+  )
+
+```
+
+
+------------------------------------------------------------------------
+
+## PYRODINIUM ANNUAL TRENDS
+
+
+```{r}
+wqatt <- anlz_avedat(epcdata) %>%
+  anlz_attain()%>%
+  filter(bay_segment == 'OTB') %>%
+  mutate(outcome = factor(outcome, levels = c('red', 'yellow', 'green')))
+dat <- bind_rows(datall, dat2021, dat2022) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date)
+  ) %>%
+  left_join(wqatt, by = 'yr')
+
+yrmd <- dat %>%
+  mutate(pyro = ifelse(pyro == 0, NA, pyro)) %>%
+  summarise(medv = median(pyro, na.rm = T), .by = c('yr', 'outcome'))
+gndave <- yrmd %>%
+  summarise(gndave = mean(medv)) %>%
+  pull(gndave)
+
+ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, color = outcome))  +
+  # geom_boxplot(alpha = 0.7) +
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.25) +
+  stat_summary(fun = median, geom = 'point', size = 6) +
+
+  geom_segment(data = yrmd,
+    aes(x = factor(yr), xend = factor(yr),
+        y = gndave, yend = medv),
+    size = 1
+  ) +
+  geom_hline(aes(yintercept = gndave), color = "black", size = 0.6) +
+  scale_y_log10(breaks = c(1e4, 1e5, 1e6), labels = c('Low (1e4)', 'Medium (1e5)', 'High (1e6)')) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = 'none',
+    axis.text.x = element_text(size = 12)
+  ) +
+  scale_fill_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
+  scale_color_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
+  labs(
+    x = NULL,
+    y = expression(paste(italic('P. bahamense'), ' (cells/L)')),
+    title = 'Median OTB cell counts by year colored by water quality outcomes',
+    caption = 'Data from FWC routine monitoring stations',
+    fill = NULL
+  )
+```
+
+
+------------------------------------------------------------------------
+
+## TAKE HOME
+
+-   Hopeful that preliminary 2022 water quality is a beginning to longer-term improvements
+-   Water quality in OTB has been highly variable, one good year does not mean a long-term improvement, key HAB events may have been missed
+-   Seagrasses may continue to decline - What other stressors are at play?
+-   Stick to our nitrogen load reduction efforts, but investigate other management actions to kickstart seagrass recovery
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Nekton index reports on the health of fish and inverts
+-   Responds to water quality and habitat degradation
+-   2021 results show all but LTB as intermediate
+-   More info at <https://shiny.tbep.org/nekton-dash/>
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+tbniscr <- anlz_tbniscr(fimdata)
+p <- show_tbnimatrix(tbniscr, txtsz = NULL) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+-   2021 drop in scores likely from red tide effects
+
+
+```{r}
+tbniscr <- anlz_tbniscr(fimdata)
+show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
+```
+
+
+------------------------------------------------------------------------
+
+## BENTHIC RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Benthic index reports on the health of aquatic organisms in or near the bay bottom
+-   Responds to pollutants that can accumulate in the sediment
+-   2021 results similar to previous years
+-   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
+:::
+
+::: {.column width="50%"}
+
+```{r}
+#| fig-width: 3
+#| fig-height: 6
+#| fig-align: "center"
+tbbiscr <- anlz_tbbiscr(benthicdata)
+p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+## 2022 HABITAT RESTORATION
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/bar2022.png)
+
+------------------------------------------------------------------------
+
+## NUMBER OF PROJECTS: 2020-2022
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/totalpie.png)
+
+
+------------------------------------------------------------------------
+
+## HABITAT REPORT CARD
+
+* Newly developed habitat report card, uses land use/cover data
+
+![](figure/hmpureporcriteria.PNG)
+
+------------------------------------------------------------------------
+
+## HABITAT REPORT CARD
+
+
+```{r}
+p <- show_hmpreport(acres, subtacres, hmptrgs, typ = 'targets') +
+  labs(title = NULL) +
+  theme(
+    axis.text.y = element_text(size = 8)
+  )
+
+collev <- p$data$metric
+
+ax2 <- list(
+      tickfont = list(size=12),
+      overlaying = "x",
+      nticks = length(collev),
+      side = "top",
+      tickangle = 335,
+      ticktext = collev,
+      ticklabelposition = 'outside right'
+      )
+
+show_matrixplotly(p, hmp = T, width = 800, height = 550) %>%
+      plotly::layout(xaxis2 = ax2)
+```
+
+
+------------------------------------------------------------------------
+
+## HABITAT RESTORATION PRIORITIES
+
+<br>
+
+::: {.columns style="display: flex !important; height: 20%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+
+{{< fa arrows-up-to-line size=3x >}}
+
+
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+
+{{< fa shield-halved size=3x >}}
+
+
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+
+{{< fa thumbs-up size=3x >}}
+
+
+:::
+:::
+
+::: {.columns style="display: flex !important; height: 30%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Focus on seagrass, oysters, salt marsh, freshwater wetlands
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Uplands - protect existing habitat!
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Mangroves expected to expand
+:::
+:::
+
+* Additional info at <https://tbep-tech.github.io/tbeptools/articles/habitatmasterplan>
+
+------------------------------------------------------------------------
+
+##
+
+<br>
+
+### Questions??
+
+<br>
+
+Marcus Beck, <mbeck@tbep.org>
+
+Kerry Flaherty-Walia, <kfwalia@tbep.org>
+
+
+------------------------------------------------------------------------
+
+## EXTRA SLIDES
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS RESULTS
+
+
+```{r}
+seagrass %>%
+  select(-Hectares) %>%
+  mutate(
+    difv = c(NA, diff(Acres)),
+    perc = paste0(round(100 * difv / lag(Acres), 0), '%'),
+    Acres = as.integer(round(Acres, 0))
+  ) %>%
+  select(Year, Acres, `Change` = difv, `% change` = perc) %>%
+  filter(Year > 2009) %>%
+  knitr::kable() %>%
+  kableExtra::kable_styling(font_size = 30)
+```
+
+
+------------------------------------------------------------------------
+
+## SEAGRASS RATE OF RECOVERY
+
+![](figure/sgrecovrate.PNG)
+
+------------------------------------------------------------------------
+
+## PYRO vs WATER QUALITY SAMPLING
+
+
+```{r}
+dat <- bind_rows(datall, dat2021, dat2022) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
+    pyro = pmin(1e6, pyro)
+  ) %>%
+  filter(yr == 2022)
+
+epcdts <- epcdata %>%
+  filter(yr == 2022 & bay_segment == 'OTB') %>%
+  mutate(
+    doy = yday(SampleTime),
+    date = format(as.Date(SampleTime), '%b %d')
+  ) %>%
+  select(date, doy, Latitude, Longitude)
+
+ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
+  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
+  geom_point(data = subset(dat, is.na(pyro)), aes(shape = "No cells"),
+             size = 1, color = "lightgrey", fill = 'lightgrey') +
+  scale_x_continuous(limits = c(150, 275)) +
+  geom_point(data = epcdts, aes(x = doy, y = Latitude, shape = 'EPC chl samples')) +
+  scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
+  scale_size_continuous(range = c(1, 5), breaks = c(1e5, 5e5, 1e6), labels = c('100k', '500k', '> 1e6')) +
+  scale_shape_manual(values = c(17, 21)) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    legend.spacing.y = unit(-0.2, "cm")
+  ) +
+  geom_text(data = epcdts, aes(x = doy, y = min(dat$Latitude), label = date), angle = 90, hjust = 0.2) +
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
+         size = guide_legend(order = 3),
+         shape = guide_legend(order = 1,
+                              override.aes = list(
+                                color = c('black', 'lightgrey'),
+                                fill = c('black', 'lightgrey')
+                                )
+                              )
+         ) +
+  labs(
+    x = 'Day of Year',
+    shape = NULL,
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
+    subtitle = expression(paste('2022 ', italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
+    caption = 'Data from FWC routine monitoring stations, dotted lines are bridge locations'
+  )
+```
