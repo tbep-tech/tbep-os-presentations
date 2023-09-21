@@ -60,7 +60,8 @@ https://github.com/posit-conf-2023
 
 ## 2024 SCHEDULE
 
--   Final 2023 meeting, Nov 1, 10:00 AM - 11:30 AM
-    -   Lindsay Mullins (MSU): Modernizing data workflows for marine resources
-    -   Emma Jones (VDEQ): Open Science at the Virginia Department of Environmental Quality
--   2024 meeting dates forthcoming
+-   2024 meeting dates
+     - February 28
+     - May 29
+     - August 28
+     - November 27
