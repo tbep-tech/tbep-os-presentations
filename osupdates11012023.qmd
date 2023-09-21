@@ -1,0 +1,66 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "11/01/2023"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+
+------------------------------------------------------------------------
+
+## AI/LLM TOOLS
+
+* RStudio copilot
+* chattr
+
+------------------------------------------------------------------------
+
+## POSIT CONF WORKSHOPS 
+
+https://github.com/posit-conf-2023
+
+------------------------------------------------------------------------
+
+## UPCOMING TRAININGS
+
+-   CERF 2023 biennial meeting, Nov. 12-16, Portland, OR: [Dashboards: Using R to Create Actionable Science](https://conference.cerf.science/2023-workshop--dashboards--using-r-to-create-actionable-science)
+
+------------------------------------------------------------------------
+
+## 2024 SCHEDULE
+
+-   Final 2023 meeting, Nov 1, 10:00 AM - 11:30 AM
+    -   Lindsay Mullins (MSU): Modernizing data workflows for marine resources
+    -   Emma Jones (VDEQ): Open Science at the Virginia Department of Environmental Quality
+-   2024 meeting dates forthcoming
