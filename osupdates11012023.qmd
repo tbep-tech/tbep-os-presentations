@@ -41,7 +41,7 @@ library(tbeptools)
 
 ## AI/LLM TOOLS
 
-* RStudio copilot
+* RStudio copilot: https://colorado.posit.co/rsc/rstudio-copilot/#/TitleSlide
 * chattr
 
 ------------------------------------------------------------------------
