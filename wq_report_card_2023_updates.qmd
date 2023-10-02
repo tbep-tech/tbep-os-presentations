@@ -47,35 +47,15 @@ g_legend<-function(a.gplot){
 
 ::: columns
 ::: {.column width="50%"}
--   Each year, assess attainment of chlorophyll threshold in each segment
--   Follow NMC actions for segments that don't meet threshold
--   Annual reporting to FDEP
+-   Each year, assess attainment of water quality thresholds
+-   Annual reporting to FDEP, second year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
+-   Today's results include data __through July__, Aug-Dec based on five-year average
 :::
 
 ::: {.column width="50%"}
 ![](figure/decisionframework.png){width="450" fig-align="center"}
 :::
 :::
-
-------------------------------------------------------------------------
-
-## HILLSBOROUGH BAY
-
-```{r}
-show_ratab(epcdata, yrsel = maxyr, bay_segment = 'HB', width = 5, partialyr = T)
-```
-
-* Aug - Dec based on average from five years prior
-
-------------------------------------------------------------------------
-
-## OLD TAMPA BAY
-
-```{r}
-show_ratab(epcdata, yrsel = maxyr, bay_segment = 'OTB', width = 5, partialyr = T)
-```
-
-* Aug - Dec based on average from five years prior
 
 ------------------------------------------------------------------------
 
