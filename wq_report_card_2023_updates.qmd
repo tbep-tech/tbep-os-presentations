@@ -4,6 +4,7 @@ author:
    - name: Dr. Marcus Beck, <mbeck@tbep.org>
 institute: "Tampa Bay Estuary Program"
 date: "10/6/2023"
+date-format: medium
 format:
   revealjs:
     logo: figure/TBEP_logo.png
@@ -49,7 +50,7 @@ g_legend<-function(a.gplot){
 ::: {.column width="50%"}
 -   Each year, assess attainment of water quality thresholds
 -   Annual reporting to FDEP, second year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
--   Today's results include data __through July__, Aug-Dec based on five-year average
+-   Today's results include data __through August__, Sep-Dec based on five-year average
 :::
 
 ::: {.column width="50%"}
@@ -93,7 +94,7 @@ show_annualassess(epcdata, yrsel = maxyr, partialyr = T, caption = T, txtsz = 22
                   width = 8)
 ```
 
-* Aug - Dec based on average from five years prior
+* Sep - Dec based on average from five years prior
 
 ------------------------------------------------------------------------
 
@@ -107,7 +108,7 @@ show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly 
 show_matrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
 ```
 
-* 2023 Aug - Dec based on average from five years prior
+* 2023 Sep - Dec based on average from five years prior
 
 ------------------------------------------------------------------------
 
@@ -227,7 +228,7 @@ grid.arrange(
 
 ## CONCLUSIONS
 
-* All segments provisionally meet management targets and regulatory thresholds in 2023 (through July)
+* All segments provisionally meet management targets and regulatory thresholds in 2023 (through August)
 * Second year of [2022 - 2026 RA period](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc)
 * Need to assess assimilative capacity of OTB 
 
