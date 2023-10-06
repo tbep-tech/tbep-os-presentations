@@ -50,7 +50,7 @@ g_legend<-function(a.gplot){
 ::: {.column width="50%"}
 -   Each year, assess attainment of water quality thresholds
 -   Annual reporting to FDEP, second year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
--   Today's results include data __through August__, Sep-Dec based on five-year average
+-   Today's results include data __through August__
 :::
 
 ::: {.column width="50%"}
@@ -76,7 +76,6 @@ g_legend<-function(a.gplot){
 
 :::::
 
-
 ------------------------------------------------------------------------
 
 ## MANAGEMENT ACTIONS
@@ -87,14 +86,22 @@ g_legend<-function(a.gplot){
 
 ------------------------------------------------------------------------
 
-## MANAGEMENT RESULTS
+## REGULATORY THRESHOLDS
+
+* Each bay segment evaluated by chlorophyll-a threshold
+
+![](figure/regthresh.png)
+
+------------------------------------------------------------------------
+
+## 2023 MANAGEMENT RESULTS
 
 ```{r}
 show_annualassess(epcdata, yrsel = maxyr, partialyr = T, caption = T, txtsz = 22,
                   width = 8)
 ```
 
-* Sep - Dec based on average from five years prior
+\* Sep - Dec based on average from five years prior
 
 ------------------------------------------------------------------------
 
@@ -108,7 +115,7 @@ show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly 
 show_matrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
 ```
 
-* 2023 Sep - Dec based on average from five years prior
+\* 2023 Sep - Dec based on average from five years prior
 
 ------------------------------------------------------------------------
 
@@ -130,7 +137,7 @@ show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotl
 show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
 ```
 
-* 2023 Aug - Dec based on average from five years prior
+\* 2023 Aug - Dec based on average from five years prior
 
 ------------------------------------------------------------------------
 
