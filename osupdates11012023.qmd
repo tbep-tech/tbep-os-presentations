@@ -39,16 +39,46 @@ library(tbeptools)
 
 ------------------------------------------------------------------------
 
-## AI/LLM TOOLS
+## RStudio/GitHub copilot
 
-* RStudio copilot: https://colorado.posit.co/rsc/rstudio-copilot/#/TitleSlide
-* chattr
+
+* <https://colorado.posit.co/rsc/rstudio-copilot/>
+* Automated code prompts
+* Requires GitHub Pro (personal) - $10/mo
+* Requires RStudio 2023.09.1
+
+------------------------------------------------------------------------
+
+## RStudio/GitHub copilot
+
+![](media/copilot_vid.gif)
+
+------------------------------------------------------------------------
+
+## ChatGPT and chattr RStudio
+
+* AI can be used directly in RStudio
+* [RStudio 2023.09.1](https://posit.co/download/rstudio-desktop/) can use ChatGPT as an [add in](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html)
+* The [chattr](https://mlverse.github.io/chattr/) package is similar, but provides code-specific answers, links to other LLMs
+ * Requires a credit card...
+
+------------------------------------------------------------------------
+
+## ChatGPT
+
+![](media/chatgptaddin2.gif)
+
+------------------------------------------------------------------------
+
+## chattr
+
+![](media/chattr2.gif)
 
 ------------------------------------------------------------------------
 
 ## POSIT CONF WORKSHOPS 
 
-https://github.com/posit-conf-2023
+* <https://github.com/posit-conf-2023>
 
 ------------------------------------------------------------------------
 
@@ -61,7 +91,6 @@ https://github.com/posit-conf-2023
 ## 2024 SCHEDULE
 
 -   2024 meeting dates
-     - February 28
      - May 29
-     - August 28
      - November 27
+     - Hackathon date TBD
