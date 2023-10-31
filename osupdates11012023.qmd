@@ -41,11 +41,10 @@ library(tbeptools)
 
 ## RStudio/GitHub copilot
 
-
-* <https://colorado.posit.co/rsc/rstudio-copilot/>
-* Automated code prompts
-* Requires GitHub Pro (personal) - $10/mo
-* Requires RStudio 2023.09.1
+-   <https://colorado.posit.co/rsc/rstudio-copilot/>
+-   Automated code prompts
+-   Requires GitHub Pro (personal) - \$10/mo
+-   Requires RStudio 2023.09.1
 
 ------------------------------------------------------------------------
 
@@ -57,10 +56,10 @@ library(tbeptools)
 
 ## ChatGPT and chattr RStudio
 
-* AI can be used directly in RStudio
-* [RStudio 2023.09.1](https://posit.co/download/rstudio-desktop/) can use ChatGPT as an [add in](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html)
-* The [chattr](https://mlverse.github.io/chattr/) package is similar, but provides code-specific answers, links to other LLMs
- * Requires a credit card...
+-   AI can be used directly in RStudio
+-   [RStudio 2023.09.1](https://posit.co/download/rstudio-desktop/) can use ChatGPT as an [add in](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html)
+-   The [chattr](https://mlverse.github.io/chattr/) package is similar, but provides code-specific answers, links to other LLMs
+-   Requires a credit card...
 
 ------------------------------------------------------------------------
 
@@ -76,21 +75,16 @@ library(tbeptools)
 
 ------------------------------------------------------------------------
 
-## POSIT CONF WORKSHOPS 
+## TRAININGS AND GOOD READS
 
-* <https://github.com/posit-conf-2023>
-
-------------------------------------------------------------------------
-
-## UPCOMING TRAININGS
-
+-   <https://github.com/posit-conf-2023>
 -   CERF 2023 biennial meeting, Nov. 12-16, Portland, OR: [Dashboards: Using R to Create Actionable Science](https://conference.cerf.science/2023-workshop--dashboards--using-r-to-create-actionable-science)
+-   [Open Science 2.0: Towards a truly collaborative research ecosystem](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3002362)
 
 ------------------------------------------------------------------------
 
 ## 2024 SCHEDULE
 
--   2024 meeting dates
-     - May 29
-     - November 27
-     - Hackathon date TBD
+-   May 29
+-   November 27
+-   Hackathon date TBD
