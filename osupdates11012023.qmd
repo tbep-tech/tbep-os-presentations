@@ -57,7 +57,7 @@ library(tbeptools)
 ## ChatGPT and chattr RStudio
 
 -   AI can be used directly in RStudio
--   [RStudio 2023.09.1](https://posit.co/download/rstudio-desktop/) can use ChatGPT as an [add in](https://rstudio.github.io/rstudio-extensions/rstudio_addins.html)
+-   RStudio can use ChatGPT as an add in with the [chatgpt](https://github.com/jcrodriguez1989/chatgpt) package
 -   The [chattr](https://mlverse.github.io/chattr/) package is similar, but provides code-specific answers, links to other LLMs
 -   Requires a credit card...
 
