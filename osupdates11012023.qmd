@@ -78,7 +78,7 @@ library(tbeptools)
 ## TRAININGS AND GOOD READS
 
 -   <https://github.com/posit-conf-2023>
--   CERF 2023 biennial meeting, Nov. 12-16, Portland, OR: [Dashboards: Using R to Create Actionable Science](https://conference.cerf.science/2023-workshop--dashboards--using-r-to-create-actionable-science)
+-   CERF 2023 biennial meeting, Nov. 12-16, Portland, OR: [Dashboards: Using R to Create Actionable Science](https://tbep-tech.github.io/shiny-workshop/)
 -   [Open Science 2.0: Towards a truly collaborative research ecosystem](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3002362)
 
 ------------------------------------------------------------------------
