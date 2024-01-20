@@ -184,13 +184,13 @@ subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
 
-![Management](figure/wq2023prov1.jpg){width="360"}
+![Management](figure/wq2023prov1.JPG){width="360"}
 
 :::
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
 
-![Regulatory](figure/wq2023prov2.jpg){width="360"}
+![Regulatory](figure/wq2023prov2.JPG){width="360"}
 
 :::
 
@@ -434,7 +434,8 @@ p3 <- ggplot(toplo, aes(x = inches, y = chla)) +
   labs(
     x = 'Annual rainfall (inches)', 
     y = 'Chlorophyll-a (ug/L)', 
-    title = 'Annual mean chlorophyll-a vs. rainfall'
+    title = 'Annual mean chlorophyll-a vs. rainfall', 
+    caption = 'Data from EPCHC, SWFWMD'
   )
 
 p <- (p1 / p2) | p3
