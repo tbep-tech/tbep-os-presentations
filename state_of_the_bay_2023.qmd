@@ -31,6 +31,8 @@ library(ggplot2)
 library(lubridate)
 library(tidyr)
 library(plotly)
+library(sf)
+library(ggrepel)
 
 maxyr <- 2023
 partialyr <- F
@@ -338,10 +340,107 @@ p
 ## WATER QUALITY DRIVERS
 
 -   The water quality outcomes are based on chlorophyll and light attenuation
--   Past exceedances have been linked eutrophic conditions, sometimes caused by harmful algal blooms
--   *Pyrodinium bahamense* in Old Tampa Bay, red tide from Gulf
+-   Past exceedances have been linked to eutrophic conditions
+-   Sometimes caused by harmful algal blooms and rain patterns (largest source of N)
 
 ![](figure/TBEP_N_Paradigm.png){fig-align="center" width=60%}
+
+------------------------------------------------------------------------
+
+## RAIN AS A DRIVER
+
+```{r}
+grd <- st_read(here('data/swfwmd-GARR-gisfiles-utm/swfwmd_pixel_2_utm_m_83.shp'), quiet = T)
+
+tbgrdcent <- grd %>% 
+  st_transform(crs = st_crs(tbshed)) %>% 
+  st_centroid() %>% 
+  .[tbshed, ]
+
+# unzip folders
+loc <- here('data/swfwmd_rain')
+# files <- list.files(loc, pattern = '.zip', full.names = T)
+# lapply(files, unzip, exdir = loc)
+
+# read text files
+raindat <- list.files(loc, pattern = '19.*\\.txt$|20.*\\.txt$', full.names = T) %>% 
+  lapply(read.table, sep = ',', header = F) %>% 
+  do.call('rbind', .) %>% 
+  rename(
+    'PIXEL' = V1, 
+    'yr' = V2, 
+    'inches' = V3
+    ) %>%
+  filter(PIXEL %in% tbgrdcent$PIXEL)
+
+# ave rain dat
+raindatave <- raindat %>% 
+  summarise(
+    inches = mean(inches, na.rm = T), 
+    .by = 'yr'
+    )
+
+# ave chldat
+chlave <- anlz_avedat(epcdata) %>% 
+  .$ann %>% 
+  filter(var == 'mean_chla') %>% 
+  summarise(
+    chla = mean(val, na.rm = T),
+    .by = 'yr'
+  ) %>% 
+  filter(yr >= min(raindatave$yr))
+  
+toplo <- inner_join(chlave, raindatave, by = 'yr')
+
+p1 <- ggplot(raindatave, aes(x = yr, y = inches)) +
+  geom_line() +
+  geom_point() +
+  geom_point(data = raindatave[chlave$yr == 2023, ], col = 'red', size = 2) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+  ) + 
+  labs(
+    x = NULL, 
+    y = 'Annual rainfall (inches)', 
+    title = 'Annual rainfall', 
+    subtitle = 'Tampa Bay watershed, 1995 - 2023'
+  )
+
+p2 <- ggplot(chlave, aes(x = yr, y = chla)) +
+  geom_line() +
+  geom_point() +
+  geom_point(data = chlave[chlave$yr == 2023, ], col = 'red', size = 2) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+  ) + 
+  labs(
+    x = NULL, 
+    y = 'Chlorophyll-a (ug/L)', 
+    title = 'Annual mean chlorophyll-a', 
+    subtitle = 'All segments, 1995 - 2023'
+  )
+
+p3 <- ggplot(toplo, aes(x = inches, y = chla)) +
+  geom_text_repel(aes(label = yr), point.size = NA, segment.size = NA) +
+  geom_label_repel(data = toplo[toplo$yr == 2023, ], aes(label = yr), color = 'red', point.size = NA) +
+  geom_smooth(formula = y ~ x, method = 'lm', se = F, color = 'red') + 
+  # geom_segment(aes(x = 45, xend = 40, y = 4.86, yend = 4.86), color = 'red', arrow = arrow(length = unit(0.2, "inches")), linewidth = 1) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+  ) + 
+  labs(
+    x = 'Annual rainfall (inches)', 
+    y = 'Chlorophyll-a (ug/L)', 
+    title = 'Annual mean chlorophyll-a vs. rainfall'
+  )
+
+p <- (p1 / p2) | p3
+p
+```
+
 
 ------------------------------------------------------------------------
 
