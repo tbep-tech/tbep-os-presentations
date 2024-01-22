@@ -33,6 +33,7 @@ library(tidyr)
 library(plotly)
 library(sf)
 library(ggrepel)
+library(readxl)
 
 maxyr <- 2023
 partialyr <- F
@@ -350,35 +351,57 @@ p
 ## RAIN AS A DRIVER
 
 ```{r}
-grd <- st_read(here('data/swfwmd-GARR-gisfiles-utm/swfwmd_pixel_2_utm_m_83.shp'), quiet = T)
+# ##
+# # from SWFWMD grid cells, use only if interested in areas finer than TB watershed
+# # this currently gets the same data as the compiled spreadsheet
+# grd <- st_read(here('data/swfwmd-GARR-gisfiles-utm/swfwmd_pixel_2_utm_m_83.shp'), quiet = T)
+# 
+# tbgrdcent <- grd %>% 
+#   st_transform(crs = st_crs(tbshed)) %>% 
+#   st_centroid() %>% 
+#   .[tbshed, ]
+# 
+# # unzip folders
+# loc <- here('data/swfwmd_rain')
+# # files <- list.files(loc, pattern = '.zip', full.names = T)
+# # lapply(files, unzip, exdir = loc)
+# 
+# # read text files
+# raindat <- list.files(loc, pattern = '19.*\\.txt$|20.*\\.txt$', full.names = T) %>% 
+#   lapply(read.table, sep = ',', header = F) %>% 
+#   do.call('rbind', .) %>% 
+#   rename(
+#     'PIXEL' = V1, 
+#     'yr' = V2, 
+#     'inches' = V3
+#     ) %>%
+#   filter(PIXEL %in% tbgrdcent$PIXEL)
+# 
+# # ave rain dat
+# raindatave <- raindat %>% 
+#   summarise(
+#     inches = mean(inches, na.rm = T), 
+#     .by = 'yr'
+#     )
 
-tbgrdcent <- grd %>% 
-  st_transform(crs = st_crs(tbshed)) %>% 
-  st_centroid() %>% 
-  .[tbshed, ]
+##
+# use compiled SWFWMD data
 
-# unzip folders
-loc <- here('data/swfwmd_rain')
-# files <- list.files(loc, pattern = '.zip', full.names = T)
-# lapply(files, unzip, exdir = loc)
+# # https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
+# # file is from the link "USGS watershed"
+# download.file(
+#   'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825', 
+#   here('data/swfwmdrainfall.xlsx'), 
+#   mode = 'wb'
+#   )
 
-# read text files
-raindat <- list.files(loc, pattern = '19.*\\.txt$|20.*\\.txt$', full.names = T) %>% 
-  lapply(read.table, sep = ',', header = F) %>% 
-  do.call('rbind', .) %>% 
-  rename(
-    'PIXEL' = V1, 
-    'yr' = V2, 
-    'inches' = V3
-    ) %>%
-  filter(PIXEL %in% tbgrdcent$PIXEL)
-
-# ave rain dat
-raindatave <- raindat %>% 
-  summarise(
-    inches = mean(inches, na.rm = T), 
-    .by = 'yr'
-    )
+raindatave <- read_excel(here('data/swfwmdrainfall.xlsx'), sheet = 'ann-usgsbsn', skip = 1) %>% 
+  filter(Year %in% 1975:2023) %>% 
+  select(
+    yr = Year, 
+    inches = `Tampa Bay/Coastal Areas`
+  ) %>% 
+  mutate_all(as.numeric)
 
 # ave chldat
 chlave <- anlz_avedat(epcdata) %>% 
@@ -388,7 +411,7 @@ chlave <- anlz_avedat(epcdata) %>%
     chla = mean(val, na.rm = T),
     .by = 'yr'
   ) %>% 
-  filter(yr >= min(raindatave$yr))
+  filter(yr >= 1975)
   
 toplo <- inner_join(chlave, raindatave, by = 'yr')
 
@@ -404,7 +427,7 @@ p1 <- ggplot(raindatave, aes(x = yr, y = inches)) +
     x = NULL, 
     y = 'Annual rainfall (inches)', 
     title = 'Annual rainfall', 
-    subtitle = 'Tampa Bay watershed, 1995 - 2023'
+    subtitle = 'Tampa Bay watershed, 1975 - 2023'
   )
 
 p2 <- ggplot(chlave, aes(x = yr, y = chla)) +
@@ -419,7 +442,7 @@ p2 <- ggplot(chlave, aes(x = yr, y = chla)) +
     x = NULL, 
     y = 'Chlorophyll-a (ug/L)', 
     title = 'Annual mean chlorophyll-a', 
-    subtitle = 'All segments, 1995 - 2023'
+    subtitle = 'All segments, 1975 - 2023'
   )
 
 p3 <- ggplot(toplo, aes(x = inches, y = chla)) +
