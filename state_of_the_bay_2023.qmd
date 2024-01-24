@@ -227,7 +227,7 @@ subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
 #| fig-height: 6
 #| fig-width: 3
 #| fig-align: "center"
-p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr) +
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr, historic = T) +
   theme(axis.text.y = element_text(size = 8))
 show_matrixplotly(p, height = 600, width = 300)
 ```
