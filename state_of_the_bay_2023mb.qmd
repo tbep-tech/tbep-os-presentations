@@ -1,0 +1,881 @@
+---
+title: "2023 STATE OF THE BAY"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>, Kerry Flaherty-Walia <kfwalia@tbep.org>
+institute: "Tampa Bay Estuary Program, Management Board Meeting"
+date: "February, 2024"
+date-format: "MMM, YYYY"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program 2023 State of the Bay"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+  fig-align: "center"
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+library(plotly)
+library(sf)
+library(ggrepel)
+library(readxl)
+
+maxyr <- 2023
+partialyr <- F
+
+load(file = here('data/sgsegest.RData'))
+
+load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RData'))
+
+# segment coverage targets in 1k acres
+segtrgs <- tibble(
+  segment = factor(c(levels(sgsegest$segment), 'Total')),
+  trgs = c(11.1, 1.751, 9.4, 7.4, 8.8, 1.1, 0.449, 40)
+)
+
+# worst case coverage ests in 1k acres, 1982
+segworst <- tibble(
+  segment = factor(c(levels(sgsegest$segment), 'Total')),
+  trgs = c(5.94, 0, 4.04, 5.02, 5.77, 0.75, 0.13, 21.65)
+)
+```
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS RESULTS
+
+* Baywide loss of 4,161 acres from 2020 to 2022
+* Third straight reporting period with loss
+
+```{r}
+#| fig-align: "center"
+#| fig-width: 6
+#| fig-height: 3
+show_seagrasscoverage(seagrass, lastlab = 'acres (provisional)')
+```
+
+------------------------------------------------------------------------
+
+## 2022 SEAGRASS RESULTS: SEGMENT
+
+* Most losses in OTB and HB, OTB is lowest coverage on record
+
+```{r}
+#| fig-align: "center"
+#| fig-height: 4.5
+#| fig-width: 9
+toplo <- sgsegest %>%
+  filter(segment %in% c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')) %>%
+  mutate(acres = acres / 1000) %>%
+  mutate(segment = forcats::fct_drop(segment))
+
+subsegtrgs <- segtrgs %>%
+  filter(segment %in% levels(toplo$segment))
+
+arrdf <- tibble(
+  segment = factor('Old Tampa Bay', levels = levels(toplo$segment)),
+  x = factor(2022),
+  xend = factor(2022),
+  y = 8,
+  yend =  5
+)
+
+ggplot(toplo, aes(x = factor(year), y = acres)) +
+  geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
+  geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
+  geom_segment(
+    data = arrdf,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(length = grid::unit(0.5, "cm")),
+    size = 2, lineend = 'round', linejoin = 'round', col = 'red'
+  ) +
+  scale_color_manual(values = 'red') +
+  facet_wrap(~segment, ncol = 2, scales = 'free') +
+  theme(panel.grid.minor=element_blank(),
+        panel.grid.major=element_blank(),
+        plot.background = element_rect(fill = NA, color = NA),
+        axis.text.y = element_text(colour = 'black'),
+        plot.title = element_text(size = 22, colour = 'black'),
+        legend.text = element_text(size = 16, colour = 'black'),
+        axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 13),
+        legend.position = 'none'
+  ) +
+  labs(
+    y = 'Seagrass Coverage (x1,000 acres)',
+    x = NULL,
+    color = NULL
+  )
+```
+
+------------------------------------------------------------------------
+
+## 2023 SEAGRASS TRANSECT RESULTS
+
+```{r}
+#| fig-align: 'center'
+#| fig-width: 9
+#| fig-height: 4
+transectocc <- anlz_transectocc(transect)
+spp <- c("Halodule", "Syringodium", "Thalassia")
+show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), species = spp, plotly = T, width = 1000, height = 450)
+```
+
+* Transects results suggest slight increase in frequency occurrence
+* More info at <https://shiny.tbep.org/seagrasstransect-dash/>
+
+------------------------------------------------------------------------
+
+## 2023 SEAGRASS TRANSECT RESULTS
+
+```{r}
+width <- 1000
+height <- 500
+p1 <- show_transectavespp(transectocc, bay_segment = c('OTB'), species = spp, plotly = T, width = width, height = height)
+p2 <- show_transectavespp(transectocc, bay_segment = c('HB'), species = spp, plotly = T, width = width, height = height)
+p3 <- show_transectavespp(transectocc, bay_segment = c('MTB'), species = spp, plotly = T, width = width, height = height)
+p4 <- show_transectavespp(transectocc, bay_segment = c('LTB', 'BCB'), species = spp, plotly = T, width = width, height = height)
+
+# # only show legend for the first plot, but legend group still works
+for(i in 1:4){
+  p2$x$data[[i]]$showlegend <- F
+  p3$x$data[[i]]$showlegend <- F
+  p4$x$data[[i]]$showlegend <- F
+}
+
+subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
+  layout(
+    title = NA,
+    annotations = list(
+      list(x = 0.2 , y = 1.05, text = "OTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.77 , y = 1.05, text = "HB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.2 , y = 0.5, text = "MTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.8 , y = 0.5, text = "LTB/BCB", showarrow = F, xref='paper', yref='paper')
+    ),
+    yaxis = list(range = c(0, 100)),
+    yaxis2 = list(range = c(0, 100))
+  )
+```
+
+* Gains observed in Old Tampa Bay and Hillsborough Bay
+
+------------------------------------------------------------------------
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::: {.columns style="display: flex !important; height: 80%;"}
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+
+![Management](figure/wq2023prov1.JPG){width="360"}
+
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+
+![Regulatory](figure/wq2023prov2.JPG){width="360"}
+
+:::
+
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+-   Each bay segment assigned a management action
+
+![](figure/wqactions.jpg)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT RESULTS
+
+![](figure/wq2023segprov.PNG)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+::: columns
+::: {.column width="50%"}
+-   Matrix shows attainment of chlorophyll and light attenuation *targets*
+-   All segments in 2023 as "Stay the Course"
+-   More info at <https://shiny.tbep.org/wq-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr, historic = T) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## REGULATORY OUTCOMES
+
+::: columns
+::: {.column width="50%"}
+-   Matrix shows attainment of chlorophyll *threshold* (red/green only)
+-   All segments in `r maxyr` met the annual threshold
+-   More info at <https://shiny.tbep.org/wq-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+p <- show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5)
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
+
+p <-  (guide_area() / (p1 + p2 + p3 + p4 + plot_layout(ncol = 2))) + plot_layout(ncol = 1, guides = 'collect', heights = unit(c(1, 1), c("cm", "null"))) & thrthm
+p
+```
+
+
+------------------------------------------------------------------------
+
+## LIGHT ATTENUATION TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5)
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx
+
+p <-  (guide_area() / (p1 + p2 + p3 + p4 + plot_layout(ncol = 2))) + plot_layout(ncol = 1, guides = 'collect', heights = unit(c(1, 1), c("cm", "null"))) & thrthm
+p
+```
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL BY SEASON
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5)
+  )
+
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+
+p <-  (guide_area() / (p1 + p2 + p3 + p4 + plot_layout(ncol = 2))) + plot_layout(ncol = 1, guides = 'collect', heights = unit(c(1, 1), c("cm", "null"))) & thrthm
+p
+```
+
+------------------------------------------------------------------------
+
+## WATER QUALITY DRIVERS
+
+-   The water quality outcomes are based on chlorophyll and light attenuation
+-   Past exceedances have been linked to eutrophic conditions
+-   Sometimes caused by harmful algal blooms and rain patterns (largest source of N)
+
+![](figure/TBEP_N_Paradigm.png){fig-align="center" width=60%}
+
+------------------------------------------------------------------------
+
+## RAIN AS A DRIVER
+
+```{r}
+# ##
+# # from SWFWMD grid cells, use only if interested in areas finer than TB watershed
+# # this currently gets the same data as the compiled spreadsheet
+# grd <- st_read(here('data/swfwmd-GARR-gisfiles-utm/swfwmd_pixel_2_utm_m_83.shp'), quiet = T)
+# 
+# tbgrdcent <- grd %>% 
+#   st_transform(crs = st_crs(tbshed)) %>% 
+#   st_centroid() %>% 
+#   .[tbshed, ]
+# 
+# # unzip folders
+# loc <- here('data/swfwmd_rain')
+# # files <- list.files(loc, pattern = '.zip', full.names = T)
+# # lapply(files, unzip, exdir = loc)
+# 
+# # read text files
+# raindat <- list.files(loc, pattern = '19.*\\.txt$|20.*\\.txt$', full.names = T) %>% 
+#   lapply(read.table, sep = ',', header = F) %>% 
+#   do.call('rbind', .) %>% 
+#   rename(
+#     'PIXEL' = V1, 
+#     'yr' = V2, 
+#     'inches' = V3
+#     ) %>%
+#   filter(PIXEL %in% tbgrdcent$PIXEL)
+# 
+# # ave rain dat
+# raindatave <- raindat %>% 
+#   summarise(
+#     inches = mean(inches, na.rm = T), 
+#     .by = 'yr'
+#     )
+
+##
+# use compiled SWFWMD data
+
+# # https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
+# # file is from the link "USGS watershed"
+# download.file(
+#   'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825', 
+#   here('data/swfwmdrainfall.xlsx'), 
+#   mode = 'wb'
+#   )
+
+raindatave <- read_excel(here('data/swfwmdrainfall.xlsx'), sheet = 'ann-usgsbsn', skip = 1) %>% 
+  filter(Year %in% 1975:2023) %>% 
+  select(
+    yr = Year, 
+    inches = `Tampa Bay/Coastal Areas`
+  ) %>% 
+  mutate_all(as.numeric)
+
+# ave chldat
+chlave <- anlz_avedat(epcdata) %>% 
+  .$ann %>% 
+  filter(var == 'mean_chla') %>% 
+  summarise(
+    chla = mean(val, na.rm = T),
+    .by = 'yr'
+  ) %>% 
+  filter(yr >= 1975)
+  
+toplo <- inner_join(chlave, raindatave, by = 'yr')
+
+p1 <- ggplot(raindatave, aes(x = yr, y = inches)) +
+  geom_line() +
+  geom_point() +
+  geom_point(data = raindatave[chlave$yr == 2023, ], col = 'red', size = 2) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+  ) + 
+  labs(
+    x = NULL, 
+    y = 'Annual rainfall (inches)', 
+    title = 'Annual rainfall', 
+    subtitle = 'Tampa Bay watershed, 1975 - 2023'
+  )
+
+p2 <- ggplot(chlave, aes(x = yr, y = chla)) +
+  geom_line() +
+  geom_point() +
+  geom_point(data = chlave[chlave$yr == 2023, ], col = 'red', size = 2) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+  ) + 
+  labs(
+    x = NULL, 
+    y = 'Chlorophyll-a (ug/L)', 
+    title = 'Annual mean chlorophyll-a', 
+    subtitle = 'All segments, 1975 - 2023'
+  )
+
+p3 <- ggplot(toplo, aes(x = inches, y = chla)) +
+  geom_text_repel(aes(label = yr), point.size = NA, segment.size = NA) +
+  geom_label_repel(data = toplo[toplo$yr == 2023, ], aes(label = yr), color = 'red', point.size = NA) +
+  geom_smooth(formula = y ~ x, method = 'lm', se = F, color = 'red') + 
+  # geom_segment(aes(x = 45, xend = 40, y = 4.86, yend = 4.86), color = 'red', arrow = arrow(length = unit(0.2, "inches")), linewidth = 1) +
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(),
+  ) + 
+  labs(
+    x = 'Annual rainfall (inches)', 
+    y = 'Chlorophyll-a (ug/L)', 
+    title = 'Annual mean chlorophyll-a vs. rainfall', 
+    caption = 'Data from EPCHC, SWFWMD'
+  )
+
+p <- (p1 / p2) | p3
+p
+```
+
+------------------------------------------------------------------------
+
+## PYRODINIUM IN 2023
+
+```{r}
+
+bridges <- tibble(
+  brdg = c('Gandy', 'HF', 'CC'),
+  Latitude = c(27.880486, 27.922358652608654, 27.965458)
+)
+
+# https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
+datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
+  select(
+    yr = Year,
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = P..bahamense.Abundance..cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2021 only
+dat2021 <- read.csv(here('data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
+  select(
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = Pbahamense..cells.L.
+  ) %>%
+  mutate(
+    date = case_when(
+      grepl('[a-z]', date) ~ dmy(date),
+      T ~ mdy(date)
+    )
+  )
+
+# 2022 only
+dat2022 <- read.csv(here('data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
+  select(
+    date = Date,
+    Latitude,
+    Longitude,
+    pyro = Pyrodinium..Cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2023 only
+dat2023 <- read_excel(here('data/2023 OTB Pyrodinium bahamense abundance data.xlsx')) %>% 
+  select(
+    date = `Sample Date`,
+    Latitude,
+    Longitude,
+    pyro = `Pyrodinium bahamense abundance (cells/L)`
+  ) %>%
+  mutate(date = ymd(date))
+
+brks <- c(-Inf, 1e4, 1e5, 1e6, Inf)
+labs <- c('No bloom', 'Low', 'Medium', 'High')
+
+dat <- bind_rows(datall, dat2021, dat2022, dat2023) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
+    pyro = pmin(3e6, pyro)
+  )
+
+toplo <- dat %>% 
+  filter(yr > 2011)
+
+ggplot(subset(toplo, !is.na(pyro)), aes(x = doy, y = Latitude)) +
+  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
+  geom_point(data = subset(toplo, is.na(pyro)), aes(shape = "No cells"),
+             size = 1, color = "lightgrey") +
+  scale_x_continuous(limits = c(0, 365)) +
+  scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
+  scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
+  facet_wrap(~yr, ncol = 4) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    legend.spacing.y = unit(-0.2, "cm")
+  ) +
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
+         size = guide_legend(order = 3),
+         shape = guide_legend(order = 1)) +
+  labs(
+    x = 'Day of Year',
+    shape = NULL,
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
+    subtitle = expression(paste(italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
+    caption = 'Data from FWC-FWRI HAB Monitoring Database, dotted lines are bridge locations'
+  )
+
+```
+
+------------------------------------------------------------------------
+
+## PYRODINIUM ANNUAL TRENDS
+
+```{r}
+wqatt <- anlz_avedat(epcdata) %>%
+  anlz_attain()%>%
+  filter(bay_segment == 'OTB') %>%
+  mutate(outcome = factor(outcome, levels = c('red', 'yellow', 'green')))
+dat <- bind_rows(datall, dat2021, dat2022, dat2023) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date)
+  ) %>%
+  left_join(wqatt, by = 'yr')
+
+yrmd <- dat %>%
+  mutate(pyro = ifelse(pyro == 0, NA, pyro)) %>%
+  summarise(medv = median(pyro, na.rm = T), .by = c('yr', 'outcome'))
+gndave <- yrmd %>%
+  summarise(gndave = mean(medv)) %>%
+  pull(gndave)
+
+ggplot(subset(dat, !is.na(pyro)), aes(x = factor(yr), y = pyro, fill = outcome, color = outcome))  +
+  # geom_boxplot(alpha = 0.7) +
+  geom_point(position = position_jitter(width = 0.2), alpha = 0.25) +
+  stat_summary(fun = median, geom = 'point', size = 6) +
+
+  geom_segment(data = yrmd,
+    aes(x = factor(yr), xend = factor(yr),
+        y = gndave, yend = medv),
+    size = 1
+  ) +
+  geom_hline(aes(yintercept = gndave), color = "black", size = 0.6) +
+  scale_y_log10(breaks = c(1e4, 1e5, 1e6), labels = c('Low (1e4)', 'Medium (1e5)', 'High (1e6)')) +
+  theme_minimal() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank(),
+    legend.position = 'none',
+    axis.text.x = element_text(size = 12)
+  ) +
+  scale_fill_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
+  scale_color_manual(values = c('red' = '#CC3231', 'yellow' = '#E9C318', 'green' = '#2DC938')) +
+  labs(
+    x = NULL,
+    y = expression(paste(italic('P. bahamense'), ' (cells/L)')),
+    title = 'Median OTB cell counts by year colored by water quality outcomes',
+    caption = 'Data from FWC-FWRI HAB Monitoring Database',
+    fill = NULL
+  )
+```
+
+------------------------------------------------------------------------
+
+## TAKE HOME
+
+-   Hopeful that 2022, 2023 water quality is a beginning to longer-term improvements
+-   Hopeful that seagrasses will continue to rebound, but drought is not a management strategy
+-   Stick to our nitrogen load reduction efforts, but investigate other management actions to kickstart seagrass recovery
+-   Old Tampa Bay Assimilative Capacity Study ongoing this year
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Nekton index reports on the health of fish and inverts
+-   Responds to water quality and habitat degradation
+-   2022 results show all bay segments as intermediate
+-   More info at <https://shiny.tbep.org/nekton-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+tbniscr <- anlz_tbniscr(fimdata)
+p <- show_tbnimatrix(tbniscr, txtsz = NULL) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+-   2020-2022 drop in scores likely from red tide effects
+
+```{r}
+tbniscr <- anlz_tbniscr(fimdata)
+show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
+```
+
+------------------------------------------------------------------------
+
+## BENTHIC RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Benthic index reports on the health of aquatic organisms in or near the bay bottom
+-   Responds to pollutants that can accumulate in the sediment
+-   2022 results similar to previous years
+-   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-width: 3
+#| fig-height: 6
+#| fig-align: "center"
+tbbiscr <- anlz_tbbiscr(benthicdata)
+p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## 2023 HABITAT RESTORATION
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/curbar.png)
+
+------------------------------------------------------------------------
+
+## NUMBER OF PROJECTS: 2021-2023
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/curpie.png)
+
+
+------------------------------------------------------------------------
+
+## HABITAT MASTER PLAN PROGRESS
+
+* Uses land use/cover data, relates trends to HMP targets
+
+![](figure/hmpureporcriteria.PNG)
+
+------------------------------------------------------------------------
+
+## HABITAT MASTER PLAN PROGRESS
+
+```{r}
+p1 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = 'Subtidal', ycollapse = T, xang = 45)
+p2 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = c('Intertidal', 'Supratidal'), ycollapse = T, xang = 45)
+
+p <- p1 + p2 + plot_layout(ncol = 2, guides = 'collect', widths = c(0.6, 1)) & labs(title = NULL)
+
+p
+```
+
+------------------------------------------------------------------------
+
+## FOCUSING RESTORATION EFFORT
+
+::: {.columns style="display: flex !important; height: 5%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Prioritize
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Keep it up
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Doing fine
+:::
+:::
+
+::: {.columns style="display: flex !important; height: 20%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa arrows-up-to-line size=3x >}}
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa hands-clapping size=3x >}}
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa thumbs-up size=3x >}}
+:::
+:::
+
+::: {.columns style="display: flex !important; height: 5%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Seagrass, salt marsh, freshwater wetlands
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Oyster bars, uplands (coastal/non-coastal)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Mangroves
+:::
+:::
+
+<br>
+
+::: {.columns style="display: flex !important; height: 20%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianseagrass.png)
+![](figure/iansaltmarsh.png)
+![](figure/ianwetland.png)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianoyster.png)
+![](figure/ianuplands.png)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianmangrove.png)
+:::
+:::
+
+<br>
+
+* Additional info: <https://tbep.org/habitat-master-plan-update>
+
+------------------------------------------------------------------------
+
+##
+
+<br>
+
+### Questions??
+
+<br>
+
+Marcus Beck, <mbeck@tbep.org>
+
+Kerry Flaherty-Walia, <kfwalia@tbep.org>
+
+<https://tbep.org/estuary/state-of-the-bay>
+
+------------------------------------------------------------------------
+
+## EXTRA SLIDES
+
+------------------------------------------------------------------------
+
+## PYRO vs WATER QUALITY SAMPLING
+
+```{r}
+dat <- bind_rows(datall, dat2021, dat2022, dat2023) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
+    pyro = pmin(1e6, pyro)
+  ) %>%
+  filter(yr == 2023)
+
+epcdts <- epcdata %>%
+  filter(yr == 2023 & bay_segment == 'OTB') %>%
+  mutate(
+    doy = yday(SampleTime),
+    date = format(as.Date(SampleTime), '%b %d')
+  ) %>%
+  select(date, doy, Latitude, Longitude)
+
+# pyro doy range
+doyrng <- dat %>% 
+  na.omit() %>% 
+  pull(doy) %>% 
+  range()
+
+ggplot(subset(dat, !is.na(pyro)), aes(x = doy, y = Latitude)) +
+  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
+  geom_point(data = subset(dat, is.na(pyro)), aes(shape = "No cells"),
+             size = 1, color = "lightgrey", fill = 'lightgrey') +
+  scale_x_continuous(limits = doyrng) +
+  geom_point(data = epcdts, aes(x = doy, y = Latitude, shape = 'EPC chl samples')) +
+  scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
+  scale_size_continuous(range = c(1, 5), breaks = c(1e5, 5e5, 1e6), labels = c('100k', '500k', '> 1e6')) +
+  scale_shape_manual(values = c(17, 21)) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    legend.spacing.y = unit(-0.2, "cm")
+  ) +
+  geom_text(data = epcdts, aes(x = doy, y = min(dat$Latitude), label = date), angle = 90, hjust = 0.2) +
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
+         size = guide_legend(order = 3),
+         shape = guide_legend(order = 1,
+                              override.aes = list(
+                                color = c('black', 'lightgrey'),
+                                fill = c('black', 'lightgrey')
+                                )
+                              )
+         ) +
+  labs(
+    x = 'Day of Year',
+    shape = NULL,
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
+    subtitle = expression(paste('2023 ', italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
+    caption = 'Data from FWC-FWRI HAB Monitoring Database, dotted lines are bridge locations'
+  )
+```
