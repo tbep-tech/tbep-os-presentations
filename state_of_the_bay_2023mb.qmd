@@ -537,12 +537,17 @@ dat <- bind_rows(datall, dat2021, dat2022, dat2023) %>%
 toplo <- dat %>% 
   filter(yr > 2011)
 
+# doy x-axis breaks and labels
+dts <- seq.Date(as.Date('2023-01-01'), as.Date('2023-10-01'), by = "3 month")
+xbrks <- yday(dts)                       
+xlabs <- format(dts, "%b")
+
 ggplot(subset(toplo, !is.na(pyro)), aes(x = doy, y = Latitude)) +
   geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
   geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
   geom_point(data = subset(toplo, is.na(pyro)), aes(shape = "No cells"),
              size = 1, color = "lightgrey") +
-  scale_x_continuous(limits = c(0, 365)) +
+  scale_x_continuous(limits = c(0, 365), breaks = xbrks, labels = xlabs) +
   scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
   scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
   facet_wrap(~yr, ncol = 4) +
