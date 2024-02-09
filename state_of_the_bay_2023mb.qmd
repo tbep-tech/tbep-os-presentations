@@ -253,7 +253,8 @@ thrthm <- theme(
     axis.title = element_blank(),
     plot.title = element_text(size = 15, colour = txtcol),
     legend.text = element_text(size = 12, colour = txtcol),
-    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5)
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
+    legend.position = 'top'
   )
 
 p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
