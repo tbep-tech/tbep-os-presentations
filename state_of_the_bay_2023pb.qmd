@@ -2,7 +2,7 @@
 title: "2023 STATE OF THE BAY"
 author: 
    - name: Dr. Marcus Beck, <mbeck@tbep.org>, Kerry Flaherty-Walia <kfwalia@tbep.org>
-institute: "Tampa Bay Estuary Program, Management Board Meeting"
+institute: "Tampa Bay Estuary Program, Policy Board Meeting"
 date: "February, 2024"
 date-format: "MMM, YYYY"
 format:
