@@ -1,0 +1,61 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "05/29/2024"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+
+------------------------------------------------------------------------
+
+## ANNOUNCEMENT 1
+
+------------------------------------------------------------------------
+
+## HACKATHON
+
+------------------------------------------------------------------------
+
+## HABITAT REPORT CARD
+
+------------------------------------------------------------------------
+
+## TRAININGS AND GOOD READS
+
+------------------------------------------------------------------------
+
+## 2024 SCHEDULE
+
+-   November 27
+-   Hackathon date January 27, 2025
