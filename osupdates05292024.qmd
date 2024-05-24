@@ -39,23 +39,88 @@ library(tbeptools)
 
 ------------------------------------------------------------------------
 
-## ANNOUNCEMENT 1
+## CO-CHAIR NOMINATIONS
+
+-   Open until June 12, please email me with your nomination
+-   Responsibilities defined in our [Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+-   Poll opened when nominations are closed
+
+------------------------------------------------------------------------
+
+## CO-CHAIR NOMINATIONS
+
+
+![](figure/fiveschools.PNG)
 
 ------------------------------------------------------------------------
 
 ## HACKATHON
 
+::: columns
+::: {.column width="50%"}
+
+-   January 27, 2025, Tampa River Center
+-   Competitive event to develop indicator products missing from CCMP
+-   Winner contracts with TBEP
+-   Formal announcement in the fall
+
+:::
+
+::: {.column width="50%"}
+<iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14097.18510029272!2d-82.4658116!3d27.9542113!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88c2c5c8e18c4d6d%3A0x94406299296831ca!2sTampa%20River%20Center!5e0!3m2!1sen!2sus!4v1716549214027!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+:::
+:::
+
+------------------------------------------------------------------------
+
+## CCMP INTERIM UPDATE
+
+-   Comprehensive Conservation and Management Plan
+-   Full upate every ten years, interim update every five years
+-   Draft open science format for interim update now available
+
+<https://tbep-tech.github.io/ccmp/docs/water/wq1.html>
+
+------------------------------------------------------------------------
+
+## CCMP INTERIM UPDATE
+
+<iframe src="https://tbep-tech.github.io/ccmp/docs/water/wq1.html" width="100%" height="80%" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+</iframe>
+
 ------------------------------------------------------------------------
 
 ## HABITAT REPORT CARD
 
+::: columns
+::: {.column width="50%"}
+
+-   Two-page summary report card on habitat restoration and trends
+-   Supported by [tbeptools](https://tbep-tech.github.io/tbeptools/articles/habitatmasterplan.html) visualization products and [habitat restoration database](https://knb.ecoinformatics.org/view/doi:10.5063/F11Z42VZ)
+-   Data-visualization landing page on [tbep.org](https://tbep.org/habitat-report-card/)
+
+:::
+
+::: {.column width="50%"}
+![](figure/hrc.png)
+:::
+:::
+
 ------------------------------------------------------------------------
 
-## TRAININGS AND GOOD READS
+## TOOLS, TRAININGS, AND GOOD READS
+
+-  [https://elicit.com/](https://elicit.com/), [https://elicit.com/](https://typeset.io/)
+-  [NASA Open Science Training](https://www.nasa.gov/news-release/new-course-from-nasa-helps-build-open-inclusive-science-community/)
+-  [The Value of Open Source Software](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4693148)
+-  [Welcoming More Participation in Open Data Science for the Oceans](https://www.annualreviews.org/doi/full/10.1146/annurev-marine-041723-094741)
+-  [Spatial Statistics Illustrated](https://www.esri.com/en-us/esri-press/browse/spatial-statistics-illustrated)
 
 ------------------------------------------------------------------------
 
-## 2024 SCHEDULE
+## UPCOMING SCHEDULE
 
--   November 27
--   Hackathon date January 27, 2025
+-   June 29th Technical Advisory Committee meeting (CC indicators!)
+-   November 27 OS subcommittee meeting
+-   January 27, 2025 Hackathon
