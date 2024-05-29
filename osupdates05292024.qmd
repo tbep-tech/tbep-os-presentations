@@ -110,7 +110,7 @@ library(tbeptools)
 
 ## TOOLS, TRAININGS, AND GOOD READS
 
--  [https://elicit.com/](https://elicit.com/), [https://elicit.com/](https://typeset.io/)
+-  [https://elicit.com/](https://elicit.com/), [https://typeset.io/](https://typeset.io/)
 -  [NASA Open Science Training](https://www.nasa.gov/news-release/new-course-from-nasa-helps-build-open-inclusive-science-community/)
 -  [The Value of Open Source Software](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4693148)
 -  [Welcoming More Participation in Open Data Science for the Oceans](https://www.annualreviews.org/doi/full/10.1146/annurev-marine-041723-094741)
