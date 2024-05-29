@@ -49,8 +49,7 @@ library(tbeptools)
 
 ## CO-CHAIR NOMINATIONS
 
-
-![](figure/fiveschools.PNG)
+![](figure/fiveschools.PNG){fig-align="center"}
 
 ------------------------------------------------------------------------
 
@@ -121,6 +120,6 @@ library(tbeptools)
 
 ## UPCOMING SCHEDULE
 
--   June 29th Technical Advisory Committee meeting (CC indicators!)
--   November 27 OS subcommittee meeting
+-   June 26th Technical Advisory Committee meeting (CC indicators!)
+-   November 27th OS subcommittee meeting
 -   January 27, 2025 Hackathon
