@@ -1,0 +1,145 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "12/10/2024"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+
+------------------------------------------------------------------------
+
+## HACKATHON
+
+::: columns
+::: {.column width="70%"}
+
+-   January 27, 2025, Tampa River Center
+-   Competitive event to develop indicator products missing from CCMP
+-   Winner can contract with TBEP
+-   <https://tbep.org/hack-the-bay>
+-   [Informational webinar tomorrow!](https://us06web.zoom.us/meeting/register/tZAkdO2uqDspHN0WPGcVy1INpdCS_zYoxe1G#/registration)
+
+:::
+
+::: {.column width="30%"}
+![](figure/hack the bay final small.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## HACKATHON
+
+::: columns
+::: {.column width="70%"}
+-   Select an eligible bay indicator subject to conceptualize an end-to-end workflow from data to indicator reporting
+-   Winning team invited into contract worth $20k to fully develop the workflow
+-   Register as team or individual
+:::
+
+::: {.column width="30%"}
+![](figure/hack the bay final small.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## ELIGIBLE INDICATORS
+
+::: columns
+::: {.column width="70%"}
+-   Wildlife: birds, sea turtles, marine mammals, terrestrial turtles, amphibians, 
+-   Invasive species
+-   Human health/wellbeing
+-   Check out [CCMP](https://tbep-tech.github.io/ccmp/docs/water/wq1.html) for others, but make sure there aren’t existing indicators used by TBEP
+:::
+::: {.column width="30%"}
+![](figure/hack the bay final small.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## HABITAT REPORT CARD
+
+::: columns
+::: {.column width="50%"}
+
+-   Two-page summary report card on habitat restoration and trends ([2024 draft](https://docs.google.com/presentation/d/1YWEKStAcn2SnsUUGgo8ioTz92XT7xUCNJK8CQCnnk-M/edit#slide=id.g1e535a2e560_1_38))
+-   Supported by [tbeptools](https://tbep-tech.github.io/tbeptools/articles/habitatmasterplan.html) visualization products and [habitat restoration database](https://knb.ecoinformatics.org/view/doi:10.5063/F11Z42VZ)
+-   Data-visualization landing page on [tbep.org](https://tbep.org/habitat-report-card/)
+
+:::
+
+::: {.column width="50%"}
+![](figure/hrc.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## TOOLS, TRAININGS, AND GOOD READS
+
+-  [Shifting institutional culture to develop climate solutions with Open Science](https://openscapes.org/blog/2024-06-06-editorial-published/)
+-  [Ten simple rules for quick and dirty scientific programming](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008549)
+-  [How to make sure no one cares about your data](https://www.heltweg.org/posts/how-to-make-sure-no-one-cares-about-your-open-data/)
+-  [AEMON-J/DSOS "Hacking Limnology" archive](https://osf.io/682v5/)
+-  [NCEAS Learning Hub's coreR course](https://learning.nceas.ucsb.edu/2024-10-coreR/)
+
+------------------------------------------------------------------------
+
+## Shiny app assistant
+
+::: columns
+::: {.column width="80%"}
+-   Generative AI tool for building Shiny apps
+-   General questions about Shiny
+-   Updating an existing app
+-   Building a novel app from scratch
+-   Fully functional code and UI in the browser
+  
+<https://gallery.shinyapps.io/assistant/>
+:::
+::: {.column width="20%"}
+![](figure/shiny_hex.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## UPCOMING SCHEDULE
+
+-   January 27, 2025 Hack the Bay!
+-   May 28, 2025 Open Science subcommittee meeting
+-   December 10, 2025 Open Science subcommittee meeting
