@@ -63,7 +63,7 @@ library(tbeptools)
 
 ::: columns
 ::: {.column width="70%"}
--   Select an eligible bay indicator subject to conceptualize an end-to-end workflow from data to indicator reporting
+-   Select a bay health indicator to develop a workflow from data to reporting
 -   Winning team invited into contract worth $20k to fully develop the workflow
 -   Register as team or individual
 :::
@@ -82,7 +82,7 @@ library(tbeptools)
 -   Wildlife: birds, sea turtles, marine mammals, terrestrial turtles, amphibians, 
 -   Invasive species
 -   Human health/wellbeing
--   Check out [CCMP](https://tbep-tech.github.io/ccmp/docs/water/wq1.html) for others, but make sure there aren’t existing indicators used by TBEP
+-   Check out [CCMP](https://tbep-tech.github.io/ccmp/docs/water/wq1.html) for others
 :::
 ::: {.column width="30%"}
 ![](figure/hack the bay final small.png)
@@ -116,6 +116,7 @@ library(tbeptools)
 -  [How to make sure no one cares about your data](https://www.heltweg.org/posts/how-to-make-sure-no-one-cares-about-your-open-data/)
 -  [AEMON-J/DSOS "Hacking Limnology" archive](https://osf.io/682v5/)
 -  [NCEAS Learning Hub's coreR course](https://learning.nceas.ucsb.edu/2024-10-coreR/)
+-  [How to name files](https://youtu.be/ES1LTlnpLMk?si=4X_6e4yNvTXnlLAw)
 
 ------------------------------------------------------------------------
 
