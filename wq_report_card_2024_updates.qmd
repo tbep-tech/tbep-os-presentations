@@ -14,6 +14,7 @@ format:
     link-external-icon: true
     linkcolor: "#00806E"
     link-external-newwindow: true
+        
 execute:
   echo: false
   ft.keepnext: false
@@ -23,15 +24,16 @@ execute:
 #| include: false
 library(knitr)
 library(tbeptools)
-library(ggplot2)
 library(patchwork)
 library(flextable)
-library(dplyr)
+library(tidyverse)
+library(plotly)
 
 maxyr <- 2024
 partialyr <- T
 
 epcdata <- read_importwq('data/currentdata.xlsx', download_latest = F)
+load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 ```
 
 ------------------------------------------------------------------------
@@ -76,11 +78,13 @@ epcdata <- read_importwq('data/currentdata.xlsx', download_latest = F)
 
 ![](figure/regthresh.png)
 
+__OTB__: 9.3 &mu;g/L, __HB__: 15.0 &mu;g/L, __MTB__: 8.5 &mu;g/L, __LTB__: 5.1 &mu;g/L
+
 ------------------------------------------------------------------------
 
 ## MANAGEMENT ACTIONS
 
-* Each bay segment assigned a management action
+* Each bay segment assigned a management action, based on chlorophyll and light attenuation magnitude and duration
 
 ![](figure/wqactions.jpg)
 
@@ -92,7 +96,7 @@ epcdata <- read_importwq('data/currentdata.xlsx', download_latest = F)
 #| layout-ncol: 2
 #| fig-height: 5
 #| out-height: 100%
-show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450) 
+show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450)
 show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
 ```
 
@@ -106,7 +110,7 @@ show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plot
 #| layout-ncol: 2
 #| fig-height: 5
 #| out-height: 100%
-show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450) 
+show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450)
 show_matrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
 ```
 
@@ -161,7 +165,7 @@ thrthm <- theme(
     axis.title = element_blank(),
     plot.title = element_text(size = 15, colour = txtcol),
     legend.text = element_text(size = 12, colour = txtcol),
-    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5), 
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
     legend.position = 'top'
   )
 
@@ -175,8 +179,257 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 
 ------------------------------------------------------------------------
 
+## STATION TARGET ATTAINMENT
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, partialyr = T, thrs = F)
+```
+
+------------------------------------------------------------------------
+
+## STATION OCTOBER CHLOROPHYLL
+
+```{r}
+show_sitemap(epcdata, yrsel = maxyr, partialyr = T, thrs = F, mosel = c(10))
+```
+
+------------------------------------------------------------------------
+
+## SEAGRASS TRANSECT DATA
+
+```{r}
+transectocc <- anlz_transectocc(transect)
+toplo <- anlz_transectavespp(transectocc, total = T, bay_segment = c('OTB', 'HB', 'MTB', 'LTB'), yrrng = c(1998, maxyr), species = c('Halodule', 'Syringodium', 'Thalassia'), by_seg = T) %>%
+  filter(Savspecies == 'total') |>
+  arrange(bay_segment, yr) |>
+  mutate(
+    fochg = foest - lag(foest),
+    chgsgn = ifelse(fochg > 0, 'increase', 'decrease')
+  ) |>
+  na.omit()
+ggplot(toplo, aes(x = yr, y = fochg)) +
+  geom_col(aes(fill = chgsgn), color = 'grey', alpha = 0.8) +
+  geom_col(data = toplo[toplo$yr == maxyr, ], fill = NA, color = 'black', linewidth = 1) +
+  facet_wrap(~bay_segment, ncol = 2) +
+  geom_hline(yintercept = 0) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    x = NULL,
+    y = 'Change',
+  ) +
+  scale_fill_manual(values = c('increase' = '#2DC938', 'decrease' = '#CC3231')) +
+  theme_minimal() +
+  theme(
+    legend.position = 'none',
+    strip.text = element_text(size = 12),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## EVALUATING SSOs
+
+* FDEP maintains [Public Notice of Pollution](https://prodenv.dep.state.fl.us/DepPNP/reports/viewIncidentDetails?page=1) database
+* Reports indicate location, date, contact, and narrative description
+* Details in narrative description...
+
+------------------------------------------------------------------------
+
+## EVALUATING SSOs
+
+* An example of a spill volume description:
+
+```{r}
+vols$descrip[1]
+```
+
+------------------------------------------------------------------------
+
+## EVALUATING SSOs
+
+```{mermaid}
+%%| out-height: 100% 
+flowchart LR
+    A[Raw Description Column] --> B{Contains Numeric\nCharacters?}
+    B -->|No| C[Remove Record]
+    B -->|Yes| D{Check Pattern Types}
+
+    D -->|None Found| C
+    D --> E1{Has 'spill volume:'?}
+    D --> E2{Has 'gallon'?}
+    D --> E3{Has 'mg'?}
+
+    E1 -->|Yes| F1[Extract number after\n'spill volume:' or\n'spill volume: estimated']
+    
+    E2 -->|Yes AND\nNo spill volume| F2[Extract all numbers\nbefore 'gallon']
+    
+    E3 -->|Yes AND\nNo gallon AND\nNo spill volume| F3[Extract numbers\nbefore 'mg'\nExclude 'mg/l']
+    
+    F2 --> G2[Take maximum if\nmultiple values]
+    F3 --> G3[Take maximum if\nmultiple values\nMultiply by 1e6]
+    
+    F1 --> H[Final Volume Value]
+    G2 --> H
+    G3 --> H
+    
+    H --> I{Is Value NA?}
+    I -->|Yes| C
+    I -->|No| J[Keep Record]
+```
+
+------------------------------------------------------------------------
+
+## SSOs 2017 to present
+
+```{r}
+toplo <- vols |>
+  group_by(yr, bay_segment) |>
+  summarise(volest = sum(volest), .groups = 'drop') |>
+  mutate(volest = volest / 1e6)
+tots <- nrow(vols)
+toplo_wide <- toplo |>
+  pivot_wider(
+    names_from = bay_segment,
+    values_from = volest,
+    values_fill = 0
+  )
+
+plot_ly() |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`OTB`, name = "Old Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`HB`, name = "Hillsborough Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`MTB`, name = "Middle Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`LTB`, name = "Lower Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`BCB`, name = "Boca Ciega Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`MR`, name = "Manatee River",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`TCB`, name = "Terra Ceia Bay",
+           opacity = 0.7) |>
+  layout(
+    barmode = "stack",
+    showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      y = 1.15,
+      x = 0.5,
+      xanchor = "center",
+      traceorder = "reversed"
+    ),
+    xaxis = list(
+      title = "",
+      showgrid = FALSE,
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      title = "Million gallons reported",
+      showgrid = TRUE,
+      gridcolor = "lightgray",
+      zeroline = FALSE
+    ),
+    font = list(
+      size = 14
+    ),
+    annotations = list(
+      x = 1,
+      y = -0.09,
+      text = paste0("Total n = ", tots),
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      font = list(size = 12)
+    ),
+    autosize = F,
+    width = 1000,
+    height = 450
+  ) |>
+  config(displayModeBar = F)
+```
+
+------------------------------------------------------------------------
+
+## SSOs 2024 by month
+
+```{r}
+toplo <- vols |>
+  filter(yr == maxyr) |>
+  group_by(modt, bay_segment) |>
+  summarise(volest = sum(volest), .groups = 'drop') |>
+  mutate(volest = volest / 1e6)
+tots <- sum(vols$yr == maxyr)
+toplo_wide <- toplo |>
+  pivot_wider(
+    names_from = bay_segment,
+    values_from = volest,
+    values_fill = 0
+  )
+
+plot_ly() |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`OTB`, name = "Old Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`HB`, name = "Hillsborough Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`MTB`, name = "Middle Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`LTB`, name = "Lower Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`BCB`, name = "Boca Ciega Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`MR`, name = "Manatee River",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`TCB`, name = "Terra Ceia Bay",
+           opacity = 0.7) |>
+  layout(
+    barmode = "stack",
+    showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      y = 1.15,
+      x = 0.5,
+      xanchor = "center",
+      traceorder = "reversed"
+    ),
+    xaxis = list(
+      title = "",
+      showgrid = FALSE,
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      title = "Million gallons reported",
+      showgrid = TRUE,
+      gridcolor = "lightgray",
+      zeroline = FALSE
+    ),
+    font = list(
+      size = 14
+    ),
+    annotations = list(
+      x = 1,
+      y = -0.09,
+      text = paste0("Total n = ", tots),
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      font = list(size = 12)
+    ),
+    autosize = F,
+    width = 1000,
+    height = 450
+  ) |>
+  config(displayModeBar = F)
+```
+
+------------------------------------------------------------------------
+
 ## CONCLUSIONS
 
 * All segments provisionally (through October) meet regulatory thresholds, all segments green for management targets except LTB
+* Continued seagrass loss in OTB
+* SSOs in 2024 likely contributed to poor water quality in October, among other things
 * Third year of [2022 - 2026 RA period](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc)
 
