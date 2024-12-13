@@ -1,0 +1,182 @@
+---
+title: "2024 PROVISIONAL WATER QUALITY REPORT CARD"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "2024-12-18"
+date-format: medium
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Nitrogen Management Consortium"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+  ft.keepnext: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+library(ggplot2)
+library(patchwork)
+library(flextable)
+library(dplyr)
+
+maxyr <- 2024
+partialyr <- T
+
+epcdata <- read_importwq('data/currentdata.xlsx', download_latest = F)
+```
+
+------------------------------------------------------------------------
+
+## RA FRAMEWORK
+
+::: columns
+::: {.column width="50%"}
+-   Each year, assess attainment of water quality thresholds
+-   Annual reporting to FDEP, second year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
+-   Today's results include data __through October__
+:::
+
+::: {.column width="50%"}
+![](figure/decisionframework.png){width="450" fig-align="center"}
+:::
+:::
+
+------------------------------------------------------------------------
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::::: {.columns style='display: flex !important; height: 80%;'}
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Management](figure/wq2024prov1.PNG){width="360"}
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Regulatory](figure/wq2024prov2.PNG){width="360"}
+:::
+
+:::::
+
+------------------------------------------------------------------------
+
+## REGULATORY THRESHOLDS
+
+* Each bay segment evaluated by chlorophyll-a threshold
+
+![](figure/regthresh.png)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+* Each bay segment assigned a management action
+
+![](figure/wqactions.jpg)
+
+------------------------------------------------------------------------
+
+## REGULATORY OUTCOMES
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 5
+#| out-height: 100%
+show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450) 
+show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
+```
+
+\* `r maxyr` Nov - Dec based on average from five years prior
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 5
+#| out-height: 100%
+show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450) 
+show_matrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
+```
+
+\* `r maxyr` Nov - Dec based on average from five years prior
+
+------------------------------------------------------------------------
+
+## OLD TAMPA BAY DETAILS
+
+```{r}
+show_segplotly(epcdata, yrrng = c(1975, maxyr), bay_segment = 'OTB', partialyr = T, height = 600, width = 1000)
+```
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5),
+    legend.position = 'top'
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+```
+
+------------------------------------------------------------------------
+
+## SEASONAL TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5), 
+    legend.position = 'top'
+  )
+
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+```
+
+------------------------------------------------------------------------
+
+## CONCLUSIONS
+
+* All segments provisionally (through October) meet regulatory thresholds, all segments green for management targets except LTB
+* Third year of [2022 - 2026 RA period](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc)
+
