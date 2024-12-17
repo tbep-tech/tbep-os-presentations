@@ -218,10 +218,11 @@ ggplot(toplo, aes(x = yr, y = fochg)) +
     y = 'Change',
   ) +
   scale_fill_manual(values = c('increase' = '#2DC938', 'decrease' = '#CC3231')) +
-  theme_minimal() +
+  theme_bw() +
   theme(
     legend.position = 'none',
     strip.text = element_text(size = 12),
+    strip.background = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor = element_blank()
   )
@@ -243,40 +244,6 @@ ggplot(toplo, aes(x = yr, y = fochg)) +
 
 ```{r}
 vols$descrip[1]
-```
-
-------------------------------------------------------------------------
-
-## EVALUATING SSOs
-
-```{mermaid}
-%%| out-height: 100% 
-flowchart LR
-    A[Raw Description Column] --> B{Contains Numeric\nCharacters?}
-    B -->|No| C[Remove Record]
-    B -->|Yes| D{Check Pattern Types}
-
-    D -->|None Found| C
-    D --> E1{Has 'spill volume:'?}
-    D --> E2{Has 'gallon'?}
-    D --> E3{Has 'mg'?}
-
-    E1 -->|Yes| F1[Extract number after\n'spill volume:' or\n'spill volume: estimated']
-    
-    E2 -->|Yes AND\nNo spill volume| F2[Extract all numbers\nbefore 'gallon']
-    
-    E3 -->|Yes AND\nNo gallon AND\nNo spill volume| F3[Extract numbers\nbefore 'mg'\nExclude 'mg/l']
-    
-    F2 --> G2[Take maximum if\nmultiple values]
-    F3 --> G3[Take maximum if\nmultiple values\nMultiply by 1e6]
-    
-    F1 --> H[Final Volume Value]
-    G2 --> H
-    G3 --> H
-    
-    H --> I{Is Value NA?}
-    I -->|Yes| C
-    I -->|No| J[Keep Record]
 ```
 
 ------------------------------------------------------------------------
