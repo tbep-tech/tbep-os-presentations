@@ -44,85 +44,13 @@ load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vo
 ::: {.column width="50%"}
 -   Each year, assess attainment of water quality thresholds
 -   Annual reporting to FDEP, second year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
--   Today's results include data __through October__
+-   Today's results include data __through November__
 :::
 
 ::: {.column width="50%"}
 ![](figure/decisionframework.png){width="450" fig-align="center"}
 :::
 :::
-
-------------------------------------------------------------------------
-
-## WATER QUALITY REPORT CARD
-
-<https://tbep-tech.github.io/wq-static/wq.pdf>
-
-::::: {.columns style='display: flex !important; height: 80%;'}
-
-::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Management](figure/wq2024prov1.PNG){width="360"}
-:::
-
-::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Regulatory](figure/wq2024prov2.PNG){width="360"}
-:::
-
-:::::
-
-------------------------------------------------------------------------
-
-## REGULATORY THRESHOLDS
-
-* Each bay segment evaluated by chlorophyll-a threshold
-
-![](figure/regthresh.png)
-
-__OTB__: 9.3 &mu;g/L, __HB__: 15.0 &mu;g/L, __MTB__: 8.5 &mu;g/L, __LTB__: 5.1 &mu;g/L
-
-------------------------------------------------------------------------
-
-## MANAGEMENT ACTIONS
-
-* Each bay segment assigned a management action, based on chlorophyll and light attenuation magnitude and duration
-
-![](figure/wqactions.jpg)
-
-------------------------------------------------------------------------
-
-## REGULATORY OUTCOMES
-
-```{r}
-#| layout-ncol: 2
-#| fig-height: 5
-#| out-height: 100%
-show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450)
-show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
-```
-
-\* `r maxyr` Dec based on average from five years prior
-
-------------------------------------------------------------------------
-
-## MANAGEMENT OUTCOMES
-
-```{r}
-#| layout-ncol: 2
-#| fig-height: 5
-#| out-height: 100%
-show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450)
-show_matrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
-```
-
-\* `r maxyr` Dec based on average from five years prior
-
-------------------------------------------------------------------------
-
-## OLD TAMPA BAY DETAILS
-
-```{r}
-show_segplotly(epcdata, yrrng = c(1975, maxyr), bay_segment = 'OTB', partialyr = T, height = 600, width = 1000)
-```
 
 ------------------------------------------------------------------------
 
@@ -153,7 +81,7 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 
 ------------------------------------------------------------------------
 
-## SEASONAL TRENDS
+## SEASONAL CHLOROPHYLL
 
 ```{r}
 #| fig-height: 6
@@ -179,18 +107,149 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 
 ------------------------------------------------------------------------
 
-## STATION TARGET ATTAINMENT
+## OCTOBER CHLOROPHYLL
 
 ```{r}
-show_sitesegmap(epcdata, yrsel = maxyr, partialyr = T, thrs = F)
+show_sitemap(epcdata, yrsel = maxyr, param = "chla", mosel = c(10))
 ```
 
 ------------------------------------------------------------------------
 
-## STATION OCTOBER CHLOROPHYLL
+## LIGHT ATTENUATION TRENDS
 
 ```{r}
-show_sitemap(epcdata, yrsel = maxyr, partialyr = T, thrs = F, mosel = c(10))
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5),
+    legend.position = 'top'
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+```
+
+------------------------------------------------------------------------
+
+## SEASONAL LIGHT ATTENUATION
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
+    legend.position = 'top'
+  )
+
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+```
+
+------------------------------------------------------------------------
+
+## OCTOBER LIGHT ATTENUATION
+
+```{r}
+show_sitemap(epcdata, yrsel = maxyr, param = "la", mosel = c(10))
+```
+
+------------------------------------------------------------------------
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::::: {.columns style='display: flex !important; height: 80%;'}
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Management](figure/wq2024prov1.PNG){width="360"}
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Regulatory](figure/wq2024prov2.PNG){width="360"}
+:::
+
+:::::
+
+------------------------------------------------------------------------
+
+## REGULATORY THRESHOLDS
+
+* Each bay segment evaluated by chlorophyll-a threshold
+
+![](figure/regthresh.png)
+
+------------------------------------------------------------------------
+
+## REGULATORY OUTCOMES
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 5
+#| out-height: 100%
+show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450)
+show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
+```
+
+\* `r maxyr` Dec based on average from five years prior
+
+------------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+* Each bay segment assigned a management action, based on chlorophyll and light attenuation magnitude and duration
+
+![](figure/wqactions.jpg)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 5
+#| out-height: 100%
+show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450)
+show_matrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
+```
+
+\* `r maxyr` Dec based on average from five years prior
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL ATTAINMENT
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', partialyr = T, thrs = F)
+```
+
+------------------------------------------------------------------------
+
+## LIGHT ATTENUATION ATTAINMENT
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = T, thrs = F)
 ```
 
 ------------------------------------------------------------------------
@@ -207,18 +266,19 @@ toplo <- anlz_transectavespp(transectocc, total = T, bay_segment = c('OTB', 'HB'
     chgsgn = ifelse(fochg > 0, 'increase', 'decrease')
   ) |>
   na.omit()
-ggplot(toplo, aes(x = yr, y = fochg)) +
-  geom_col(aes(fill = chgsgn), color = 'grey', alpha = 0.8) +
-  geom_col(data = toplo[toplo$yr == maxyr, ], fill = NA, color = 'black', linewidth = 1) +
+ggplot(toplo, aes(x = yr, y = foest)) +
+  geom_line() + 
+  geom_point(aes(fill = chgsgn), color = 'black', pch = 21, size = 2) +
+  geom_point(data = toplo[toplo$yr == maxyr, ], aes(fill = chgsgn), color = 'black', size = 4, pch = 21, stroke = 2) +
   facet_wrap(~bay_segment, ncol = 2) +
   geom_hline(yintercept = 0) +
   scale_y_continuous(labels = scales::percent) +
   labs(
     x = NULL,
-    y = 'Change',
+    y = 'Frequency of Occurrence'
   ) +
   scale_fill_manual(values = c('increase' = '#2DC938', 'decrease' = '#CC3231')) +
-  theme_bw() +
+  theme_minimal() +
   theme(
     legend.position = 'none',
     strip.text = element_text(size = 12),
@@ -318,6 +378,8 @@ plot_ly() |>
   config(displayModeBar = F)
 ```
 
+* 2016 baseline ~200M gallons
+
 ------------------------------------------------------------------------
 
 ## SSOs 2024 by month
@@ -395,8 +457,9 @@ plot_ly() |>
 
 ## CONCLUSIONS
 
+::: {.incremental}
 * All segments provisionally (through November) meet regulatory thresholds, all segments green for management targets except LTB
-* Continued seagrass loss in OTB
-* SSOs in 2024 likely contributed to poor water quality later in the year, among other things
+* Adaptive capacity of the bay is high coming off dry years, reduced with storms
+* OTB still a marginal bay segment, continued seagrass loss - is this an acceptable condition??
 * Third year of [2022 - 2026 RA period](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc)
-
+:::
