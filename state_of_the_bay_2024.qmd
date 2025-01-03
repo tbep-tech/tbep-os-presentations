@@ -464,9 +464,10 @@ plot_ly() |>
 
 ------------------------------------------------------------------------
 
-## WATER QUALITY DRIVERS
+## WATER QUALITY TAKE HOME
 
-* All segments provisionally meet regulatory thresholds, all segments green for management targets except LTB
+* All segments provisionally exceed chlorophyll management target except HB, LTB also exceeded light penetration target pushing it to "Caution"
+* All segments provisionally meet regulatory thresholds
 * Adaptive capacity of the bay is high coming off dry years, reduced with storms
 * OTB still a marginal bay segment, continued seagrass loss - is this an acceptable condition??
 
