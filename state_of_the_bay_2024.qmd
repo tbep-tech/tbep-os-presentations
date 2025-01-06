@@ -93,6 +93,10 @@ subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
 
 * Losses observed in Old Tampa Bay, gains in others
 
+::: {.notes}
+Mention areal maps forthcoming.
+:::
+
 ------------------------------------------------------------------------
 
 ## WATER QUALITY REPORT CARD
