@@ -156,7 +156,7 @@ Table shows bay segment management outcomes for chlorophyll on the left and ligh
 ::: columns
 ::: {.column width="50%"}
 -   Matrix shows attainment of chlorophyll and light attenuation *targets*
--   All segments in 2023 as "Stay the Course", except LTB as "Caution"
+-   All segments in `r maxyr` as "Stay the Course", except LTB as "Caution"
 -   More info at <https://shiny.tbep.org/wq-dash/>
 :::
 
