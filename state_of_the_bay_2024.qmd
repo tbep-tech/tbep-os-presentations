@@ -58,6 +58,10 @@ show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB
 * Similar as last year, but species and bay segment differences
 * More info at <https://shiny.tbep.org/seagrasstransect-dash/>
 
+::: {.notes}
+Note increase in Halodule
+:::
+
 ------------------------------------------------------------------------
 
 ## 2024 SEAGRASS TRANSECT RESULTS
@@ -94,7 +98,7 @@ subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
 * Losses observed in Old Tampa Bay, gains in others
 
 ::: {.notes}
-Mention areal maps forthcoming.
+Mention areal maps forthcoming.  Preliminary look at draft results suggests similar outcome in coverage.
 :::
 
 ------------------------------------------------------------------------
@@ -119,6 +123,10 @@ Mention areal maps forthcoming.
 
 :::
 
+::: {.notes}
+Two sides to report card, first side showing management outcomes is relevant to TAC, second side relevant to NMC.
+:::
+
 ------------------------------------------------------------------------
 
 ## MANAGEMENT ACTIONS
@@ -127,11 +135,19 @@ Mention areal maps forthcoming.
 
 ![](figure/wqactions.jpg)
 
+::: {.notes}
+Management actions defined by both chlorophyll and light attenuation, considers magnitude of exceedance for each year above targets and duration of exceedence from previous four years.
+:::
+
 ------------------------------------------------------------------------
 
 ## MANAGEMENT RESULTS
 
 ![](figure/wq2024segprov.PNG)
+
+::: {.notes}
+Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right.  Annual averages are compared to management targets. Note that chlorophyll targets exceeded for all bay segments exept HB, light attenuation targets only exceeded for LTB.  LTB receives "caution" category.
+:::
 
 ------------------------------------------------------------------------
 
@@ -156,6 +172,22 @@ show_matrixplotly(p, height = 600, width = 300)
 :::
 :::
 
+::: {.notes}
+Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022 and 2023. 
+:::
+
+------------------------------------------------------------------------
+
+## REGULATORY THRESHOLDS
+
+* Each bay segment evaluated by chlorophyll-a threshold
+
+![](figure/regthresh.png)
+
+::: {.notes}
+Only related to chlorophyll thresholds, magnitude of exceedence, no duration component.  Relevant for NMC, not the TAC.
+:::
+
 ------------------------------------------------------------------------
 
 ## REGULATORY OUTCOMES
@@ -177,6 +209,10 @@ p <- show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = pa
 show_matrixplotly(p, height = 600, width = 300)
 ```
 :::
+:::
+
+::: {.notes}
+Note historical perspective showing long-term bay recovery. Also note OTB non-attainment in recent years.
 :::
 
 ------------------------------------------------------------------------
@@ -206,6 +242,22 @@ p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, pa
 guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
 ```
 
+::: {.notes}
+All bay segments show an increase in chlorophyll from last year due to storms, note different y-axis scales. Solid blue line is bay segment management target. Top dotted line is "large exceedence", +2 standard errors above the target based on historical reference period. Middle dashed line is "small exceedence, + 1 standard error.
+:::
+
+------------------------------------------------------------------------
+
+## `r maxyr` CHLOROPHYLL
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', partialyr = F, thrs = F)
+```
+
+::: {.notes}
+Map shows annual average chlorophyll at each sample station.  Note high values in OTB, northern part of MTB (possibly from Alafia flooding).  Also note that segment outcomes are based on site averages. 
+:::
+
 ------------------------------------------------------------------------
 
 ## SEASONAL CHLOROPHYLL
@@ -224,13 +276,17 @@ thrthm <- theme(
     legend.position = 'top'
   )
 
-p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
 p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
 
 guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
 ```
+
+::: {.notes}
+Monthly chlorophyll averages are below medians until August - Debbie and then Helene/Milton.  Stays high until December.  All sites in October sampled late October except OTB on Oct. 1 (LTB sampled 10/28 so not sure why October values are lower). 
+:::
 
 ------------------------------------------------------------------------
 
@@ -239,6 +295,10 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 ```{r}
 show_sitemap(epcdata, yrsel = maxyr, param = "chla", mosel = c(10))
 ```
+
+::: {.notes}
+Emphasize locations with very high chlorophyll in October (west OTB, north HB).  
+:::
 
 ------------------------------------------------------------------------
 
@@ -258,14 +318,31 @@ thrthm <- theme(
     legend.position = 'top'
   )
 sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+scly <- scale_y_continuous(limits = c(0.43, 2.55))
 
-p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
-p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
-p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
-p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly 
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly
 
 guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
 ```
+
+::: {.notes}
+Light attenuation also shows an increase in all bay segments in 2024, except OTB possibly because of locations of major inflows into the bay, i.e., light attenuation can be affected by factors besides chlorophyll (e.g., organic matter from storms). Note fixed y-axes.
+:::
+
+------------------------------------------------------------------------
+
+## `r maxyr` LIGHT ATTENUATION
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = F, thrs = F)
+```
+
+::: {.notes}
+Map shows annual average light attenuation at each sample station.  Note high values in OTB, LTB.  Interesting that average light attenuation in OTB was still relatively low for potential reasons described in last slide
+:::
 
 ------------------------------------------------------------------------
 
@@ -284,14 +361,19 @@ thrthm <- theme(
     axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
     legend.position = 'top'
   )
+scly <- scale_y_continuous(limits = c(0.19, 4.1))
 
-p1 <- show_boxplot(epcdata, bay_segment = "OTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p2 <- show_boxplot(epcdata, bay_segment = "HB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p3 <- show_boxplot(epcdata, bay_segment = "MTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p4 <- show_boxplot(epcdata, bay_segment = "LTB",  param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + scly
+p2 <- show_boxplot(epcdata, bay_segment = "HB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + scly
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + scly
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + scly
 
 guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
 ```
+
+::: {.notes}
+Seasonal light attenuation shows similar pattern as chlorophyll, low until storms late summer/fall.  Note fixed y-axis across plots.
+:::
 
 ------------------------------------------------------------------------
 
@@ -301,6 +383,10 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 show_sitemap(epcdata, yrsel = maxyr, param = "la", mosel = c(10))
 ```
 
+::: {.notes}
+Emphasize locations with high light attenuation in October (HB).  
+:::
+
 ------------------------------------------------------------------------
 
 ## EVALUATING SSOs
@@ -308,6 +394,10 @@ show_sitemap(epcdata, yrsel = maxyr, param = "la", mosel = c(10))
 * FDEP maintains [Public Notice of Pollution](https://prodenv.dep.state.fl.us/DepPNP/reports/viewIncidentDetails?page=1) database
 * Reports indicate location, date, contact, and narrative description
 * Details in narrative description...
+
+::: {.notes}
+Supplementary analysis to understand potential contributions of SSOs to water quality late 2024. It comes with a lot of caveats and also note that SSOs are not the sole driver of water quality but important to consider.
+:::
 
 ------------------------------------------------------------------------
 
@@ -318,6 +408,10 @@ show_sitemap(epcdata, yrsel = maxyr, param = "la", mosel = c(10))
 ```{r}
 vols$descrip[1]
 ```
+
+::: {.notes}
+Parsing estimated spill volumes is tricky.  Most of the caveats related to the reported values - an estimate, usually not directly to the bay (but can be), water characteristics differ (loads cannot be calculated), many SSOs have reported volume that is recovered.
+:::
 
 ------------------------------------------------------------------------
 
@@ -393,6 +487,10 @@ plot_ly() |>
 
 * 2016 baseline ~200M gallons
 
+::: {.notes}
+Note the high values in 2024 compared to other years but also emphasize baseline 2016 estimate (Hermione, St. Pete SSOs).  Public database did not exist prior to 2017.
+:::
+
 ------------------------------------------------------------------------
 
 ## SSOs 2024 by month
@@ -466,14 +564,22 @@ plot_ly() |>
   config(displayModeBar = F)
 ```
 
+::: {.notes}
+Clear seasonal signal associated with storms, starting in August (Debbie)
+:::
+
 ------------------------------------------------------------------------
 
 ## WATER QUALITY TAKE HOME
 
 * All segments provisionally exceed chlorophyll management target except HB, LTB also exceeded light penetration target pushing it to "Caution"
-* All segments provisionally meet regulatory thresholds
+* All segments provisionally meet regulatory thresholds 
 * Adaptive capacity of the bay is high coming off dry years, reduced with storms
 * OTB still a marginal bay segment, continued seagrass loss - is this an acceptable condition??
+
+::: {.notes}
+Take home here is that we're coming off dry years, next year may not be the same given the storm effects.  Do not lose focus on OTB due to disconnect between water quality outcomes and continued seagrass loss. 
+:::
 
 ------------------------------------------------------------------------
 
