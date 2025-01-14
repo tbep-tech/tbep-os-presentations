@@ -44,65 +44,6 @@ load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RD
 load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 ```
 
-## 2024 SEAGRASS TRANSECT RESULTS
-
-```{r}
-#| fig-align: 'center'
-#| fig-width: 9
-#| fig-height: 4
-transectocc <- anlz_transectocc(transect)
-spp <- c("Halodule", "Syringodium", "Thalassia")
-show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), species = spp, plotly = T, width = 1000, height = 450)
-```
-
-* Similar as last year, but species and bay segment differences
-* More info at <https://shiny.tbep.org/seagrasstransect-dash/>
-
-::: {.notes}
-Note increase in Halodule
-:::
-
-------------------------------------------------------------------------
-
-## 2024 SEAGRASS TRANSECT RESULTS
-
-```{r}
-width <- 1000
-height <- 500
-p1 <- show_transectavespp(transectocc, bay_segment = c('OTB'), species = spp, plotly = T, width = width, height = height)
-p2 <- show_transectavespp(transectocc, bay_segment = c('HB'), species = spp, plotly = T, width = width, height = height)
-p3 <- show_transectavespp(transectocc, bay_segment = c('MTB'), species = spp, plotly = T, width = width, height = height)
-p4 <- show_transectavespp(transectocc, bay_segment = c('LTB', 'BCB'), species = spp, plotly = T, width = width, height = height)
-
-# # only show legend for the first plot, but legend group still works
-for(i in 1:4){
-  p2$x$data[[i]]$showlegend <- F
-  p3$x$data[[i]]$showlegend <- F
-  p4$x$data[[i]]$showlegend <- F
-}
-
-subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
-  layout(
-    title = NA,
-    annotations = list(
-      list(x = 0.2 , y = 1.05, text = "OTB", showarrow = F, xref='paper', yref='paper'),
-      list(x = 0.77 , y = 1.05, text = "HB", showarrow = F, xref='paper', yref='paper'),
-      list(x = 0.2 , y = 0.5, text = "MTB", showarrow = F, xref='paper', yref='paper'),
-      list(x = 0.8 , y = 0.5, text = "LTB/BCB", showarrow = F, xref='paper', yref='paper')
-    ),
-    yaxis = list(range = c(0, 100)),
-    yaxis2 = list(range = c(0, 100))
-  )
-```
-
-* Losses observed in Old Tampa Bay, gains in others
-
-::: {.notes}
-Mention areal maps forthcoming.  Preliminary look at draft results suggests similar outcome in coverage.
-:::
-
-------------------------------------------------------------------------
-
 ## WATER QUALITY REPORT CARD
 
 <https://tbep-tech.github.io/wq-static/wq.pdf>
@@ -146,7 +87,7 @@ Management actions defined by both chlorophyll and light attenuation, considers 
 ![](figure/wq2024segprov.PNG)
 
 ::: {.notes}
-Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right.  Annual averages are compared to management targets. Note that chlorophyll targets exceeded for all bay segments exept HB, light attenuation targets only exceeded for LTB.  LTB receives "caution" category.
+Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right.  Annual averages are compared to management targets. Note that chlorophyll targets exceeded for all bay segments except HB, light attenuation targets only exceeded for LTB.  LTB receives "caution" category.
 :::
 
 ------------------------------------------------------------------------
@@ -566,6 +507,65 @@ plot_ly() |>
 
 ::: {.notes}
 Clear seasonal signal associated with storms, starting in August (Debbie)
+:::
+
+------------------------------------------------------------------------
+
+## 2024 SEAGRASS TRANSECT RESULTS
+
+```{r}
+#| fig-align: 'center'
+#| fig-width: 9
+#| fig-height: 4
+transectocc <- anlz_transectocc(transect)
+spp <- c("Halodule", "Syringodium", "Thalassia")
+show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), species = spp, plotly = T, width = 1000, height = 450)
+```
+
+* Similar as last year, but species and bay segment differences
+* More info at <https://shiny.tbep.org/seagrasstransect-dash/>
+
+::: {.notes}
+Note increase in Halodule
+:::
+
+------------------------------------------------------------------------
+
+## 2024 SEAGRASS TRANSECT RESULTS
+
+```{r}
+width <- 1000
+height <- 500
+p1 <- show_transectavespp(transectocc, bay_segment = c('OTB'), species = spp, plotly = T, width = width, height = height)
+p2 <- show_transectavespp(transectocc, bay_segment = c('HB'), species = spp, plotly = T, width = width, height = height)
+p3 <- show_transectavespp(transectocc, bay_segment = c('MTB'), species = spp, plotly = T, width = width, height = height)
+p4 <- show_transectavespp(transectocc, bay_segment = c('LTB', 'BCB'), species = spp, plotly = T, width = width, height = height)
+
+# # only show legend for the first plot, but legend group still works
+for(i in 1:4){
+  p2$x$data[[i]]$showlegend <- F
+  p3$x$data[[i]]$showlegend <- F
+  p4$x$data[[i]]$showlegend <- F
+}
+
+subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
+  layout(
+    title = NA,
+    annotations = list(
+      list(x = 0.2 , y = 1.05, text = "OTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.77 , y = 1.05, text = "HB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.2 , y = 0.5, text = "MTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.8 , y = 0.5, text = "LTB/BCB", showarrow = F, xref='paper', yref='paper')
+    ),
+    yaxis = list(range = c(0, 100)),
+    yaxis2 = list(range = c(0, 100))
+  )
+```
+
+* Losses observed in Old Tampa Bay, gains in others
+
+::: {.notes}
+Mention areal maps forthcoming.  Preliminary look at draft results suggests similar outcome in coverage.
 :::
 
 ------------------------------------------------------------------------
