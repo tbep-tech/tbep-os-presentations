@@ -44,7 +44,6 @@ load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RD
 load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 ```
 
-
 ## SEAGRASS AND POLLUTION
 
 <br>
@@ -56,6 +55,24 @@ load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vo
 ## SEAGRASS AND POLLUTION
 
 ![](figure/TBEP_N_Paradigm.png)
+
+------------------------------------------------------------------------
+
+## TAMPA BAY WATERSHED
+
+![](figure/watershed.jpg)
+
+-----------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+-   Each bay segment assigned a management action
+
+![](figure/wqactions.jpg)
+
+::: notes
+Management actions defined by both chlorophyll and light attenuation, considers magnitude of exceedance for each year above targets and duration of exceedence from previous four years.
+:::
 
 ------------------------------------------------------------------------
 
@@ -209,35 +226,6 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 Seasonal light attenuation shows similar pattern as chlorophyll, low until storms late summer/fall. Note fixed y-axis across plots.
 :::
 
-## WATER QUALITY REPORT CARD
-
-<https://tbep-tech.github.io/wq-static/wq.pdf>
-
-::::: {.columns style="display: flex !important; height: 80%;"}
-::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Management](figure/wq2024prov1.PNG){width="360"}
-:::
-
-::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Regulatory](figure/wq2024prov2.PNG){width="360"}
-:::
-:::::
-
-::: notes
-Two sides to report card, first side showing management outcomes is relevant to TAC, second side relevant to NMC.
-:::
-
-------------------------------------------------------------------------
-
-## MANAGEMENT ACTIONS
-
--   Each bay segment assigned a management action
-
-![](figure/wqactions.jpg)
-
-::: notes
-Management actions defined by both chlorophyll and light attenuation, considers magnitude of exceedance for each year above targets and duration of exceedence from previous four years.
-:::
 
 ------------------------------------------------------------------------
 
@@ -274,6 +262,26 @@ show_matrixplotly(p, height = 600, width = 300)
 
 ::: notes
 Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022 and 2023.
+:::
+
+------------------------------------------------------------------------
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::::: {.columns style="display: flex !important; height: 80%;"}
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Management](figure/wq2024prov1.PNG){width="360"}
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Regulatory](figure/wq2024prov2.PNG){width="360"}
+:::
+:::::
+
+::: notes
+Two sides to report card, first side showing management outcomes is relevant to TAC, second side relevant to NMC.
 :::
 
 ------------------------------------------------------------------------
@@ -698,5 +706,3 @@ Kerry Flaherty-Walia, [kfwalia\@tbep.org](mailto:kfwalia@tbep.org){.email}
 Sheila Scolaro, [sscolaro\@tbep.org](mailto:sscolaro@tbep.org){.email}
 
 Marcus Beck, [mbeck\@tbep.org](mailto:mbeck@tbep.org){.email}
-
-
