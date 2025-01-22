@@ -1,7 +1,7 @@
 ---
 title: "2024 STATE OF THE BAY"
 author: 
-   - name: Dr. Marcus Beck, <mbeck@tbep.org>, Kerry Flaherty-Walia <kfwalia@tbep.org>
+   - name: Kerry Flaherty-Walia <kfwalia@tbep.org>, Sheila Scolaro <sscolaro@tbep.org>, Dr. Marcus Beck, <mbeck@tbep.org> 
 institute: "Tampa Bay Estuary Program"
 date: "January, 2025"
 date-format: "MMM, YYYY"
@@ -46,6 +46,8 @@ load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vo
 
 
 ## SEAGRASS AND POLLUTION
+
+<br>
 
 ![](figure/effect-of-nutrients-of-aquatic-primary-producers.png)
 
@@ -279,8 +281,8 @@ Note historical perspective showing long-term bay recovery. Also note OTB as "ca
 ## EVALUATING SSOs
 
 -   FDEP maintains [Public Notice of Pollution](https://prodenv.dep.state.fl.us/DepPNP/reports/viewIncidentDetails?page=1) database
+-   Not a perfect database - an estimate, usually into a storm drain or pond, usually not raw sewage, some recovered
 -   Reports indicate location, date, contact, and narrative description
--   Not a perfect measure - usually into a storm drain or pond, not always raw sewage, some collected, etc.
 -   Details in narrative description...
 
 ::: notes
@@ -606,9 +608,9 @@ show_matrixplotly(p, height = 600, width = 300)
 
 ```{r}
 p1 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
-                     strata = 'Subtidal', twocol = T, ycollapse = T, xang = 45)
+                     strata = 'Subtidal', twocol = T, ycollapse = T, xang = 30)
 p2 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
-                     strata = c('Intertidal', 'Supratidal'), totintertid = F, ycollapse = T, twocol = T, xang = 45)
+                     strata = c('Intertidal', 'Supratidal'), totintertid = F, ycollapse = T, twocol = T, xang = 30)
 
 p <- p1 + p2 + plot_layout(ncol = 2, guides = 'collect', widths = c(0.6, 1)) & labs(title = NULL)
 
@@ -691,6 +693,10 @@ Mangroves
 
 <br>
 
+Kerry Flaherty-Walia, [kfwalia\@tbep.org](mailto:kfwalia@tbep.org){.email}
+
+Sheila Scolaro, [sscolaro\@tbep.org](mailto:sscolaro@tbep.org){.email}
+
 Marcus Beck, [mbeck\@tbep.org](mailto:mbeck@tbep.org){.email}
 
-Kerry Flaherty-Walia, [kfwalia\@tbep.org](mailto:kfwalia@tbep.org){.email}
+
