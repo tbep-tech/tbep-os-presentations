@@ -73,12 +73,12 @@ thrthm <- theme(
   )
 sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
 
-p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
-p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
-p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
-p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + labs(caption = NULL)
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + labs(caption = NULL)
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + labs(caption = NULL)
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr)
 
-guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm & sclx
 ```
 
 ::: notes
@@ -115,12 +115,12 @@ thrthm <- theme(
     legend.position = 'top'
   )
 
-ptsz <- -1
+outliers <- F
 
-p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz)
-p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz)
-p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz)
-p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz)
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
 
 guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
 ```
@@ -149,12 +149,12 @@ thrthm <- theme(
 sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
 scly <- scale_y_continuous(limits = c(0.43, 2.55))
 
-p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly 
-p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly
-p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly
-p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + scly
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "la", yrrng = yrrng, partialyr = partialyr) #+ sclx + scly 
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, partialyr = partialyr) #+ sclx + scly
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) #+ sclx + scly
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) #+ sclx + scly
 
-guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm & sclx & scly
 ```
 
 ::: notes
@@ -190,16 +190,14 @@ thrthm <- theme(
     axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
     legend.position = 'top'
   )
-scly <- scale_y_continuous(limits = c(0.19, 4.1))
+scly <- scale_y_continuous(limits = c(0.19, 3))
 
-ptsz <- -1
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
 
-p1 <- show_boxplot(epcdata, bay_segment = "OTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz) + scly
-p2 <- show_boxplot(epcdata, bay_segment = "HB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz) + scly
-p3 <- show_boxplot(epcdata, bay_segment = "MTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz) + scly
-p4 <- show_boxplot(epcdata, bay_segment = "LTB",  param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, ptsz = ptsz) + scly
-
-guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm & scly
 ```
 
 ::: notes
@@ -715,10 +713,20 @@ Mangroves
 
 ##  HACK THE BAY!
 
+:::::: {.columns}
+::: {.column width="60%"}
 * January 27th, Tampa River Center
-* 30 attendees, five teams
-* Develop a workflow to fill an existing indicator gap for TBEP
+* 30 attendees, five teams working to propose a data synthesis workflow to report on an existing indicator gap
 * Winner - Drummond Carpenter, PLLC, will focus on invasive species
+:::
+
+::: {.column width="40%"}
+![](figure/hack the bay final.png){width="50%" fig-align="center"}
+
+![](figure/hackallphoto.JPG){fig-align="center"}
+
+:::
+:::::
 
 ------------------------------------------------------------------------
 
@@ -730,8 +738,6 @@ Mangroves
 
 <br>
 
-Kerry Flaherty-Walia, [kfwalia\@tbep.org](mailto:kfwalia@tbep.org){.email}
-
-Sheila Scolaro, [sscolaro\@tbep.org](mailto:sscolaro@tbep.org){.email}
-
 Marcus Beck, [mbeck\@tbep.org](mailto:mbeck@tbep.org){.email}
+
+Kerry Flaherty-Walia, [kfwalia\@tbep.org](mailto:kfwalia@tbep.org){.email}
