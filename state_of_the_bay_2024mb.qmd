@@ -544,6 +544,14 @@ Mention areal maps forthcoming. Preliminary look at draft results suggests simil
 
 ------------------------------------------------------------------------
 
+## 2024 SEAGRASS COVERAGE
+
+```{r}
+show_seagrasscoverage(seagrass)
+```
+
+------------------------------------------------------------------------
+
 ## WATER QUALITY TAKE HOME
 
 * All segments provisionally exceed chlorophyll management target except HB, LTB also exceeded light penetration target pushing it to "Caution"
