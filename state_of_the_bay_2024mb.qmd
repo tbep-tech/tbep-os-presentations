@@ -44,6 +44,13 @@ load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RD
 load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 ```
 
+
+## MANAGEMENT PARADIGM
+
+![](figure/TBEP_N_Paradigm.png)
+
+------------------------------------------------------------------------
+
 ## MANAGEMENT ACTIONS
 
 -   Each bay segment assigned a management action
@@ -52,6 +59,43 @@ load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vo
 
 ::: notes
 Management actions defined by both chlorophyll and light attenuation, considers magnitude of exceedance for each year above targets and duration of exceedence from previous four years.
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT RESULTS
+
+![](figure/wq2024segprov.PNG)
+
+::: notes
+Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right. Annual averages are compared to management targets. Note that chlorophyll targets exceeded for all bay segments except HB, light attenuation targets only exceeded for LTB. LTB receives "caution" category.
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+::::: columns
+::: {.column width="50%"}
+-   Matrix shows attainment of chlorophyll and light attenuation *targets*
+-   All segments in `r maxyr` as "Stay the Course", except LTB as "Caution"
+-   More info at <https://shiny.tbep.org/wq-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr, historic = T) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::::
+
+::: notes
+Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022 and 2023.
 :::
 
 ------------------------------------------------------------------------
@@ -202,44 +246,6 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 
 ::: notes
 Seasonal light attenuation shows similar pattern as chlorophyll, low until storms late summer/fall. Note fixed y-axis across plots.
-:::
-
-
-------------------------------------------------------------------------
-
-## MANAGEMENT RESULTS
-
-![](figure/wq2024segprov.PNG)
-
-::: notes
-Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right. Annual averages are compared to management targets. Note that chlorophyll targets exceeded for all bay segments except HB, light attenuation targets only exceeded for LTB. LTB receives "caution" category.
-:::
-
-------------------------------------------------------------------------
-
-## MANAGEMENT OUTCOMES
-
-::::: columns
-::: {.column width="50%"}
--   Matrix shows attainment of chlorophyll and light attenuation *targets*
--   All segments in `r maxyr` as "Stay the Course", except LTB as "Caution"
--   More info at <https://shiny.tbep.org/wq-dash/>
-:::
-
-::: {.column width="50%"}
-```{r}
-#| fig-height: 6
-#| fig-width: 3
-#| fig-align: "center"
-p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr, historic = T) +
-  theme(axis.text.y = element_text(size = 8))
-show_matrixplotly(p, height = 600, width = 300)
-```
-:::
-:::::
-
-::: notes
-Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022 and 2023.
 :::
 
 ------------------------------------------------------------------------
