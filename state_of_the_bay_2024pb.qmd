@@ -1,0 +1,700 @@
+---
+title: "2024 STATE OF THE BAY"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>, Kerry Flaherty-Walia <kfwalia@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "February, 2025"
+date-format: "MMM, YYYY"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program 2024 State of the Bay"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+  fig-align: "center"
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+library(plotly)
+library(sf)
+library(ggrepel)
+library(readxl)
+
+maxyr <- 2024
+partialyr <- F
+
+# load(file = here('data/sgsegest.RData'))
+
+load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RData'))
+load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
+```
+
+## SEAGRASS AND POLLUTION
+
+<br>
+
+![](figure/effect-of-nutrients-of-aquatic-primary-producers.png)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT PARADIGM
+ 
+<br>
+
+![](figure/TBEP_N_Paradigm.png)
+
+------------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+-   Each bay segment assigned a management action
+
+![](figure/wqactions.jpg)
+
+::: notes
+Management actions defined by both chlorophyll and light attenuation, considers magnitude of exceedance for each year above targets and duration of exceedence from previous four years.
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT RESULTS
+
+![](figure/wq2024segprov.PNG)
+
+::: notes
+Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right. Annual averages are compared to management targets. Note that chlorophyll targets exceeded for all bay segments except HB, light attenuation targets only exceeded for LTB. LTB receives "caution" category.
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+::::: columns
+::: {.column width="50%"}
+-   Matrix shows attainment of chlorophyll and light attenuation *targets*
+-   All segments in `r maxyr` as "Stay the Course", except LTB as "Caution"
+-   More info at <https://shiny.tbep.org/wq-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr, historic = T) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::::
+
+::: notes
+Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022 and 2023.
+:::
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5),
+    legend.position = 'top'
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + labs(caption = NULL)
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + labs(caption = NULL)
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + labs(caption = NULL)
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr)
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm & sclx
+```
+
+::: notes
+All bay segments show an increase in chlorophyll from last year due to storms, note different y-axis scales. Solid blue line is bay segment management target. Top dotted line is "large exceedence", +2 standard errors above the target based on historical reference period. Middle dashed line is "small exceedence, + 1 standard error.
+:::
+
+------------------------------------------------------------------------
+
+## `r maxyr` CHLOROPHYLL
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', partialyr = F, thrs = F)
+```
+
+::: notes
+Map shows annual average chlorophyll at each sample station. Note high values in OTB, northern part of MTB (possibly from Alafia flooding). Also note that segment outcomes are based on site averages.
+:::
+
+------------------------------------------------------------------------
+
+## SEASONAL CHLOROPHYLL
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
+    legend.position = 'top'
+  )
+
+outliers <- F
+
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, outliers = outliers)
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+```
+
+::: notes
+Monthly chlorophyll averages are below medians until August - Debbie and then Helene/Milton. Stays high until December. All sites in October sampled late October except OTB on Oct. 1 (LTB sampled 10/28 so not sure why October values are lower).
+:::
+
+------------------------------------------------------------------------
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::::: {.columns style="display: flex !important; height: 80%;"}
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Management](figure/wq2024prov1.PNG){width="360"}
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+![Regulatory](figure/wq2024prov2.PNG){width="360"}
+:::
+:::::
+
+::: notes
+Two sides to report card, first side showing management outcomes is relevant to TAC, second side relevant to NMC.
+:::
+
+------------------------------------------------------------------------
+
+## TAMPA BAY ANNUAL RAINFALL
+
+```{r}
+# monthly rainfall data from swfwmd 
+# https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
+# file is from the link "USGS watershed"
+download.file(
+  'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825',
+  here('data/swfwmdrainfall.xlsx'),
+  mode = 'wb'
+)
+
+# rain data for relevant TB areas
+raindat <- readxl::excel_sheets(here('data/swfwmdrainfall.xlsx')) %>% 
+  grep('jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec', ., value = TRUE) %>% 
+  tibble(
+    mo = .
+  ) %>% 
+  nest(.by = mo) %>% 
+  mutate(
+    data = purrr::map(mo, function(mo){
+      
+      read_excel(here('data/swfwmdrainfall.xlsx'), sheet = mo, skip = 1) %>% 
+        filter(Year %in% 1975:2024) %>% 
+        select(
+          yr = Year, 
+          tampacoastal_in = `Tampa Bay/Coastal Areas`, # this just a fringe area around the bay, not the watershed
+          hillsborough_in = `Hillsborough River`,
+          alafia_in = `Alafia River`,
+          littlemanatee_in = `Little Manatee River`,
+          manatee_in = `Manatee River`
+        ) %>% 
+        mutate_all(as.numeric)
+      
+    })
+  ) %>% 
+  unnest('data') %>% 
+  # mutate(
+  #   precip_in = rowSums(select(., -mo, -yr), na.rm = TRUE)
+  # ) %>%
+  select(mo, yr, precip_in = tampacoastal_in) %>% 
+  mutate(
+    mo = gsub('\\-usgsbsn$', '', mo),
+    mo = as.numeric(factor(mo,
+                           levels = c('jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                                      'jul', 'aug', 'sep', 'oct', 'nov', 'dec'),
+                           labels = 1:12)
+    ),
+    date = as.Date(paste0(yr, '-', mo, '-01')), 
+    precip_mm = precip_in * 25.4
+  )
+
+toplo <- raindat %>% 
+  filter(yr > 2009) %>% 
+  summarise(
+    precip_in = sum(precip_in, na.rm = TRUE), 
+    .by = yr
+  )
+
+ave <- mean(toplo$precip_in)
+
+ggplot(toplo, aes(x = yr, y = precip_in)) + 
+  geom_col(fill = '#004F7E', color = 'black', alpha = 0.8) +
+  geom_hline(yintercept = ave, linetype = 2, color = '#5C4A42', linewidth = 1) +
+  theme_minimal(base_size = 14) + 
+  scale_x_continuous(breaks = unique(toplo$yr)) +
+  scale_y_continuous(expand= c(0, 0)) +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 10, hjust = 1),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank()
+  ) +
+  labs(
+    x = NULL,
+    y = 'Inches',
+    caption = 'Data source: SWFWMD'
+  )
+```
+
+------------------------------------------------------------------------
+
+## EVALUATING SSOs
+
+-   FDEP maintains [Public Notice of Pollution](https://prodenv.dep.state.fl.us/DepPNP/reports/viewIncidentDetails?page=1) database
+-   Not a perfect database - an estimate, usually into a storm drain or pond, usually not raw sewage, some recovered
+-   Reports indicate location, date, contact, and narrative description
+-   Details in narrative description...
+
+::: notes
+Supplementary analysis to understand potential contributions of SSOs to water quality late 2024. It comes with a lot of caveats and also note that SSOs are not the sole driver of water quality but important to consider.
+:::
+
+------------------------------------------------------------------------
+
+## SSOs 2017 to present
+
+```{r}
+toplo <- vols |>
+  group_by(yr, bay_segment) |>
+  summarise(volest = sum(volest), .groups = 'drop') |>
+  mutate(volest = volest / 1e6)
+tots <- nrow(vols)
+toplo_wide <- toplo |>
+  pivot_wider(
+    names_from = bay_segment,
+    values_from = volest,
+    values_fill = 0
+  )
+
+plot_ly() |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`OTB`, name = "Old Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`HB`, name = "Hillsborough Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`MTB`, name = "Middle Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`LTB`, name = "Lower Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`BCB`, name = "Boca Ciega Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`MR`, name = "Manatee River",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~yr, y = ~`TCB`, name = "Terra Ceia Bay",
+           opacity = 0.7) |>
+  layout(
+    barmode = "stack",
+    showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      y = 1.15,
+      x = 0.5,
+      xanchor = "center",
+      traceorder = "reversed"
+    ),
+    xaxis = list(
+      title = "",
+      showgrid = FALSE,
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      title = "Million gallons reported",
+      showgrid = TRUE,
+      gridcolor = "lightgray",
+      zeroline = FALSE
+    ),
+    font = list(
+      size = 14
+    ),
+    annotations = list(
+      x = 1,
+      y = -0.09,
+      text = paste0("Total n = ", tots),
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      font = list(size = 12)
+    ),
+    autosize = F,
+    width = 1000,
+    height = 450
+  ) |>
+  config(displayModeBar = F)
+```
+
+-   2016 baseline \~200M gallons
+
+::: notes
+Note the high values in 2024 compared to other years but also emphasize baseline 2016 estimate (Hermione, St. Pete SSOs). Public database did not exist prior to 2017.
+:::
+
+------------------------------------------------------------------------
+
+## SSOs 2024 by month
+
+```{r}
+toplo <- vols |>
+  filter(yr == maxyr) |>
+  group_by(modt, bay_segment) |>
+  summarise(volest = sum(volest), .groups = 'drop') |>
+  mutate(volest = volest / 1e6)
+tots <- sum(vols$yr == maxyr)
+toplo_wide <- toplo |>
+  pivot_wider(
+    names_from = bay_segment,
+    values_from = volest,
+    values_fill = 0
+  )
+
+plot_ly() |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`OTB`, name = "Old Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`HB`, name = "Hillsborough Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`MTB`, name = "Middle Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`LTB`, name = "Lower Tampa Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`BCB`, name = "Boca Ciega Bay",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`MR`, name = "Manatee River",
+           opacity = 0.7) |>
+  add_bars(data = toplo_wide, x = ~modt, y = ~`TCB`, name = "Terra Ceia Bay",
+           opacity = 0.7) |>
+  layout(
+    barmode = "stack",
+    showlegend = TRUE,
+    legend = list(
+      orientation = "h",
+      y = 1.15,
+      x = 0.5,
+      xanchor = "center",
+      traceorder = "reversed"
+    ),
+    xaxis = list(
+      title = "",
+      showgrid = FALSE,
+      zeroline = FALSE
+    ),
+    yaxis = list(
+      title = "Million gallons reported",
+      showgrid = TRUE,
+      gridcolor = "lightgray",
+      zeroline = FALSE
+    ),
+    font = list(
+      size = 14
+    ),
+    annotations = list(
+      x = 1,
+      y = -0.09,
+      text = paste0("Total n = ", tots),
+      showarrow = FALSE,
+      xref = 'paper',
+      yref = 'paper',
+      font = list(size = 12)
+    ),
+    autosize = F,
+    width = 1000,
+    height = 450
+  ) |>
+  config(displayModeBar = F)
+```
+
+::: notes
+Clear seasonal signal associated with storms, starting in August (Debbie)
+:::
+
+------------------------------------------------------------------------
+
+## 2024 SEAGRASS COVERAGE
+
+```{r}
+show_seagrasscoverage(seagrass, lastlab = F)
+```
+
+------------------------------------------------------------------------
+
+## 2024 SEAGRASS TRANSECT RESULTS
+
+```{r}
+width <- 1000
+height <- 500
+transectocc <- anlz_transectocc(transect)
+spp <- c("Halodule", "Syringodium", "Thalassia")
+p1 <- show_transectavespp(transectocc, bay_segment = c('OTB'), species = spp, plotly = T, width = width, height = height)
+p2 <- show_transectavespp(transectocc, bay_segment = c('HB'), species = spp, plotly = T, width = width, height = height)
+p3 <- show_transectavespp(transectocc, bay_segment = c('MTB'), species = spp, plotly = T, width = width, height = height)
+p4 <- show_transectavespp(transectocc, bay_segment = c('LTB', 'BCB'), species = spp, plotly = T, width = width, height = height)
+
+# # only show legend for the first plot, but legend group still works
+for(i in 1:4){
+  p2$x$data[[i]]$showlegend <- F
+  p3$x$data[[i]]$showlegend <- F
+  p4$x$data[[i]]$showlegend <- F
+}
+
+subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
+  layout(
+    title = NA,
+    annotations = list(
+      list(x = 0.2 , y = 1.05, text = "OTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.77 , y = 1.05, text = "HB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.2 , y = 0.5, text = "MTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.8 , y = 0.5, text = "LTB/BCB", showarrow = F, xref='paper', yref='paper')
+    ),
+    yaxis = list(range = c(0, 100)),
+    yaxis2 = list(range = c(0, 100))
+  )
+```
+
+-   Losses observed in Old Tampa Bay, gains in others
+
+::: notes
+Mention areal maps forthcoming. Preliminary look at draft results suggests similar outcome in coverage.
+:::
+
+------------------------------------------------------------------------
+
+## WATER QUALITY TAKE HOME
+
+* All segments provisionally exceed chlorophyll management target except HB, LTB also exceeded light penetration target pushing it to "Caution"
+* Adaptive capacity of the bay is high coming off dry years, reduced with storms
+* OTB still a marginal bay segment, continued seagrass loss - is this an acceptable condition??
+
+::: notes
+Take home here is that we're coming off dry years, next year may not be the same given the storm effects. Do not lose focus on OTB due to disconnect between water quality outcomes and continued seagrass loss.
+:::
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+::::: columns
+::: {.column width="50%"}
+-   Nekton index reports on the health of fish and inverts
+-   Responds to water quality and habitat degradation
+-   2023 results show all bay segments as caution, except OTB
+-   More info at <https://shiny.tbep.org/nekton-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+tbniscr <- anlz_tbniscr(fimdata)
+p <- show_tbnimatrix(tbniscr, txtsz = NULL) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::::
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+-   Most bay segments show recovery from red tide, OTB marginal
+
+```{r}
+tbniscr <- anlz_tbniscr(fimdata)
+show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
+```
+
+------------------------------------------------------------------------
+
+## BENTHIC RESULTS
+
+::::: columns
+::: {.column width="50%"}
+-   Benthic index reports on the health of aquatic organisms in or near the bay bottom
+-   Responds to pollutants that can accumulate in the sediment
+-   2023 results similar to previous years, except MTB now fair
+-   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-width: 3
+#| fig-height: 6
+#| fig-align: "center"
+tbbiscr <- anlz_tbbiscr(benthicdata)
+p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::::
+
+------------------------------------------------------------------------
+
+## RESTORATION LOCATIONS
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/map.png)
+
+------------------------------------------------------------------------
+
+## RESTORATION PROJECTS OVER TIME
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/totalhmp.png)
+
+------------------------------------------------------------------------
+
+## HABITAT MASTER PLAN PROGRESS
+
+```{r}
+p1 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = 'Subtidal', twocol = T, ycollapse = T, xang = 30)
+p2 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = c('Intertidal', 'Supratidal'), totintertid = F, ycollapse = T, twocol = T, xang = 30)
+
+p <- p1 + p2 + plot_layout(ncol = 2, guides = 'collect', widths = c(0.6, 1)) & labs(title = NULL)
+
+p
+```
+
+------------------------------------------------------------------------
+
+## FOCUSING RESTORATION EFFORT
+
+:::::: {.columns style="display: flex !important; height: 5%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Prioritize
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Keep it up
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Doing fine
+:::
+::::::
+
+:::::: {.columns style="display: flex !important; height: 20%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa arrows-up-to-line size=3x >}}
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa hands-clapping size=3x >}}
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+{{< fa thumbs-up size=3x >}}
+:::
+::::::
+
+:::::: {.columns style="display: flex !important; height: 5%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Seagrass, salt marsh, freshwater wetlands
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Oyster bars, uplands (coastal/non-coastal)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+Mangroves
+:::
+::::::
+
+<br>
+
+:::::: {.columns style="display: flex !important; height: 20%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianseagrass.png) ![](figure/iansaltmarsh.png) ![](figure/ianwetland.png)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianoyster.png) ![](figure/ianuplands.png)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianmangrove.png)
+:::
+::::::
+
+<br>
+
+-   Additional info: <https://tbep.org/habitat-master-plan-update>
+
+------------------------------------------------------------------------
+
+##  HACK THE BAY!
+
+:::::: {.columns}
+::: {.column width="60%"}
+* January 27th, Tampa River Center
+* 30 attendees, five teams working to propose a data synthesis workflow to report on an existing indicator gap
+* Winner - Drummond Carpenter, PLLC, will focus on invasive species
+:::
+
+::: {.column width="40%"}
+![](figure/hack the bay final.png){width="50%" fig-align="center"}
+
+![](figure/hackallphoto.JPG){fig-align="center"}
+
+:::
+:::::
+
+------------------------------------------------------------------------
+
+## 
+
+<br>
+
+### Questions??
+
+<br>
+
+Marcus Beck, [mbeck\@tbep.org](mailto:mbeck@tbep.org){.email}
+
+Kerry Flaherty-Walia, [kfwalia\@tbep.org](mailto:kfwalia@tbep.org){.email}
