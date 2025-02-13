@@ -274,7 +274,7 @@ for(yr in otbsgdat$yr){
   
   p2 <- ggplot2::ggplot(na.omit(toplo2), ggplot2::aes(x = ind, y = Acres)) +
     ggplot2::geom_col(fill = '#00806E', colour = 'black', width = 1.4) +
-    ggplot2::geom_segment(x = 0, xend = nrow(toplo) + 1, y = 11.1, yend = 11.1, col = 'red', size = 2) +
+    # ggplot2::geom_segment(x = 0, xend = nrow(toplo) + 1, y = 11.1, yend = 11.1, col = 'red', size = 2) +
     # ggplot2::annotate("text", label = "Seagrass Coverage Goal", x = 4, y = 40.5, color = 'red', size = 5, hjust = 0) +
     ggplot2::annotate('text', x = brks[which(lbs == maxyr)], y = lasty, label = lastlab, angle = 90, hjust = 1, vjust = 0.3, size = 3, color = 'white') +
     ggplot2::scale_x_continuous(breaks = brks, labels = lbs2, limits = c(0, max(brks) + 1), expand = c(0.01, 0.01)) +
