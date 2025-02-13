@@ -44,7 +44,7 @@ load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RD
 load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 ```
 
-## SEAGRASS AND POLLUTION
+## 
 
 <br>
 
@@ -261,26 +261,55 @@ toplo <- raindat %>%
   summarise(
     precip_in = sum(precip_in, na.rm = TRUE), 
     .by = yr
+  ) |> 
+  mutate(
+    ave = mean(precip_in), 
+    avediff = precip_in - ave
   )
+
 
 ave <- mean(toplo$precip_in)
 
-ggplot(toplo, aes(x = yr, y = precip_in)) + 
+p1 <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
   geom_col(fill = '#004F7E', color = 'black', alpha = 0.8) +
-  geom_hline(yintercept = ave, linetype = 2, color = '#5C4A42', linewidth = 1) +
+  geom_hline(yintercept = ave, color = '#5C4A42', linewidth = 1) +
+  theme_minimal(base_size = 14) + 
+  scale_x_continuous(breaks = unique(toplo$yr)) +
+  scale_y_continuous(expand= c(0, 0)) +
+  theme(
+    axis.text.x =  element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(), 
+  ) +
+  labs(
+    x = NULL,
+    y = 'Annual rainfall (inches)',
+    # caption = 'Data source: SWFWMD'
+  )
+
+mxdiff <- max(toplo$avediff)
+p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) + 
+  geom_col(color = 'black', alpha = 0.8) +
+  geom_hline(yintercept = 0, color = '#5C4A42', linewidth = 1) +
+  scale_fill_gradient2(midpoint = 0, low = 'tomato1', mid = 'white', high = 'dodgerblue2') +
   theme_minimal(base_size = 14) + 
   scale_x_continuous(breaks = unique(toplo$yr)) +
   scale_y_continuous(expand= c(0, 0)) +
   theme(
     axis.text.x = element_text(angle = 45, size = 10, hjust = 1),
     panel.grid.minor.x = element_blank(),
-    panel.grid.major.x = element_blank()
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.y = element_blank(),
+    legend.position = 'none'
   ) +
   labs(
     x = NULL,
-    y = 'Inches',
+    y = 'Deviation (inches)',
     caption = 'Data source: SWFWMD'
   )
+
+p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
+
 ```
 
 ------------------------------------------------------------------------
