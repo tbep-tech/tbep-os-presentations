@@ -257,7 +257,7 @@ raindat <- readxl::excel_sheets(here('data/swfwmdrainfall.xlsx')) %>%
   )
 
 toplo <- raindat %>% 
-  filter(yr > 2009) %>% 
+  filter(yr > 2009) %>%
   summarise(
     precip_in = sum(precip_in, na.rm = TRUE), 
     .by = yr
@@ -311,6 +311,10 @@ p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) +
 p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
 
 ```
+
+::: notes
+2024 was wettest since 2004, 2023 was driest since 1956.
+:::
 
 ------------------------------------------------------------------------
 
