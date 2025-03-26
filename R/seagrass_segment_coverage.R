@@ -70,10 +70,10 @@ sgsegest2024 <- sgsegest %>%
   mutate(
     year = 2024, 
     acres = case_when(
-      segment == 'Old Tampa Bay' ~ acres - 327,
+      segment == 'Old Tampa Bay' ~ acres - 326,
       segment == 'Hillsborough Bay' ~ acres + 756,
       segment == 'Middle Tampa Bay' ~ acres + 230,
-      segment == 'Lower Tampa Bay' ~ acres + 403,
+      segment == 'Lower Tampa Bay' ~ acres + 401,
       segment == 'Boca Ciega Bay' ~ acres + 344,
       segment == 'Terra Ceia Bay' ~ acres + 1,
       segment == 'Manatee River' ~ acres + 2
