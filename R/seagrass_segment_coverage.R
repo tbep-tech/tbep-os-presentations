@@ -5,83 +5,10 @@ library(tbeptools)
 library(magick)
 library(gridExtra)
 
-# segment coverages by year -------------------------------------------------------------------
+# copy sgsegest from seagrass-analysis --------------------------------------------------------
 
-fls <- list.files(path = 'T:/04_STAFF/MARCUS/03_GIT/hmpu-workflow/data', pattern = 'sgdat', full.names = T)
-
-for(fl in fls){
-  cat(fl, '\n')
-  load(file = fl)
-}
-
-st_layers('T:/05_GIS/SWFWMD/Seagrass/2022_Seagrass/provisional/DraftMaps2022_1130.gdb/DraftMaps2022_1130.gdb')
-
-sgdat2022 <- st_read('T:/05_GIS/SWFWMD/Seagrass/2022_Seagrass/provisional/DraftMaps2022_1130.gdb/DraftMaps2022_1130.gdb', 
-                     layer = 'Seagrass_in_2022_Suncoast') %>% 
-  select(FLUCCSCODE = FLUCCS_Code) %>% 
-  filter(FLUCCSCODE %in% c(9113, 9116)) %>% 
-  st_cast('MULTIPOLYGON')
-
-levs <- c('oldTampaBay', 'hillsboroughBay', 'middleTampaBay', 'lowerTampaBay', 'bocaCiegaBay', 'terraCieaBay', 'manateeRiver')
-labs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay', 'Boca Ciega Bay', 'Terra Ceia Bay', 'Manatee River')
-
-segswfwmd <- st_read('T:/05_GIS/SWFWMD/Seagrass/2022_Seagrass/provisional/DraftMaps2022_1130.gdb/DraftMaps2022_1130.gdb', 
-                     layer = 'suncoastSeagrassSegments') %>% 
-  filter(waterbodyName %in% levs) %>% 
-  mutate(
-    waterbodyName = factor(waterbodyName, levels = levs, labels = labs)
-  ) %>% 
-  select(segment = waterbodyName)
-
-sgyrs <- fls %>% 
-  basename %>% 
-  gsub('\\.RData$', '', .) %>% 
-  c(., 'sgdat2022')
-
-sgsegest <- NULL
-for(sgyr in sgyrs){
-  
-  cat(sgyr, '\n')
-  
-  yr <- gsub('sgdat', '', sgyr)
-  
-  dat <- get(sgyr) %>% 
-    filter(FLUCCSCODE %in% c(9113, 9116)) %>% 
-    st_union() %>% 
-    st_transform(crs = st_crs(segswfwmd)) %>% 
-    st_intersection(segswfwmd, .) %>% 
-    mutate(
-      acres = st_area(.), 
-      acres = units::set_units(acres, 'acres'), 
-      acres = as.numeric(acres)
-    ) %>% 
-    st_set_geometry(NULL) %>% 
-    mutate(
-      year = as.numeric(yr)
-    )
-  
-  sgsegest <- rbind(sgsegest, dat)
-  
-}
-
-# add 2024 manually, will need to update workflow once shapefiles are available
-sgsegest2024 <- sgsegest %>% 
-  filter(year == 2022) %>% 
-  mutate(
-    year = 2024, 
-    acres = case_when(
-      segment == 'Old Tampa Bay' ~ acres - 326,
-      segment == 'Hillsborough Bay' ~ acres + 756,
-      segment == 'Middle Tampa Bay' ~ acres + 230,
-      segment == 'Lower Tampa Bay' ~ acres + 401,
-      segment == 'Boca Ciega Bay' ~ acres + 344,
-      segment == 'Terra Ceia Bay' ~ acres + 1,
-      segment == 'Manatee River' ~ acres + 2
-    )
-  )
-sgsegest <- bind_rows(sgsegest, sgsegest2024)
-
-save(sgsegest, file = here('data/sgsegest.RData'))
+file.copy(from = 'T:/04_STAFF/MARCUS/03_GIT/seagrass-analysis/sgsegest.RData', 
+          to = here('data/sgsegest.RData'))
 
 # coverage animation --------------------------------------------------------------------------
 
