@@ -1,0 +1,144 @@
+---
+title: "OPEN SCIENCE UPDATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "5/28/2025"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Estuary Program, Open Science Subcommittee"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: true
+  message: false
+  warning: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+```
+
+------------------------------------------------------------------------
+
+## ROLES AND RESPONSIBILITIES
+
+1.  Support development of open science products at TBEP
+
+2.  Rank priority research areas for developing open science products
+
+3.  Facilitate training activities
+
+[Guiding Document](https://docs.google.com/document/d/1w6dVTwfYYDRVzGPXy0jyHxV4mwOutEY_ISMP1oAdZ_c/edit)
+
+------------------------------------------------------------------------
+
+## HACK THE BAY!
+
+::: columns
+::: {.column width="70%"}
+-   Select a bay health indicator to develop a workflow from data to reporting
+-   Winning team invited into contract worth $20k to fully develop the workflow
+-   Register as team or individual
+:::
+
+::: {.column width="30%"}
+![](figure/hack the bay final small.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## ELIGIBLE INDICATORS
+
+::: columns
+::: {.column width="70%"}
+-   Wildlife: birds, sea turtles, marine mammals, terrestrial turtles, amphibians, 
+-   Invasive species
+-   Human health/wellbeing
+-   Check out [CCMP](https://tbep-tech.github.io/ccmp/docs/water/wq1.html) for others
+:::
+::: {.column width="30%"}
+![](figure/hack the bay final small.png)
+
+:::
+:::
+
+------------------------------------------------------------------------
+
+##  HACK THE BAY!
+
+:::::: {.columns}
+::: {.column width="60%"}
+* 30 attendees, five teams working to propose a data synthesis workflow to report on an existing indicator gap
+* Winner - Drummond Carpenter, PLLC, will focus on invasive species
+![](figure/invasive.gif){fig-align="center"}
+:::
+
+::: {.column width="40%"}
+![](figure/hack the bay final.png){width="50%" fig-align="center"}
+
+![](figure/hackallphoto.JPG){fig-align="center"}
+
+:::
+:::::
+
+------------------------------------------------------------------------
+
+##  HACK THE BAY!
+
+Feedback was positive!
+
+> "Great event! I hope there will be more types of these data-focused events in the future!"
+
+> "Overall, I enjoyed the event. I thought it was a cool experience that resulted in team building and strategic thinking. Can't wait for the next one!"
+
+> "I admire and will continue to support TBEP staff for your innovative community engagement"
+
+------------------------------------------------------------------------
+
+## TBEPTOOLS v3.1
+
+::: columns
+::: {.column width="70%"}
+*   Numerous updates, see [here](https://github.com/tbep-tech/tbeptools/releases/tag/v3.1.0){target="_blank"}:
+    * 2024 data for water quality, phytoplankton, seagrass transects, and tidal creeks
+    * 2023 data for benthic and sediment data
+    * Overhaul of FIB functions: EPC, Hillsborough, Manatee, Pasco, Polk
+- All updates reflected on [dashboards](https://tbep.org/data-visualization/){target="blank"}
+:::
+
+::: {.column width="30%"}
+![](figure/tbeptoolshex.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## 2024 LULC UPDATE
+
+
+
+------------------------------------------------------------------------
+
+## TOOLS, TRAININGS, AND GOOD READS
+
+-  [Shifting institutional culture to develop climate solutions with Open Science](https://openscapes.org/blog/2024-06-06-editorial-published/)
+-  [Ten simple rules for quick and dirty scientific programming](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008549)
+-  [How to make sure no one cares about your data](https://www.heltweg.org/posts/how-to-make-sure-no-one-cares-about-your-open-data/)
+-  [AEMON-J/DSOS "Hacking Limnology" archive](https://osf.io/682v5/)
+-  [NCEAS Learning Hub's coreR course](https://learning.nceas.ucsb.edu/2024-10-coreR/)
+-  [How to name files](https://youtu.be/ES1LTlnpLMk?si=4X_6e4yNvTXnlLAw)
+
+------------------------------------------------------------------------
+
+## UPCOMING SCHEDULE
+
+-   June 4, 2025 TAC meeting
+-   December 10, 2025 Open Science subcommittee meeting

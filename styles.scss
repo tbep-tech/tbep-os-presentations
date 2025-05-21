@@ -46,16 +46,10 @@
   font-family: 'Lato';
   font-weight: 350;
   color: #958984;
-  font-style: italic;
   letter-spacing: -0.05em;
 }
 
-.reveal ul {
-  list-style: none; /* Remove default bullets */
-}
-
 .reveal ul li::before {
-  content: "\2022";  /* Add content: \2022 is the CSS Code/unicode for a bullet */
   color: #958984; /* Change the color */
   font-family: 'Lato';
   font-weight: 400;
