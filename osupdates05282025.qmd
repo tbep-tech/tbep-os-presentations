@@ -13,6 +13,7 @@ format:
     link-external-icon: true
     linkcolor: "#00806E"
     link-external-newwindow: true
+lightbox: true   
 execute:
   echo: true
   message: false
@@ -23,6 +24,12 @@ execute:
 #| include: false
 library(knitr)
 library(tbeptools)
+library(ggplot2)
+library(here)
+
+# # save as png from url, then trim png with imagemagick
+# webshot2::webshot(url = 'https://tbep-tech.github.io/hmpu-workflow/target_table_simple_no_total_intertidal.html', file = here('figure/target_table_simple_no_total_intertidal.png'), zoom = 4)
+# system('magick convert "figure/target_table_simple_no_total_intertidal.png" -trim figure/target_table_simple_no_total_intertidal.png')
 ```
 
 ------------------------------------------------------------------------
@@ -121,24 +128,48 @@ Feedback was positive!
 
 ------------------------------------------------------------------------
 
-## 2024 LULC UPDATE
+## 2023 LULC UPDATE
 
+* Updates to [habitat report card](https://docs.google.com/presentation/d/1YWEKStAcn2SnsUUGgo8ioTz92XT7xUCNJK8CQCnnk-M/edit#slide=id.g1e535a2e560_1_38) and progress on TBEP [Habitat Master Plan](https://tbep.org/habitat-master-plan-update/)
 
+::: columns
+::: {.column width="50%"}
+```{r}
+#| echo: false
+#| fig-align: center
+#| fig-width: 5
+#| fig-height: 4.75
+show_hmpreport(acres, subtacres, hmptrgs, typ = 'targets', totintertid = F, ycollapse = T, twocol = T, text = 1.75) + 
+  labs(
+    title = NULL
+  )
+```
+:::
+::: {.column width="50%"}
+![](figure/target_table_simple_no_total_intertidal.png){width=60% fig-align="center"}
+:::
+:::
 
 ------------------------------------------------------------------------
 
 ## TOOLS, TRAININGS, AND GOOD READS
 
--  [Shifting institutional culture to develop climate solutions with Open Science](https://openscapes.org/blog/2024-06-06-editorial-published/)
--  [Ten simple rules for quick and dirty scientific programming](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1008549)
--  [How to make sure no one cares about your data](https://www.heltweg.org/posts/how-to-make-sure-no-one-cares-about-your-open-data/)
--  [AEMON-J/DSOS "Hacking Limnology" archive](https://osf.io/682v5/)
--  [NCEAS Learning Hub's coreR course](https://learning.nceas.ucsb.edu/2024-10-coreR/)
--  [How to name files](https://youtu.be/ES1LTlnpLMk?si=4X_6e4yNvTXnlLAw)
+-  [The Data Rescue Project](https://www.datarescueproject.org/){target='_blank'}
+-  [Enabling data-driven collaborative and reproducible environmental synthesis science](https://besjournals.onlinelibrary.wiley.com/doi/10.1111/2041-210X.70036){target='_blank'}
+-  [Challenges of open data in aquatic sciences: issues faced by data users and data providesrs](https://www.frontiersin.org/journals/environmental-science/articles/10.3389/fenvs.2024.1497105/full){target='_blank'}
+-  [Aquatic surveys, open science, & participatory science](https://youtu.be/a4PYx7LSzCc?si=pn3RgAUJf1gcVRUV&t=3523){target='_blank'}
+-  [CERF R training](https://conference.cerf.science/2025-introduction-to-r-workshop){target='_blank'}
 
 ------------------------------------------------------------------------
 
 ## UPCOMING SCHEDULE
 
--   June 4, 2025 TAC meeting
--   December 10, 2025 Open Science subcommittee meeting
+<https://tbep.org/get-involved/calendar/> 
+
+-   June 4, TAC meeting
+-   June 11, Seagrass Transect Training: Workshop
+-   June 18, Seagrass Transect Training: Surveyor Intercalibration
+-   June 25, CAC meeting 
+-   July 9, SWFL Regional Ambient Monitoring Program Meeting
+-   August 20, Habitat Restoration Consortium Meeting
+-   December 10, Open Science subcommittee meeting
