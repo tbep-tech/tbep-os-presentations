@@ -12,7 +12,7 @@ file.copy(from = 'T:/04_STAFF/MARCUS/03_GIT/seagrass-analysis/sgsegest.RData',
 
 # coverage animation --------------------------------------------------------------------------
 
-ls <- list.files('../hmpu-workflow/data/', pattern = '^sgdat', full.names = T) %>% 
+ls <- list.files('T:/04_STAFF/MARCUS/03_GIT/hmpu-workflow/data/', pattern = '^sgdat', full.names = T) %>% 
   enframe %>% 
   mutate(
     fl = value,
@@ -54,7 +54,7 @@ save(sgdat, file = here::here('data/sgdat.RData'), compress = 'xz')
 load(file = here('data/sgdat.RData'))
 
 toplo <- tibble::tibble(
-  Year = seq(1988, 2022)
+  Year = seq(1988, 2024)
 ) %>%
   dplyr::left_join(seagrass, by = 'Year', ) %>%
   dplyr::mutate(
@@ -163,7 +163,7 @@ otbsgsegest <- sgsegest %>%
     )
 
 toplo <- tibble::tibble(
-  Year = seq(1988, 2022)
+  Year = seq(1988, 2024)
 ) %>%
   dplyr::left_join(otbsgsegest, by = 'Year') %>%
   dplyr::mutate(
