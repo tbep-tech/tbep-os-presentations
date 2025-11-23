@@ -1,0 +1,85 @@
+---
+title: "2022-2024 LOADING ESTIMATES"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>
+   - name: Dr. Ray Pribble, <rpribble@esassoc.com>
+institute: 
+    - "Tampa Bay Estuary Program"
+    - "Environmental Science Associates"
+date: "2025-12-09"
+date-format: medium
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: slide
+    footer: "Tampa Bay Nitrogen Management Consortium"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+        
+execute:
+  echo: false
+  ft.keepnext: false
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+library(flextable)
+library(tidyverse)
+library(plotly)
+library(mapview)
+library(leafem)
+```
+
+------------------------------------------------------------------------
+
+## RA FRAMEWORK
+
+::: columns
+::: {.column width="50%"}
+-   Each year, assess attainment of water quality thresholds
+-   Loadings only evaluated if water quality thresholds not attained
+-   Annual reporting to FDEP, fourth year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
+
+:::
+
+::: {.column width="50%"}
+![](figure/decisionframework.png){width="450" fig-align="center"}
+:::
+:::
+
+------------------------------------------------------------------------
+
+## EPA TMDL  
+
+
+::: columns
+::: {.column width="50%"}
+Based on 1992-1994 mean loads
+
+* OTB: 486 tons / yr
+* HB: 1451 tons / yr
+* MTB: 799 tons / yarr
+* LTB: 349 tons / yr
+* RALTB: 629 tons / yr
+:::
+
+::: {.column width="50%"}
+```{r}
+#| out-width: 100%
+mapview(tbsegshed, zcol = 'long_name', legend = F, homebutton = F) |> 
+    addStaticLabels(data = tbsegshed, label = tbsegshed$long_name)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## CONCLUSIONS
+
+::: {.incremental}
+* text
+:::
