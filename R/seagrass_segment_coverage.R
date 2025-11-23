@@ -7,7 +7,7 @@ library(gridExtra)
 
 # copy sgsegest from seagrass-analysis --------------------------------------------------------
 
-file.copy(from = 'T:/04_STAFF/MARCUS/03_GIT/seagrass-analysis/sgsegest.RData', 
+file.copy(from = 'T:/04_STAFF/MARCUS/03_GIT/seagrass-analysis/data/sgsegest.RData', 
           to = here('data/sgsegest.RData'))
 
 # coverage animation --------------------------------------------------------------------------

@@ -29,11 +29,32 @@ library(flextable)
 library(tidyverse)
 library(plotly)
 
+source('R/funcs.R')
+
 maxyr <- 2025
 partialyr <- T
 
 epcdata <- read_importwq('data/currentdata.xlsx', download_latest = F)
-load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
+vols <- rdataload('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData')
+load(file = here::here('data/sgsegest.RData'))
+
+# segment coverage targets in 1k acres
+segtrgs <- tibble(
+  segment = factor(
+    c(levels(sgsegest$segment), 'Total'), 
+    levels = c(levels(sgsegest$segment), 'Total')
+    ), 
+  trgs = c(11.1, 1.751, 9.4, 7.4, 8.8, 1.1, 0.449, 40)
+)  
+
+# worst case coverage ests in 1k acres, 1982
+segworst <- tibble(
+  segment = factor(
+    c(levels(sgsegest$segment), 'Total'), 
+    levels = c(levels(sgsegest$segment), 'Total')
+    ), 
+  trgs = c(5.94, 0, 4.04, 5.02, 5.77, 0.75, 0.13, 21.65)
+) 
 ```
 
 ------------------------------------------------------------------------
@@ -43,7 +64,7 @@ load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vo
 ::: columns
 ::: {.column width="50%"}
 -   Each year, assess attainment of water quality thresholds
--   Annual reporting to FDEP, second year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
+-   Annual reporting to FDEP, fourth year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
 -   Today's results include data __through September__
 :::
 
@@ -63,11 +84,11 @@ txtcol <- 'black'
 thrthm <- theme(
     plot.background = element_rect(fill = NA, color = NA),
     axis.text.y = element_text(colour = txtcol, size = 12),
-    axis.title = element_blank(),
+    axis.title.x = element_blank(),
     plot.title = element_text(size = 15, colour = txtcol),
     legend.text = element_text(size = 12, colour = txtcol),
     axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5),
-    legend.position = 'top'
+    legend.position = 'bottom'
   )
 sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
 
@@ -76,7 +97,7 @@ p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, par
 p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
 p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
 
-guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+p1 + p2 + p3 + p4 + plot_layout(guides = 'collect', axis_titles = 'collect_y') & thrthm
 ```
 
 ------------------------------------------------------------------------
@@ -90,27 +111,29 @@ txtcol <- 'black'
 thrthm <- theme(
     plot.background = element_rect(fill = NA, color = NA),
     axis.text.y = element_text(colour = txtcol, size = 12),
-    axis.title = element_blank(),
+    axis.title.x = element_blank(),
     plot.title = element_text(size = 15, colour = txtcol),
     legend.text = element_text(size = 12, colour = txtcol),
     axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
-    legend.position = 'top'
+    legend.position = 'bottom'
   )
 
-p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+outliers <- F
 
-guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers) + labs(caption = NULL)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers) + labs(caption = NULL)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers) + labs(caption = NULL)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers)
+
+p1 + p2 + p3 + p4 + plot_layout(guides = 'collect', axis_titles = 'collect_y') & thrthm
 ```
 
 ------------------------------------------------------------------------
 
-## OCTOBER CHLOROPHYLL
+## CHLOROPHYLL BY SITE
 
 ```{r}
-show_sitemap(epcdata, yrsel = maxyr, param = "chla", mosel = c(10))
+show_sitesegmap(epcdata, yrsel = maxyr, param = "chla", partialyr = T, thrs = T)
 ```
 
 ------------------------------------------------------------------------
@@ -124,11 +147,11 @@ txtcol <- 'black'
 thrthm <- theme(
     plot.background = element_rect(fill = NA, color = NA),
     axis.text.y = element_text(colour = txtcol, size = 12),
-    axis.title = element_blank(),
+    axis.title.x = element_blank(),
     plot.title = element_text(size = 15, colour = txtcol),
     legend.text = element_text(size = 12, colour = txtcol),
     axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5),
-    legend.position = 'top'
+    legend.position = 'bottom'
   )
 sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
 
@@ -137,7 +160,7 @@ p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "la", yrrng = yrrng, parti
 p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
 p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "la", yrrng = yrrng, partialyr = partialyr) + sclx
 
-guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+p1 + p2 + p3 + p4 + plot_layout(guides = 'collect', axis_titles = 'collect_y') & thrthm
 ```
 
 ------------------------------------------------------------------------
@@ -151,27 +174,29 @@ txtcol <- 'black'
 thrthm <- theme(
     plot.background = element_rect(fill = NA, color = NA),
     axis.text.y = element_text(colour = txtcol, size = 12),
-    axis.title = element_blank(),
+    axis.title.x = element_blank(),
     plot.title = element_text(size = 15, colour = txtcol),
     legend.text = element_text(size = 12, colour = txtcol),
     axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
-    legend.position = 'top'
+    legend.position = 'bottom'
   )
 
-p1 <- show_boxplot(epcdata, bay_segment = "OTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p2 <- show_boxplot(epcdata, bay_segment = "HB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p3 <- show_boxplot(epcdata, bay_segment = "MTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr) + labs(caption = NULL)
-p4 <- show_boxplot(epcdata, bay_segment = "LTB",  param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr)
+outliers <- F
 
-guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers) + labs(caption = NULL)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers) + labs(caption = NULL)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers) + labs(caption = NULL)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  param = "la", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = outliers)
+
+p1 + p2 + p3 + p4 + plot_layout(guides = 'collect', axis_titles = 'collect_y') & thrthm
 ```
 
 ------------------------------------------------------------------------
 
-## OCTOBER LIGHT ATTENUATION
+## LIGHT ATTENUATION BY SITE
 
 ```{r}
-show_sitemap(epcdata, yrsel = maxyr, param = "la", mosel = c(10))
+show_sitesegmap(epcdata, yrsel = maxyr, param = "la", partialyr = T, thrs = T)
 ```
 
 ------------------------------------------------------------------------
@@ -183,11 +208,11 @@ show_sitemap(epcdata, yrsel = maxyr, param = "la", mosel = c(10))
 ::::: {.columns style='display: flex !important; height: 80%;'}
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Management](figure/wq2024prov1.PNG){width="360"}
+![Management](figure/wq2025prov1.PNG){width="360"}
 :::
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Regulatory](figure/wq2024prov2.PNG){width="360"}
+![Regulatory](figure/wq2025prov2.PNG){width="360"}
 :::
 
 :::::
@@ -254,42 +279,6 @@ show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = T, thrs = F)
 
 ------------------------------------------------------------------------
 
-## SEAGRASS TRANSECT DATA
-
-```{r}
-transectocc <- anlz_transectocc(transect)
-toplo <- anlz_transectavespp(transectocc, total = T, bay_segment = c('OTB', 'HB', 'MTB', 'LTB'), yrrng = c(1998, maxyr), species = c('Halodule', 'Syringodium', 'Thalassia'), by_seg = T) %>%
-  filter(Savspecies == 'total') |>
-  arrange(bay_segment, yr) |>
-  mutate(
-    fochg = foest - lag(foest),
-    chgsgn = ifelse(fochg > 0, 'increase', 'decrease')
-  ) |>
-  na.omit()
-ggplot(toplo, aes(x = yr, y = foest)) +
-  geom_line() + 
-  geom_point(aes(fill = chgsgn), color = 'black', pch = 21, size = 2) +
-  geom_point(data = toplo[toplo$yr == maxyr, ], aes(fill = chgsgn), color = 'black', size = 4, pch = 21, stroke = 2) +
-  facet_wrap(~bay_segment, ncol = 2) +
-  geom_hline(yintercept = 0) +
-  scale_y_continuous(labels = scales::percent) +
-  labs(
-    x = NULL,
-    y = 'Frequency of Occurrence'
-  ) +
-  scale_fill_manual(values = c('increase' = '#2DC938', 'decrease' = '#CC3231')) +
-  theme_minimal() +
-  theme(
-    legend.position = 'none',
-    strip.text = element_text(size = 12),
-    strip.background = element_blank(),
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor = element_blank()
-  )
-```
-
-------------------------------------------------------------------------
-
 ## EVALUATING SSOs
 
 * FDEP maintains [Public Notice of Pollution](https://prodenv.dep.state.fl.us/DepPNP/reports/viewIncidentDetails?page=1) database
@@ -314,13 +303,17 @@ vols$descrip[1]
 toplo <- vols |>
   group_by(yr, bay_segment) |>
   summarise(volest = sum(volest), .groups = 'drop') |>
-  mutate(volest = volest / 1e6)
+  mutate(
+    volest = volest / 1e6,
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'))
+  )
 tots <- nrow(vols)
 toplo_wide <- toplo |>
   pivot_wider(
     names_from = bay_segment,
     values_from = volest,
-    values_fill = 0
+    values_fill = 0,
+    names_expand = T
   )
 
 plot_ly() |>
@@ -389,13 +382,17 @@ toplo <- vols |>
   filter(yr == maxyr) |>
   group_by(modt, bay_segment) |>
   summarise(volest = sum(volest), .groups = 'drop') |>
-  mutate(volest = volest / 1e6)
+  mutate(
+    volest = volest / 1e6,
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'))
+  )
 tots <- sum(vols$yr == maxyr)
 toplo_wide <- toplo |>
   pivot_wider(
     names_from = bay_segment,
     values_from = volest,
-    values_fill = 0
+    values_fill = 0,
+    names_expand = T
   )
 
 plot_ly() |>
@@ -455,11 +452,211 @@ plot_ly() |>
 
 ------------------------------------------------------------------------
 
+## 2024 SEAGRASS COVERAGE
+
+```{r}
+show_seagrasscoverage(seagrass, lastlab = T)
+```
+
+------------------------------------------------------------------------
+
+## 2024 SEAGRASS RESULTS: SEGMENT
+
+* Continued loss in OTB, gain in HB
+
+```{r}
+#| fig-align: "center"
+#| fig-height: 4.5
+#| fig-width: 9
+toplo <- sgsegest %>%
+  filter(segment %in% c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 'Lower Tampa Bay')) %>%
+  mutate(acres = acres / 1000) %>%
+  mutate(segment = forcats::fct_drop(segment))
+
+subsegtrgs <- segtrgs %>%
+  filter(segment %in% levels(toplo$segment))
+
+arrdf <- tibble(
+  segment = factor('Old Tampa Bay', levels = levels(toplo$segment)),
+  x = factor(2024),
+  xend = factor(2024),
+  y = 8,
+  yend =  5
+)
+
+ggplot(toplo, aes(x = factor(year), y = acres)) +
+  geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
+  geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
+  geom_segment(
+    data = arrdf,
+    aes(x = x, xend = xend, y = y, yend = yend),
+    arrow = arrow(length = grid::unit(0.5, "cm")),
+    size = 2, lineend = 'round', linejoin = 'round', col = 'red'
+  ) +
+  scale_color_manual(values = 'red') +
+  facet_wrap(~segment, ncol = 2, scales = 'free') +
+  theme(panel.grid.minor=element_blank(),
+        panel.grid.major=element_blank(),
+        plot.background = element_rect(fill = NA, color = NA),
+        axis.text.y = element_text(colour = 'black'),
+        plot.title = element_text(size = 22, colour = 'black'),
+        legend.text = element_text(size = 16, colour = 'black'),
+        axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 13),
+        legend.position = 'none'
+  ) +
+  labs(
+    y = 'Seagrass Coverage (x1,000 acres)',
+    x = NULL,
+    color = NULL
+  )
+```
+
+------------------------------------------------------------------------
+
+## 2024 SEAGRASS RESULTS: SEGMENT
+
+* Remainder bay segments relatively stable
+
+```{r}
+#| fig-align: "center"
+#| fig-height: 4.25
+#| fig-width: 9
+toplo <- sgsegest %>%
+  filter(segment %in% c('Boca Ciega Bay', 'Terra Ceia Bay', 'Manatee River')) %>%
+  mutate(acres = acres / 1000) %>%
+  mutate(segment = forcats::fct_drop(segment))
+
+subsegtrgs <- segtrgs %>%
+  filter(segment %in% levels(toplo$segment))
+
+ggplot(toplo, aes(x = factor(year), y = acres)) +
+  geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
+  geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
+  scale_color_manual(values = 'red') +
+  facet_wrap(~segment, ncol = 2, scales = 'free') +
+  theme(panel.grid.minor=element_blank(),
+        panel.grid.major=element_blank(),
+        plot.background = element_rect(fill = NA, color = NA),
+        axis.text.y = element_text(colour = 'black'),
+        plot.title = element_text(size = 22, colour = 'black'),
+        legend.text = element_text(size = 16, colour = 'black'),
+        axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
+        strip.background = element_blank(),
+        strip.text = element_text(hjust = 0, size = 13),
+        legend.position = 'none'
+  ) +
+  labs(
+    y = 'Seagrass Coverage (x1,000 acres)',
+    x = NULL,
+    color = NULL
+  )
+```
+
+------------------------------------------------------------------------
+
+## TARGET ATTAINMENT vs WORST CASE
+
+```{r}
+#| fig-align: "center"
+#| fig-width: 9
+#| fig-height: 5
+levs <- c(levels(sgsegest$segment), 'Total')
+
+totest <- seagrass %>%
+  select(-Hectares) %>%
+  mutate(segment = 'Total') %>%
+  rename(
+    year = Year,
+    acres = Acres
+    ) %>%
+  filter(year == 2024)
+
+toplo <- sgsegest %>%
+  filter(year == 2024) %>%
+  bind_rows(totest) %>%
+  mutate(acres = acres / 1000) %>%
+  pivot_wider(names_from = 'year', values_from = 'acres') %>%
+  bind_rows %>%
+  left_join(segworst, by = 'segment') %>%
+  rename(`1982` = trgs) %>%
+  left_join(segtrgs, by = 'segment') %>%
+  pivot_longer(cols = c(`2024`, `1982`), names_to = 'Year', values_to = 'Acres') %>%
+  mutate(
+    attain = Acres / trgs,
+    segment = factor(segment, levels = levels(segtrgs$segment)),
+    Year = factor(Year, levels = c(1982, 2024), labels = c('1982 - Worst Case', '2024'))
+  )
+
+ggplot(toplo, aes(x = segment, y = attain)) +
+  coord_cartesian(ylim = c(0, 1.3)) +
+  scale_y_continuous(expand = c(0, 0), labels = scales::percent, breaks = c(0, .25, 0.5, 0.75, 1)) +
+  geom_text(aes(group = Year, label = scales::percent(round(attain, 2))), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) +
+  geom_text(data = segtrgs, aes(y = 1.2, label = paste(formatC(1000 * trgs, format = 'd', big.mark = ','), '\nacres'))) +
+  geom_col(position = 'dodge', aes(group = Year, fill = Year), color = 'black') +
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
+  scale_fill_manual(values = c('grey', '#00806E')) +
+  geom_vline(xintercept = 7.5, linetype = 'dashed') +
+  geom_segment(aes(x = 0.75, xend = 1.25, y = 0.7, yend = 0.54), arrow = arrow(length = unit(0.5, "cm")), size = 2, lineend = 'round', linejoin = 'round', col = 'red') +
+  geom_text(aes(x = 1.5, y = 0.65, label = '2024 OTB is now\nworst case'), size = 3, col = 'red') +
+  theme_minimal() +
+  theme(
+    legend.position = 'bottom',
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.minor.y = element_blank()
+  ) +
+  labs(
+    y = '% Attainment of Target Acreage',
+    fill = NULL,
+    x = NULL
+  )
+```
+
+------------------------------------------------------------------------
+
+## 2025 SEAGRASS TRANSECT DATA
+
+```{r}
+transectocc <- anlz_transectocc(transect)
+toplo <- anlz_transectavespp(transectocc, total = T, bay_segment = c('OTB', 'HB', 'MTB', 'LTB'), yrrng = c(1998, maxyr), species = c('Halodule', 'Syringodium', 'Thalassia'), by_seg = T) %>%
+  filter(Savspecies == 'total') |>
+  arrange(bay_segment, yr) |>
+  mutate(
+    fochg = foest - lag(foest),
+    chgsgn = ifelse(fochg > 0, 'increase', 'decrease')
+  ) |>
+  na.omit()
+ggplot(toplo, aes(x = yr, y = foest)) +
+  geom_line() + 
+  geom_point(aes(fill = chgsgn), color = 'black', pch = 21, size = 2) +
+  geom_point(data = toplo[toplo$yr == maxyr, ], aes(fill = chgsgn), color = 'black', size = 4, pch = 21, stroke = 2) +
+  facet_wrap(~bay_segment, ncol = 2) +
+  geom_hline(yintercept = 0) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(
+    x = NULL,
+    y = 'Frequency of Occurrence'
+  ) +
+  scale_fill_manual(values = c('increase' = '#2DC938', 'decrease' = '#CC3231')) +
+  theme_minimal() +
+  theme(
+    legend.position = 'none',
+    strip.text = element_text(size = 12),
+    strip.background = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.grid.minor = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
 ## CONCLUSIONS
 
 ::: {.incremental}
-* All segments provisionally (through September) meet regulatory thresholds, all segments green for management targets except LTB
-* Adaptive capacity of the bay is high coming off dry years, reduced with storms
-* OTB still a marginal bay segment, continued seagrass loss - is this an acceptable condition??
-* Third year of [2022 - 2026 RA period](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc)
+* All segments provisionally (through September) meet regulatory thresholds, all segments provisionally green for management targets
+* Adaptive capacity of the bay is high coming off dry years
+* OTB still a marginal bay segment, continued seagrass coverage loss, slight uptick in frequency occurrence in 2025
+* Fourth year of [2022 - 2026 RA period](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc)
 :::
