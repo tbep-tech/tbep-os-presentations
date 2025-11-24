@@ -11,27 +11,93 @@ date-format: medium
 format:
   revealjs:
     logo: figure/TBEP_logo.png
-    transition: slide
     footer: "Tampa Bay Nitrogen Management Consortium"
     theme: styles.scss
     link-external-icon: true
     linkcolor: "#00806E"
     link-external-newwindow: true
-        
+    transition: fade
+    background-transition: fade
+  
+lightbox: true
 execute:
   echo: false
-  ft.keepnext: false
 ---
 
 ```{r}
 #| include: false
 library(knitr)
-library(tbeptools)
-library(flextable)
 library(tidyverse)
 library(plotly)
-library(mapview)
-library(leafem)
+library(leaflet)
+library(sf)
+library(here)
+
+tbsegshed <- tbeptools::tbsegshed
+
+source(here('R/funcs.R'))
+
+totanndat <- rdataload('https://github.com/tbep-tech/load-estimates/raw/refs/heads/main/data/totanndat.RData') |> 
+  select(year, bay_segment, tn_load, tnhy) |> 
+  dplyr::filter(bay_segment != 'All Segments (- N. BCB)')
+
+totanndat2224 <- read.csv(here('data/TOTLoadsRASeg2224.csv')) |> 
+  mutate(
+    bay_segment = case_when(
+      BAY_SEG == 1 ~ 'Old Tampa Bay',
+      BAY_SEG == 2 ~ 'Hillsborough Bay',
+      BAY_SEG == 3 ~ 'Middle Tampa Bay',
+      BAY_SEG == 4 ~ 'Lower Tampa Bay',
+      BAY_SEG == 5567 ~ 'Remainder Lower Tampa Bay'
+    )
+  ) |> 
+  select(
+    year = YEAR,
+    bay_segment,
+    tn_load = TN_TONS,
+    tnhy = TN_H2O_RATIO
+  )
+
+totanndat <- bind_rows(totanndat, totanndat2224) |> 
+  arrange(bay_segment, year)
+
+tnanndat <- rdataload('https://github.com/tbep-tech/load-estimates/raw/refs/heads/main/data/tnanndat.RData') |> 
+  dplyr::filter(bay_segment != 'All Segments (- N. BCB)')
+
+tnanndat2224 <- read.csv(here('data/SrcSegAnnLoad2224.csv')) |> 
+  filter(!BAY_SEG == 5) |>
+  mutate(
+    bay_segment = case_when(
+      BAY_SEG == 1 ~ 'Old Tampa Bay',
+      BAY_SEG == 2 ~ 'Hillsborough Bay',
+      BAY_SEG == 3 ~ 'Middle Tampa Bay',
+      BAY_SEG == 4 ~ 'Lower Tampa Bay',
+      BAY_SEG %in% c(55, 6, 7) ~ 'Remainder Lower Tampa Bay'
+    )
+  ) |> 
+  select(
+    year = YEAR,
+    bay_segment,
+    source,
+    tn_load = TN_TONS
+  ) |>
+  summarise(
+    tn_load = sum(tn_load),
+    .by = c(bay_segment, year, source)
+  )
+
+tnanndat <- bind_rows(tnanndat, tnanndat2224) |> 
+  mutate(
+    source = case_when(
+      source %in% c('GW', 'SPR') ~ 'GWS', 
+      source == 'ML' ~ 'IPS', 
+      T ~ source
+    )
+  ) |> 
+  summarize(
+    tn_load = sum(tn_load),
+    .by = c(bay_segment, year, source)
+  )
 ```
 
 ------------------------------------------------------------------------
@@ -41,7 +107,7 @@ library(leafem)
 ::: columns
 ::: {.column width="50%"}
 -   Each year, assess attainment of water quality thresholds
--   Loadings only evaluated if water quality thresholds not attained
+-   Loadings only evaluated if water quality thresholds not attained in two consecutive years
 -   Annual reporting to FDEP, fourth year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
 
 :::
@@ -55,14 +121,13 @@ library(leafem)
 
 ## EPA TMDL  
 
-
 ::: columns
 ::: {.column width="50%"}
-Based on 1992-1994 mean loads
+Based on 1992-1994 mean loads:
 
 * OTB: 486 tons / yr
 * HB: 1451 tons / yr
-* MTB: 799 tons / yarr
+* MTB: 799 tons / yr
 * LTB: 349 tons / yr
 * RALTB: 629 tons / yr
 :::
@@ -70,11 +135,341 @@ Based on 1992-1994 mean loads
 ::: {.column width="50%"}
 ```{r}
 #| out-width: 100%
-mapview(tbsegshed, zcol = 'long_name', legend = F, homebutton = F) |> 
-    addStaticLabels(data = tbsegshed, label = tbsegshed$long_name)
+tn_thresh <- tibble(
+  bay_segment = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                  'Lower Tampa Bay', 'Boca Ciega Bay', 'Terra Ceia Bay', 'Manatee River'),
+  tn_thresh = c(486, 1451, 799, 349, 629, 629, 629)
+)
+
+tomap <- tbsegshed |> 
+  left_join(tn_thresh, by = c("long_name" = "bay_segment"))
+
+pal <- colorNumeric(palette = "YlGnBu", domain = tomap$tn_thresh)
+
+cent <- st_centroid(tbsegshed)
+
+leaflet(tomap) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    fillColor = ~pal(tn_thresh),
+    weight = 0.5,
+    opacity = 1,
+    color = "black",
+    fillOpacity = 0.7,
+  ) %>%
+  addLabelOnlyMarkers(
+    data = cent,
+    label = ~long_name,
+    labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE,
+      style = list(
+        "background-color" = "rgba(255, 255, 255, 0.6)", # Set background to white
+        "padding" = "1px", # Add some padding around the text
+        "font-size" = "12px" # Adjust font size
+      ))
+  ) %>%
+  addLegend(
+    pal = pal,
+    values = ~tn_thresh,
+    title = "Load",
+    position = "bottomright"
+  )
 ```
 :::
 :::
+
+------------------------------------------------------------------------
+
+## 2022-2024 LOADING ESTIMATES
+
+* Calculated with 2023 land use data, current precipitation, partner-provided data
+* Described as total loads broken down by source categories:
+  -   Atmospheric deposition
+  -   Domestic point sources: end-of-pipe, reuse
+  -   Industrial point sources (including material losses)
+  -   Nonpoint sources
+  -   Groundwater/Springs
+* Entity allocations for domestic, industrial, and nonpoint sources, by bay segment
+
+------------------------------------------------------------------------
+
+## TOTAL LOADS BY SEGMENT
+
+```{r}
+#| fig-height: 6
+levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                  'Lower Tampa Bay', 'Remainder Lower Tampa Bay')
+
+lns <- tibble(
+  bay_segment = factor(levs, levels = levs),
+  tn_thresh = c(486, 1451, 799, 349, 629)
+)
+
+toplo <- totanndat |> 
+  mutate(
+    bay_segment = factor(bay_segment, levels = levs)
+  ) |> 
+  left_join(lns, by = "bay_segment") |> 
+  mutate(
+    exceeds = tn_load > tn_thresh
+  )
+
+ggplot(toplo, aes(x = year, y = tn_load, group = bay_segment)) +
+  geom_hline(aes(yintercept = tn_thresh), linetype = "dashed", color = "red") +
+  geom_line(alpha = 0) +
+  geom_point(size = 2, shape = 21, show.legend = F, alpha = 0) +  
+  geom_line(data = toplo |> filter(year < 2022)) +
+  geom_point(data = toplo |> filter(year < 2022), aes(fill = exceeds), size = 2, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+                    labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
+  coord_cartesian(xlim = c(1985, 2024)) +
+  facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
+  labs(
+    x = NULL,
+    y = "Total Nitrogen Load (tons/yr)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## TOTAL LOADS BY SEGMENT
+
+```{r}
+#| fig-height: 6
+ggplot(toplo, aes(x = year, y = tn_load, fill = exceeds, group = bay_segment)) +
+  geom_rect(xmin = 2022, xmax = 2024, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
+  geom_hline(aes(yintercept = tn_thresh), linetype = "dashed", color = "red") +
+  geom_line() +
+  geom_point(size = 2, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+                    labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
+  facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
+  labs(
+    x = NULL,
+    y = "Total Nitrogen Load (tons/yr)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## EPA TMDL  
+
+::: columns
+::: {.column width="50%"}
+Hydrologic normalization for Nitrogen Delivery Ratio:
+
+* OTB: 1.08 tons / mill m3 water
+* HB: 1.62 tons / mill m3 water
+* MTB: 1.24 tons / mill m3 water
+* LTB: 0.97 tons / mill m3 water
+* RALTB: 1.59 tons / mill m3 water
+:::
+
+::: {.column width="50%"}
+```{r}
+#| out-width: 100%
+tn_thresh <- tibble(
+  bay_segment = c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                  'Lower Tampa Bay', 'Boca Ciega Bay', 'Terra Ceia Bay', 'Manatee River'),
+  tn_thresh = c(1.08, 1.62, 1.24, 0.97, 1.59, 1.59, 1.59)
+)
+
+tomap <- tbsegshed |> 
+  left_join(tn_thresh, by = c("long_name" = "bay_segment"))
+
+pal <- colorNumeric(palette = "YlGnBu", domain = tomap$tn_thresh)
+
+cent <- st_centroid(tbsegshed)
+
+leaflet(tomap) %>%
+  addProviderTiles("CartoDB.Positron") %>%
+  addPolygons(
+    fillColor = ~pal(tn_thresh),
+    weight = 0.5,
+    opacity = 1,
+    color = "black",
+    fillOpacity = 0.7,
+  ) %>%
+  addLabelOnlyMarkers(
+    data = cent,
+    label = ~long_name,
+    labelOptions = labelOptions(noHide = TRUE, direction = 'center', textOnly = TRUE,
+      style = list(
+        "background-color" = "rgba(255, 255, 255, 0.6)", # Set background to white
+        "padding" = "1px", # Add some padding around the text
+        "font-size" = "12px" # Adjust font size
+      ))
+  ) %>%
+  addLegend(
+    pal = pal,
+    values = ~tn_thresh,
+    title = "Delivery Ratio",
+    position = "bottomright"
+  )
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## NITROGEN DELIVERY RATIOS
+
+```{r}
+#| fig-height: 6
+levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                  'Lower Tampa Bay', 'Remainder Lower Tampa Bay')
+
+lns <- tibble(
+  bay_segment = factor(levs, levels = levs),
+  ndr_thresh = c(1.08, 1.62, 1.24, 0.97, 1.59)
+)
+
+toplo <- totanndat |> 
+  mutate(
+    bay_segment = factor(bay_segment, levels = levs)
+  ) |> 
+  left_join(lns, by = "bay_segment") |> 
+  mutate(
+    exceeds = tnhy > ndr_thresh
+  )
+
+ggplot(toplo, aes(x = year, y = tnhy, group = bay_segment)) +
+  geom_hline(aes(yintercept = ndr_thresh), linetype = "dashed", color = "red") +
+  geom_line(alpha = 0) +
+  geom_point(size = 2, shape = 21, show.legend = F, alpha = 0) +  
+  geom_line(data = toplo |> filter(year < 2022)) +
+  geom_point(data = toplo |> filter(year < 2022), aes(fill = exceeds), size = 2, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+                    labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
+  coord_cartesian(xlim = c(1985, 2024)) +
+  facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
+  labs(
+    x = NULL,
+    y = "Nitrogen Delivery Ratio (tons/million m3 water)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## NITROGEN DELIVERY RATIOS
+
+```{r}
+#| fig-height: 6
+ggplot(toplo, aes(x = year, y = tnhy, fill = exceeds, group = bay_segment)) +
+  geom_rect(xmin = 2022, xmax = 2024, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
+  geom_hline(aes(yintercept = ndr_thresh), linetype = "dashed", color = "red") +
+  geom_line() +
+  geom_point(size = 2, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+                    labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
+  facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
+  labs(
+    x = NULL,
+    y = "Nitrogen Delivery Ratio (tons/million m3 water)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## LOADS BY SOURCE
+
+```{r}
+#| fig-height: 6
+levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                  'Lower Tampa Bay', 'Remainder Lower Tampa Bay')
+
+toplo <- tnanndat |> 
+  mutate(
+    bay_segment = factor(bay_segment, levels = levs)
+  )
+
+cols <- c('AD' = '#33CC33', 'DPS' = '#00B0F0', 'GWS' = '#EB641B', 'IPS' = '#C0504D', 'NPS' = '#FFFF99')
+
+ggplot(toplo, aes(x = year, y = tn_load, fill = source)) +
+  geom_area(stat = 'identity', alpha = 0) + 
+  coord_cartesian(xlim = c(1985, 2024)) +
+  geom_area(toplo |> filter(year < 2022), 
+            mapping = aes(x = year, y = tn_load, fill = source), 
+            stat = 'identity') +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = cols) +
+  facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
+  labs(
+    x = NULL,
+    fill = "Source",
+    y = "TN load (tons/yr)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## LOADS BY SOURCE
+
+```{r}
+#| fig-height: 6
+#| fig-width: 5
+ggplot(toplo, aes(x = year, y = tn_load, fill = source)) +
+  geom_rect(xmin = 2022, xmax = 2024, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
+  geom_area(stat = 'identity') + 
+  coord_cartesian(xlim = c(1985, 2024)) +
+  scale_x_continuous(expand = c(0, 0)) +
+  scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = cols) +
+  facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
+  labs(
+    x = NULL,
+    fill = "Source",
+    y = "TN load (tons/yr)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## LOADS BY SOURCE
+
+```{r}
+#| fig-height: 6
+toplo2 <- toplo |> 
+  filter(year >= 2022)
+
+#| fig-height: 6
+ggplot(toplo2, aes(x = '', y = tn_load, fill = source)) +
+  geom_bar(stat = 'identity', color = 'grey') + 
+  coord_polar('y', start = 0) +
+  # scale_y_continuous(expand = c(0, 0)) +
+  scale_fill_manual(values = cols) +
+  facet_wrap(bay_segment ~ year, scales = 'free', ncol = 3) +
+  labs(
+    x = NULL,
+    fill = "Source",
+    y = "TN load (tons/yr)"
+  ) +
+  theme_void() 
+```
 
 ------------------------------------------------------------------------
 
