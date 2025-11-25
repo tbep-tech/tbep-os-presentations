@@ -32,13 +32,18 @@ library(plotly)
 library(leaflet)
 library(sf)
 library(here)
+library(ggh4x)
+library(patchwork)
 
 tbsegshed <- tbeptools::tbsegshed
 
 source(here('R/funcs.R'))
 
+levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
+                  'Lower Tampa Bay', 'Remainder Lower Tampa Bay')
+
 totanndat <- rdataload('https://github.com/tbep-tech/load-estimates/raw/refs/heads/main/data/totanndat.RData') |> 
-  select(year, bay_segment, tn_load, tnhy) |> 
+  select(year, bay_segment, tn_load, tnhy, hy_load) |> 
   dplyr::filter(bay_segment != 'All Segments (- N. BCB)')
 
 totanndat2224 <- read.csv(here('data/TOTLoadsRASeg2224.csv')) |> 
@@ -55,7 +60,8 @@ totanndat2224 <- read.csv(here('data/TOTLoadsRASeg2224.csv')) |>
     year = YEAR,
     bay_segment,
     tn_load = TN_TONS,
-    tnhy = TN_H2O_RATIO
+    tnhy = TN_H2O_RATIO, 
+    hy_load = h2oload10e6m3
   )
 
 totanndat <- bind_rows(totanndat, totanndat2224) |> 
@@ -97,6 +103,34 @@ tnanndat <- bind_rows(tnanndat, tnanndat2224) |>
   summarize(
     tn_load = sum(tn_load),
     .by = c(bay_segment, year, source)
+  )
+
+# includes ps
+npsmonth <- read.csv(here('data/npsmod4_2224_26Sep25.csv')) |> 
+  filter(!BAY_SEG == 5) |>
+  mutate(
+    bay_segment = case_when(
+      BAY_SEG == 1 ~ 'Old Tampa Bay',
+      BAY_SEG == 2 ~ 'Hillsborough Bay',
+      BAY_SEG == 3 ~ 'Middle Tampa Bay',
+      BAY_SEG == 4 ~ 'Lower Tampa Bay',
+      BAY_SEG %in% c(55, 6, 7) ~ 'Remainder Lower Tampa Bay'
+    ),
+    date = lubridate::make_date(year, month, '01'), 
+    tn_load = tnload / 907.2, # kg to tons
+    hy_load = h2oload / 1e6, # m3 to 1e6 m3
+    bay_segment = factor(bay_segment, levels = levs)
+  ) |> 
+  select(
+    date,
+    bay_segment,
+    tn_load,
+    hy_load
+  ) |>
+  summarise(
+    tn_load = sum(tn_load),
+    hy_load = sum(hy_load),
+    .by = c(bay_segment, date)
   )
 ```
 
@@ -196,9 +230,6 @@ leaflet(tomap) %>%
 
 ```{r}
 #| fig-height: 6
-levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
-                  'Lower Tampa Bay', 'Remainder Lower Tampa Bay')
-
 lns <- tibble(
   bay_segment = factor(levs, levels = levs),
   tn_thresh = c(486, 1451, 799, 349, 629)
@@ -323,10 +354,7 @@ leaflet(tomap) %>%
 
 ```{r}
 #| fig-height: 6
-levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
-                  'Lower Tampa Bay', 'Remainder Lower Tampa Bay')
-
-lns <- tibble(
+ndrlns <- tibble(
   bay_segment = factor(levs, levels = levs),
   ndr_thresh = c(1.08, 1.62, 1.24, 0.97, 1.59)
 )
@@ -335,7 +363,7 @@ toplo <- totanndat |>
   mutate(
     bay_segment = factor(bay_segment, levels = levs)
   ) |> 
-  left_join(lns, by = "bay_segment") |> 
+  left_join(ndrlns, by = "bay_segment") |> 
   mutate(
     exceeds = tnhy > ndr_thresh
   )
@@ -390,9 +418,6 @@ ggplot(toplo, aes(x = year, y = tnhy, fill = exceeds, group = bay_segment)) +
 
 ```{r}
 #| fig-height: 6
-levs <- c('Old Tampa Bay', 'Hillsborough Bay', 'Middle Tampa Bay', 
-                  'Lower Tampa Bay', 'Remainder Lower Tampa Bay')
-
 toplo <- tnanndat |> 
   mutate(
     bay_segment = factor(bay_segment, levels = levs)
@@ -427,7 +452,6 @@ ggplot(toplo, aes(x = year, y = tn_load, fill = source)) +
 
 ```{r}
 #| fig-height: 6
-#| fig-width: 5
 ggplot(toplo, aes(x = year, y = tn_load, fill = source)) +
   geom_rect(xmin = 2022, xmax = 2024, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
   geom_area(stat = 'identity') + 
@@ -449,26 +473,78 @@ ggplot(toplo, aes(x = year, y = tn_load, fill = source)) +
 
 ------------------------------------------------------------------------
 
-## LOADS BY SOURCE
+## PROPORTIONAL 2022-2024
 
 ```{r}
 #| fig-height: 6
+#| fig-width: 3.6
+#| fig-align: "center"
 toplo2 <- toplo |> 
   filter(year >= 2022)
 
-#| fig-height: 6
 ggplot(toplo2, aes(x = '', y = tn_load, fill = source)) +
   geom_bar(stat = 'identity', color = 'grey') + 
   coord_polar('y', start = 0) +
   # scale_y_continuous(expand = c(0, 0)) +
   scale_fill_manual(values = cols) +
-  facet_wrap(bay_segment ~ year, scales = 'free', ncol = 3) +
+  facet_nested_wrap(bay_segment ~ year, scales = 'free', ncol = 3, 
+    strip = strip_nested()) +
   labs(
     x = NULL,
     fill = "Source",
-    y = "TN load (tons/yr)"
+    y = NULL
   ) +
-  theme_void() 
+  theme_void()
+```
+
+------------------------------------------------------------------------
+
+## NPS BY MONTH, 2022-2024
+
+```{r}
+#| fig-height: 6
+p1 <- ggplot(npsmonth, aes(x = date, y = tn_load)) +
+  geom_line() +
+  geom_point(size = 2, shape = 21, fill = 'grey') +
+  scale_x_date(date_labels = "%b %y", breaks = scales::breaks_pretty(12)) +
+  facet_wrap(~ bay_segment, ncol = 1) +
+  labs(
+    x = NULL,
+    y = "NPS TN load (tons/month)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank(), 
+    axis.text.x = element_text(size = 7)
+  )
+
+p2 <- ggplot(npsmonth, aes(x = date, y = hy_load)) +
+  geom_line() +
+  geom_point(size = 2, shape = 21, fill = 'blue') +
+  scale_x_date(date_labels = "%b %y", breaks = scales::breaks_pretty(12)) +
+  facet_wrap(~ bay_segment, ncol = 1) +
+  labs(
+    x = NULL,
+    y = "NPS hydro load (1e6 m3/month)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank(), 
+    axis.text.x = element_text(size = 7)
+  )
+
+p1 + p2 + plot_layout(ncol = 2)
+```
+
+------------------------------------------------------------------------
+
+## TABLE SUMMARY
+
+```{r}
+totab <- totanndat |> 
+  filter(year >= 2022) |> 
+  left_join(lns, by = "bay_segment") |>
+  left_join(ndrlns, by = "bay_segment")
 ```
 
 ------------------------------------------------------------------------
