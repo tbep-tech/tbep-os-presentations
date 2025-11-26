@@ -1,5 +1,5 @@
 ---
-title: "2022-2024 LOADING ESTIMATES"
+title: "2022 -- 2024 LOADING ESTIMATES"
 author: 
    - name: Dr. Marcus Beck, <mbeck@tbep.org>
    - name: Dr. Ray Pribble, <rpribble@esassoc.com>
@@ -26,14 +26,13 @@ execute:
 
 ```{r}
 #| include: false
-library(knitr)
 library(tidyverse)
-library(plotly)
 library(leaflet)
 library(sf)
 library(here)
 library(ggh4x)
 library(patchwork)
+library(reactable)
 
 tbsegshed <- tbeptools::tbsegshed
 
@@ -142,7 +141,7 @@ npsmonth <- read.csv(here('data/npsmod4_2224_26Sep25.csv')) |>
 ::: {.column width="50%"}
 -   Each year, assess attainment of water quality thresholds
 -   Loadings only evaluated if water quality thresholds not attained in two consecutive years
--   Annual reporting to FDEP, fourth year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
+-   Annual reporting to FDEP, fourth year of [2022 -- 2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
 
 :::
 
@@ -157,7 +156,7 @@ npsmonth <- read.csv(here('data/npsmod4_2224_26Sep25.csv')) |>
 
 ::: columns
 ::: {.column width="50%"}
-Based on 1992-1994 mean loads:
+Based on 1992 -- 1994 mean loads:
 
 * OTB: 486 tons / yr
 * HB: 1451 tons / yr
@@ -213,9 +212,10 @@ leaflet(tomap) %>%
 
 ------------------------------------------------------------------------
 
-## 2022-2024 LOADING ESTIMATES
+## 2022 -- 2024 LOADING ESTIMATES
 
-* Calculated with 2023 land use data, current precipitation, partner-provided data
+::: {.incremental}
+* Calculated with 2023 land use data, current precipitation/atmospheric data, partner-provided data
 * Described as total loads broken down by source categories:
   -   Atmospheric deposition
   -   Domestic point sources: end-of-pipe, reuse
@@ -223,6 +223,7 @@ leaflet(tomap) %>%
   -   Nonpoint sources
   -   Groundwater/Springs
 * Entity allocations for domestic, industrial, and nonpoint sources, by bay segment
+:::
 
 ------------------------------------------------------------------------
 
@@ -247,10 +248,10 @@ toplo <- totanndat |>
 ggplot(toplo, aes(x = year, y = tn_load, group = bay_segment)) +
   geom_hline(aes(yintercept = tn_thresh), linetype = "dashed", color = "red") +
   geom_line(alpha = 0) +
-  geom_point(size = 2, shape = 21, show.legend = F, alpha = 0) +  
+  geom_point(size = 3, shape = 21, show.legend = F, alpha = 0) +  
   geom_line(data = toplo |> filter(year < 2022)) +
-  geom_point(data = toplo |> filter(year < 2022), aes(fill = exceeds), size = 2, shape = 21, show.legend = F) +
-  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+  geom_point(data = toplo |> filter(year < 2022), aes(fill = exceeds), size = 3, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "#ffcccc", "FALSE" = "#ccffcc"), 
                     labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
   coord_cartesian(xlim = c(1985, 2024)) +
   facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
@@ -274,8 +275,8 @@ ggplot(toplo, aes(x = year, y = tn_load, fill = exceeds, group = bay_segment)) +
   geom_rect(xmin = 2022, xmax = 2024, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
   geom_hline(aes(yintercept = tn_thresh), linetype = "dashed", color = "red") +
   geom_line() +
-  geom_point(size = 2, shape = 21, show.legend = F) +
-  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+  geom_point(size = 3, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "#ffcccc", "FALSE" = "#ccffcc"), 
                     labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
   facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
   labs(
@@ -371,10 +372,10 @@ toplo <- totanndat |>
 ggplot(toplo, aes(x = year, y = tnhy, group = bay_segment)) +
   geom_hline(aes(yintercept = ndr_thresh), linetype = "dashed", color = "red") +
   geom_line(alpha = 0) +
-  geom_point(size = 2, shape = 21, show.legend = F, alpha = 0) +  
+  geom_point(size = 3, shape = 21, show.legend = F, alpha = 0) +  
   geom_line(data = toplo |> filter(year < 2022)) +
-  geom_point(data = toplo |> filter(year < 2022), aes(fill = exceeds), size = 2, shape = 21, show.legend = F) +
-  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+  geom_point(data = toplo |> filter(year < 2022), aes(fill = exceeds), size = 3, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "#ffcccc", "FALSE" = "#ccffcc"), 
                     labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
   coord_cartesian(xlim = c(1985, 2024)) +
   facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
@@ -398,8 +399,8 @@ ggplot(toplo, aes(x = year, y = tnhy, fill = exceeds, group = bay_segment)) +
   geom_rect(xmin = 2022, xmax = 2024, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
   geom_hline(aes(yintercept = ndr_thresh), linetype = "dashed", color = "red") +
   geom_line() +
-  geom_point(size = 2, shape = 21, show.legend = F) +
-  scale_fill_manual(values = c("TRUE" = "tomato1", "FALSE" = "cornflowerblue"), 
+  geom_point(size = 3, shape = 21, show.legend = F) +
+  scale_fill_manual(values = c("TRUE" = "#ffcccc", "FALSE" = "#ccffcc"), 
                     labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
   facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
   labs(
@@ -473,67 +474,123 @@ ggplot(toplo, aes(x = year, y = tn_load, fill = source)) +
 
 ------------------------------------------------------------------------
 
-## PROPORTIONAL 2022-2024
+## PROPORTIONAL 2022 -- 2024
 
 ```{r}
 #| fig-height: 6
-#| fig-width: 3.6
 #| fig-align: "center"
 toplo2 <- toplo |> 
-  filter(year >= 2022)
+  filter(year >= 2022) |> 
+  mutate(
+    source = factor(source, levels = c('AD', 'DPS', 'IPS', 'GWS', 'NPS'))
+  ) |> 
+  mutate(
+    tot = sum(tn_load),
+    .by = c(bay_segment, year)
+  )
 
-ggplot(toplo2, aes(x = '', y = tn_load, fill = source)) +
-  geom_bar(stat = 'identity', color = 'grey') + 
-  coord_polar('y', start = 0) +
-  # scale_y_continuous(expand = c(0, 0)) +
-  scale_fill_manual(values = cols) +
-  facet_nested_wrap(bay_segment ~ year, scales = 'free', ncol = 3, 
-    strip = strip_nested()) +
-  labs(
-    x = NULL,
-    fill = "Source",
-    y = NULL
-  ) +
-  theme_void()
+for(lev in seq_along(levs)){
+
+  tmp <- toplo2 |> 
+    filter(bay_segment == levs[lev]) |> 
+    complete(source, year, fill = list(tn_load = 0))
+
+  p <- ggplot(tmp, aes(x = tot / 2, y = tn_load, fill = source, width = tot)) +
+    geom_bar(position = 'fill', stat = 'identity', color = 'grey') + 
+    coord_polar('y', start = 0) +
+    scale_fill_manual(values = cols, drop = F, ) +
+    facet_wrap(~ year) +
+    labs(
+      x = NULL,
+      fill = "Source",
+      y = NULL, 
+      title = levs[lev]
+    ) +
+    theme_void() + 
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 12), 
+      strip.text = element_text(size = 10),
+      plot.margin = unit(c(0, 0, 0, 0), 'pt')
+    )
+
+  assign(paste0('p', lev), p)
+
+}
+
+p1 + p2 + p3 + p4 + p5 + plot_layout(ncol = 2, guides = 'collect') &
+  theme(legend.position = 'right')
 ```
 
 ------------------------------------------------------------------------
 
-## NPS BY MONTH, 2022-2024
+## NPS BY MONTH, 2022 -- 2024
 
 ```{r}
 #| fig-height: 6
-p1 <- ggplot(npsmonth, aes(x = date, y = tn_load)) +
+toplo <- npsmonth |> 
+  mutate(
+    year = lubridate::year(date)
+  )
+p1 <- ggplot(toplo, aes(x = date, y = tn_load)) +
   geom_line() +
-  geom_point(size = 2, shape = 21, fill = 'grey') +
-  scale_x_date(date_labels = "%b %y", breaks = scales::breaks_pretty(12)) +
+  geom_point(size = 2, shape = 21, aes(fill = factor(year))) +
+  scale_x_date(date_labels = "%b", breaks = scales::breaks_pretty(12)) +
   facet_wrap(~ bay_segment, ncol = 1) +
   labs(
     x = NULL,
-    y = "NPS TN load (tons/month)"
+    y = "NPS TN Load (tons/month)",
+    fill = "Year"
   ) +
   theme_minimal() + 
   theme(
-    panel.grid.minor.y = element_blank(), 
-    axis.text.x = element_text(size = 7)
+    panel.grid.minor = element_blank(), 
+    axis.text.x = element_text(size = 7),
+    panel.grid.major.x = element_blank(), 
+    legend.position = 'right'
   )
 
-p2 <- ggplot(npsmonth, aes(x = date, y = hy_load)) +
+p2 <- ggplot(toplo, aes(x = date, y = hy_load)) +
   geom_line() +
-  geom_point(size = 2, shape = 21, fill = 'blue') +
-  scale_x_date(date_labels = "%b %y", breaks = scales::breaks_pretty(12)) +
+  geom_point(size = 2, shape = 21, aes(fill = factor(year))) +
+  scale_x_date(date_labels = "%b", breaks = scales::breaks_pretty(12)) +
   facet_wrap(~ bay_segment, ncol = 1) +
   labs(
     x = NULL,
-    y = "NPS hydro load (1e6 m3/month)"
+    y = "NPS Hydro Load (1e6 m3/month)",
+    fill = "Year"
   ) +
   theme_minimal() + 
   theme(
-    panel.grid.minor.y = element_blank(), 
-    axis.text.x = element_text(size = 7)
+    panel.grid.minor = element_blank(), 
+    axis.text.x = element_text(size = 7),
+    panel.grid.major.x = element_blank()
   )
 
-p1 + p2 + plot_layout(ncol = 2)
+p1 + p2 + plot_layout(ncol = 2, guides = 'collect') &
+  theme(legend.position = 'right')
+```
+
+------------------------------------------------------------------------
+
+## NPS BY MONTH, 2022 -- 2024
+
+```{r}
+#| fig-height: 6
+
+ggplot(toplo, aes(x = hy_load, y = tn_load)) + 
+  geom_point(pch = 21, size = 3, aes(fill = factor(year))) + 
+  facet_wrap(~bay_segment, scales = 'free') + 
+  stat_smooth(method = 'lm', se = F, formula = y ~ x - 1, color = 'black') + 
+  theme_minimal() +
+  theme(
+    panel.grid.minor = element_blank(), 
+    legend.position = 'right'
+  ) + 
+  labs(
+    x = "NPS Hydro Load (1e6 m3/month)",
+    y = "NPS TN Load (tons/month)",
+    fill = "Year"
+  )
 ```
 
 ------------------------------------------------------------------------
@@ -543,8 +600,128 @@ p1 + p2 + plot_layout(ncol = 2)
 ```{r}
 totab <- totanndat |> 
   filter(year >= 2022) |> 
+  select(-hy_load) |> 
+  mutate(bay_segment = factor(bay_segment, levels = levs)) |>
+  arrange(bay_segment, year) |>
   left_join(lns, by = "bay_segment") |>
-  left_join(ndrlns, by = "bay_segment")
+  left_join(ndrlns, by = "bay_segment") |> 
+  pivot_wider(names_from = year, values_from = c(tn_load, tnhy), names_sep = '_')
+
+reactable(
+  totab,
+  columns = list(
+    bay_segment = colDef(
+      name = "Bay Segment",
+      sticky = "left",
+      minWidth = 375,
+      cell = function(value) {
+        if (value == "Remainder Lower Tampa Bay") {
+          htmltools::div(
+            htmltools::span(paste0(value, '*'))
+          )
+        } else {
+          value
+        }
+      }
+    ),
+    tn_load_2022 = colDef(
+      name = "2022",
+      format = colFormat(digits = 0),
+      align = 'center',
+      style = function(value, index) {
+        threshold <- totab$tn_thresh[index]
+        if (value > threshold) {
+          list(background = "#ffcccc", fontWeight = "bold")
+        } else {
+          list(background = "#ccffcc")
+        }
+      }
+    ),
+    tn_load_2023 = colDef(
+      name = "2023",
+      format = colFormat(digits = 0),
+      align = 'center',
+      style = function(value, index) {
+        threshold <- totab$tn_thresh[index]
+        if (value > threshold) {
+          list(background = "#ffcccc", fontWeight = "bold")
+        } else {
+          list(background = "#ccffcc")
+        }
+      }
+    ),
+    tn_load_2024 = colDef(
+      name = "2024",
+      format = colFormat(digits = 0),
+      align = 'center',
+      style = function(value, index) {
+        threshold <- totab$tn_thresh[index]
+        if (value > threshold) {
+          list(background = "#ffcccc", fontWeight = "bold")
+        } else {
+          list(background = "#ccffcc")
+        }
+      }
+    ),
+    tnhy_2022 = colDef(
+      name = "2022",
+      format = colFormat(digits = 2),
+      align = 'center',
+      style = function(value, index) {
+        threshold <- totab$ndr_thresh[index]
+        if (value > threshold) {
+          list(background = "#ffcccc", fontWeight = "bold")
+        } else {
+          list(background = "#ccffcc")
+        }
+      }
+    ),
+    tnhy_2023 = colDef(
+      name = "2023",
+      format = colFormat(digits = 2),
+      align = 'center',
+      style = function(value, index) {
+        threshold <- totab$ndr_thresh[index]
+        if (value > threshold) {
+          list(background = "#ffcccc", fontWeight = "bold")
+        } else {
+          list(background = "#ccffcc")
+        }
+      }
+    ),
+    tnhy_2024 = colDef(
+      name = "2024",
+      format = colFormat(digits = 2),
+      align = 'center',
+      style = function(value, index) {
+        threshold <- totab$ndr_thresh[index]
+        if (value > threshold) {
+          list(background = "#ffcccc", fontWeight = "bold")
+        } else {
+          list(background = "#ccffcc")
+        }
+      }
+    ),
+    tn_thresh = colDef(show = FALSE),  # Hide threshold columns
+    ndr_thresh = colDef(show = FALSE)
+  ),
+  columnGroups = list(
+    colGroup(name = "TN Load", columns = c("tn_load_2022", "tn_load_2023", "tn_load_2024")),
+    colGroup(name = "TN Delivery Ratio", columns = c("tnhy_2022", "tnhy_2023", "tnhy_2024"))
+  ),
+  bordered = F,
+  striped = F,
+  highlight = TRUE,
+  theme = reactableTheme(
+    style = list(fontSize = "30px")
+  )
+) |> 
+htmltools::tagList(
+  htmltools::div(
+    style = "margin-top: 10px; font-size: 25px;",
+    htmltools::span("* No TMDL")
+  )
+)
 ```
 
 ------------------------------------------------------------------------
@@ -552,5 +729,8 @@ totab <- totanndat |>
 ## CONCLUSIONS
 
 ::: {.incremental}
-* text
+* Chlorophyll-a thresholds attained for first three years of 2022 -- 2026 RA period
+* No need to evaluate loadings -- but, absolute load exceeded for OTB and RALTB in 2022, all segments except LTB in 2024
+* High loadings in 2024 from tropical storm activity, NPS contributions
+* Nitrogen delivery ratio not exceeded in any segment for 2022 -- 2024
 :::
