@@ -208,11 +208,11 @@ show_sitesegmap(epcdata, yrsel = maxyr, param = "la", partialyr = T, thrs = T)
 ::::: {.columns style='display: flex !important; height: 80%;'}
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Management](figure/wq2025prov1.PNG){width="360"}
+![Management](figure/wq2025prov1.png){width="360"}
 :::
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
-![Regulatory](figure/wq2025prov2.PNG){width="360"}
+![Regulatory](figure/wq2025prov2.png){width="360"}
 :::
 
 :::::

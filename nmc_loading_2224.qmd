@@ -517,8 +517,53 @@ for(lev in seq_along(levs)){
 
 }
 
-p1 + p2 + p3 + p4 + p5 + plot_layout(ncol = 2, guides = 'collect') &
-  theme(legend.position = 'right')
+p1 + p2 + p3 + p4 + p5 + plot_layout(ncol = 2, guides = 'collect') +  
+  plot_annotation(
+    caption = "Radius proportional within bay segments"
+  ) &
+  theme(legend.position = 'right') 
+```
+
+------------------------------------------------------------------------
+
+## PROPORTIONAL 2022 -- 2024
+
+```{r}
+#| fig-height: 6
+#| fig-align: "center"
+for(lev in seq_along(levs)){
+
+  tmp <- toplo2 |> 
+    filter(bay_segment == levs[lev]) |> 
+    complete(source, year, fill = list(tn_load = 0))
+
+  p <- ggplot(tmp, aes(x = tot / 2, y = tn_load, fill = source, width = tot)) +
+    geom_bar(position = 'fill', stat = 'identity', color = 'grey') + 
+    coord_polar('y', start = 0) +
+    scale_x_continuous(limits = c(0, max(toplo2$tot))) +
+    scale_fill_manual(values = cols, drop = F, ) +
+    facet_wrap(~ year) +
+    labs(
+      x = NULL,
+      fill = "Source",
+      y = NULL, 
+      title = levs[lev]
+    ) +
+    theme_void() + 
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 12), 
+      strip.text = element_text(size = 10),
+      plot.margin = unit(c(0, 0, 0, 0), 'pt')
+    )
+
+  assign(paste0('p', lev), p)
+
+}
+
+p1 + p2 + p3 + p4 + p5 + plot_layout(ncol = 2, guides = 'collect') +
+  plot_annotation(
+    caption = "Radius proportional across bay segments"
+  )
 ```
 
 ------------------------------------------------------------------------
@@ -576,7 +621,6 @@ p1 + p2 + plot_layout(ncol = 2, guides = 'collect') &
 
 ```{r}
 #| fig-height: 6
-
 ggplot(toplo, aes(x = hy_load, y = tn_load)) + 
   geom_point(pch = 21, size = 3, aes(fill = factor(year))) + 
   facet_wrap(~bay_segment, scales = 'free') + 
