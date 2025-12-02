@@ -28,6 +28,8 @@ library(patchwork)
 library(flextable)
 library(tidyverse)
 library(plotly)
+library(sf)
+library(leaflet)
 
 source('R/funcs.R')
 
@@ -616,7 +618,7 @@ ggplot(toplo, aes(x = segment, y = attain)) +
 
 ------------------------------------------------------------------------
 
-## 2025 SEAGRASS TRANSECT DATA
+## 2025 SEAGRASS TRANSECTS
 
 ```{r}
 transectocc <- anlz_transectocc(transect)
@@ -647,6 +649,65 @@ ggplot(toplo, aes(x = yr, y = foest)) +
     strip.background = element_blank(),
     panel.grid.major.x = element_blank(),
     panel.grid.minor = element_blank()
+  )
+```
+
+------------------------------------------------------------------------
+
+## 2025 SEAGRASS TRANSECTS BY SITE 
+
+```{r}
+#| out-width: 100%
+toplo <- transectocc |> 
+  ungroup() |> 
+  mutate(
+    yr = lubridate::year(Date)
+  ) |> 
+  filter(Savspecies %in% 'total') |> 
+  filter(yr >= 2024) |> 
+  select(Transect, yr, foest) |> 
+  summarise(
+    foest = mean(foest, na.rm = T), 
+    .by = c(Transect, yr)
+  ) |> 
+  mutate(
+    cnt = n(), 
+    .by = Transect
+  ) |> 
+  filter(cnt == 2) |> 
+  select(-cnt) |> 
+  pivot_wider(
+    names_from = yr, 
+    values_from = foest
+  ) |> 
+  mutate(
+    chg = abs(`2025` - `2024`),
+    sgn = sign(`2025` - `2024`)
+  )
+tomap <- inner_join(trnpts, toplo, by = c('TRAN_ID' = 'Transect')) |> 
+  select(TRAN_ID, chg, sgn, '2024', '2025')
+
+# make leaflet map with points sized by change and colored by sign
+# add bay segment lines from tbseglines
+leaflet(tomap) |> 
+  addProviderTiles(providers$CartoDB.Positron) |> 
+  addPolylines(data = tbseglines, color = 'blue', weight = 2, opacity = 0.5) |>
+  addCircleMarkers(
+    radius = ~ scales::rescale(chg, to = c(5, 15)),
+    color = ~ ifelse(sgn > 0, '#2DC938', '#CC3231'),
+    stroke = TRUE,
+    weight = 1,
+    fillOpacity = 0.8,
+    label = ~ lapply(paste0('Transect: ', TRAN_ID, '<br>',
+                    '2024 F.O.: ', scales::percent(`2024`, accuracy = 0.1), '<br>',
+                    '2025 F.O.: ', scales::percent(`2025`, accuracy = 0.1), '<br>',
+                    'Change: ', ifelse(sgn > 0, '+', ''), scales::percent(`2025` - `2024`, accuracy = 0.1)), htmltools::HTML)
+  ) |> 
+  addLegend(
+    position = 'bottomright',
+    colors = c('#2DC938', '#CC3231'),
+    labels = c('Increase', 'Decrease'),
+    title = 'Frequency of Occurrence Change (2024 -- 2025)'
   )
 ```
 
