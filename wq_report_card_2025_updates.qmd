@@ -707,7 +707,7 @@ leaflet(tomap) |>
     position = 'bottomright',
     colors = c('#2DC938', '#CC3231'),
     labels = c('Increase', 'Decrease'),
-    title = 'Frequency of Occurrence Change (2024 -- 2025)'
+    title = 'Frequency of Occurrence Change (2024 - 2025)'
   )
 ```
 
