@@ -131,6 +131,42 @@ npsmonth <- read.csv(here('data/npsmod4_2224_26Sep25.csv')) |>
     hy_load = sum(hy_load),
     .by = c(bay_segment, date)
   )
+
+# monthly hydro loads
+mohydat <- rdataload('https://github.com/tbep-tech/load-estimates/raw/refs/heads/main/data/mohydat.RData') |> 
+  dplyr::filter(bay_segment != 'All Segments (- N. BCB)') |> 
+  rename(
+    hy_load = hy_load_106_m3_mo
+  )
+mohydat2224 <- read.csv(here('data/segmonthlyh2o_2224_allsources_allsegs.csv')) |> 
+  filter(!bayseg == 5) |>
+  mutate(
+    bay_segment = case_when(
+      bayseg == 1 ~ 'Old Tampa Bay',
+      bayseg == 2 ~ 'Hillsborough Bay',
+      bayseg == 3 ~ 'Middle Tampa Bay',
+      bayseg == 4 ~ 'Lower Tampa Bay',
+      bayseg %in% c(55, 6, 7) ~ 'Remainder Lower Tampa Bay'
+    )
+  ) |> 
+  select(
+    year = YEAR,
+    month = MONTH,
+    bay_segment, 
+    hy_load = h2oload10e6m3
+  ) |> 
+  summarise(
+    hy_load = sum(hy_load),
+    .by = c(bay_segment, year, month)
+  )
+mohydat <- bind_rows(mohydat, mohydat2224) |> 
+  mutate(
+    bay_segment = factor(bay_segment, levels = levs)
+  ) |> 
+  mutate(
+    date = lubridate::make_date(year, month, '01')
+  ) |> 
+  arrange(bay_segment, date)
 ```
 
 ------------------------------------------------------------------------
@@ -661,7 +697,59 @@ ggplot(toplo, aes(x = year, y = hy_load, fill = exceeds, group = bay_segment)) +
 
 ------------------------------------------------------------------------
 
-## NPS BY MONTH, 2022 -- 2024
+## HYDROLOGIC LOADS JUN -- SEP
+
+```{r}
+#| fig-height: 6
+toplo <- mohydat |> 
+  filter(month %in% 6:9) |> 
+  summarise(
+    hy_load = sum(hy_load),
+    .by = c(bay_segment, year)
+  ) |> 
+  mutate(
+    raperiod = case_when(
+      year < 2002 ~ 'Pre-RA',
+      year %in% c(2002:2006) ~ '2002 - 2006',
+      year %in% c(2007:2011) ~ '2007 - 2011',
+      year %in% c(2012:2016) ~ '2012 - 2016',
+      year %in% c(2017:2021) ~ '2017 - 2021',
+      year >= 2022 ~ '2022 - 2027'
+    ), 
+    raperiod = factor(raperiod, levels = c('Pre-RA', '2002 - 2006', '2007 - 2011', 
+                                         '2012 - 2016', '2017 - 2021', '2022 - 2027'))
+  ) |> 
+  mutate(
+    hy_load_ave = mean(hy_load),
+    .by = c(bay_segment, raperiod)
+  )
+ggplot(toplo, aes(x = year, y = hy_load, group = raperiod, fill = raperiod)) +
+  geom_rect(xmin = 2022, xmax = 2024, ymin = -Inf, ymax = Inf, fill = 'grey', alpha = 0.6) + 
+  geom_line() +
+  geom_point(size = 3, shape = 21) +
+  geom_line(aes(y = hy_load_ave, color = raperiod)) +
+  # scale_fill_manual(values = c("TRUE" = "cadetblue", "FALSE" = "cadetblue1"), 
+                    # labels = c("FALSE" = "Meets Threshold", "TRUE" = "Exceeds Threshold")) +
+  facet_wrap(~ bay_segment, scales = "free_y",  ncol = 1) +
+  labs(
+    x = NULL,
+    y = "Rainy Season Total Hydrologic Load (1e6 m3/yr)"
+  ) +
+  theme_minimal() + 
+  theme(
+    panel.grid.minor.y = element_blank(), 
+    legend.position = 'bottom'
+  ) + 
+  labs(
+    fill = "RA Period",
+    color = "RA Period"
+  ) + 
+  guides(fill = guide_legend(nrow = 1), color = guide_legend(nrow = 1))
+```
+
+------------------------------------------------------------------------
+
+## NPS BY MONTH 2022 -- 2024
 
 ```{r}
 #| fig-height: 6
@@ -710,7 +798,7 @@ p1 + p2 + plot_layout(ncol = 2, guides = 'collect') &
 
 ------------------------------------------------------------------------
 
-## NPS BY MONTH, 2022 -- 2024
+## NPS BY MONTH 2022 -- 2024
 
 ```{r}
 #| fig-height: 6
