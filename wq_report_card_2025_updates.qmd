@@ -30,6 +30,8 @@ library(tidyverse)
 library(plotly)
 library(sf)
 library(leaflet)
+library(here)
+library(readxl)
 
 source('R/funcs.R')
 
@@ -278,6 +280,121 @@ show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', partialyr = T, thrs = F)
 ```{r}
 show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = T, thrs = F)
 ```
+
+## PYRODINIUM STATUS
+
+```{r}
+
+bridges <- tibble(
+  brdg = c('Gandy', 'HF', 'CC'),
+  Latitude = c(27.880486, 27.922358652608654, 27.965458)
+)
+
+# https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
+datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
+  select(
+    yr = Year,
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = P..bahamense.Abundance..cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2021 only
+dat2021 <- read.csv(here('data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
+  select(
+    date = Sample_Date,
+    Latitude,
+    Longitude,
+    pyro = Pbahamense..cells.L.
+  ) %>%
+  mutate(
+    date = case_when(
+      grepl('[a-z]', date) ~ dmy(date),
+      T ~ mdy(date)
+    )
+  )
+
+# 2022 only
+dat2022 <- read.csv(here('data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
+  select(
+    date = Date,
+    Latitude,
+    Longitude,
+    pyro = Pyrodinium..Cells.L.
+  ) %>%
+  mutate(date = mdy(date))
+
+# 2023 only
+dat2023 <- read_excel(here('data/2023 OTB Pyrodinium bahamense abundance data.xlsx')) %>% 
+  select(
+    date = `Sample Date`,
+    Latitude,
+    Longitude,
+    pyro = `Pyrodinium bahamense abundance (cells/L)`
+  ) %>%
+  mutate(date = ymd(date))
+
+# 2024, 2025
+dat2425 <- read_excel(here('data/TB Pyro 2024-2025.12.03.xlsx')) |> 
+  select(
+    date = `Sample Date`,
+    Latitude,
+    Longitude,
+    pyro = `Pyrodinium bahamesnse abundance (cells/L*)`
+  ) %>%
+  mutate(date = ymd(date))
+
+brks <- c(-Inf, 1e4, 1e5, 1e6, Inf)
+labs <- c('No bloom', 'Low', 'Medium', 'High')
+
+dat <- bind_rows(datall, dat2021, dat2022, dat2023, dat2425) %>%
+  mutate(
+    yr = year(date),
+    doy = yday(date),
+    pyro = ifelse(pyro == 0, NA, pyro),
+    pyrocat = cut(pyro, breaks = brks, labels = labs),
+    pyro = pmin(3e6, pyro)
+  )
+
+toplo <- dat %>% 
+  filter(yr > 2013)
+
+# doy x-axis breaks and labels
+dts <- seq.Date(as.Date('2023-01-01'), as.Date('2023-10-01'), by = "3 month")
+xbrks <- yday(dts)                       
+xlabs <- format(dts, "%b")
+
+ggplot(subset(toplo, !is.na(pyro)), aes(x = doy, y = Latitude)) +
+  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
+  geom_point(data = subset(toplo, is.na(pyro)), aes(shape = "No cells"),
+             size = 1, color = "lightgrey") +
+  scale_x_continuous(limits = c(0, 365), breaks = xbrks, labels = xlabs) +
+  scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
+  scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
+  facet_wrap(~yr, ncol = 4) +
+  theme_bw() +
+  theme(
+    strip.background = element_blank(),
+    panel.grid = element_blank(),
+    legend.spacing.y = unit(-0.2, "cm")
+  ) +
+  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
+         size = guide_legend(order = 3),
+         shape = guide_legend(order = 1)) +
+  labs(
+    x = 'Day of Year',
+    shape = NULL,
+    fill = 'Bloom intensity\n',
+    size = 'Cells/L\n',
+    subtitle = expression(paste(italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
+    caption = 'Data from FWC-FWRI HAB Monitoring Database, dotted lines are bridge locations'
+  )
+
+```
+
 
 ------------------------------------------------------------------------
 
