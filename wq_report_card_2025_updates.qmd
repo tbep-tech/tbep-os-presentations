@@ -14,7 +14,8 @@ format:
     link-external-icon: true
     linkcolor: "#00806E"
     link-external-newwindow: true
-        
+lightbox: true
+
 execute:
   echo: false
   ft.keepnext: false
@@ -284,11 +285,14 @@ show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = T, thrs = F)
 ## PYRODINIUM STATUS
 
 ```{r}
-
+yrmin <- 2014
 bridges <- tibble(
-  brdg = c('Gandy', 'HF', 'CC'),
-  Latitude = c(27.880486, 27.922358652608654, 27.965458)
-)
+    brdg = c('Gandy', 'HF', 'CC'),
+    Latitude = c(27.880486, 27.922358652608654, 27.965458)
+  ) |> 
+  crossing(
+    yr = seq(yrmin, maxyr)
+  )
 
 # https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
 datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
@@ -359,7 +363,7 @@ dat <- bind_rows(datall, dat2021, dat2022, dat2023, dat2425) %>%
   )
 
 toplo <- dat %>% 
-  filter(yr > 2013)
+  filter(yr >= yrmin)
 
 # doy x-axis breaks and labels
 dts <- seq.Date(as.Date('2023-01-01'), as.Date('2023-10-01'), by = "3 month")
@@ -367,12 +371,12 @@ xbrks <- yday(dts)
 xlabs <- format(dts, "%b")
 
 ggplot(subset(toplo, !is.na(pyro)), aes(x = doy, y = Latitude)) +
-  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'dotted') +
-  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'darkgrey') +
+  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'solid') +
   geom_point(data = subset(toplo, is.na(pyro)), aes(shape = "No cells"),
              size = 1, color = "lightgrey") +
+  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'black') +
   scale_x_continuous(limits = c(0, 365), breaks = xbrks, labels = xlabs) +
-  scale_fill_viridis_d(guide = "legend", option = 'C', direction = -1, na.value = 'lightgrey') +
+  scale_fill_viridis_d(guide = "legend", option = 'A', direction = -1, na.value = 'lightgrey') +
   scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
   facet_wrap(~yr, ncol = 4) +
   theme_bw() +
