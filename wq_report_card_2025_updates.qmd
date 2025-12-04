@@ -8,12 +8,13 @@ date-format: medium
 format:
   revealjs:
     logo: figure/TBEP_logo.png
-    transition: slide
     footer: "Tampa Bay Nitrogen Management Consortium"
     theme: styles.scss
     link-external-icon: true
     linkcolor: "#00806E"
     link-external-newwindow: true
+    transition: fade
+    background-transition: fade
 lightbox: true
 
 execute:
@@ -70,7 +71,7 @@ segworst <- tibble(
 ::: {.column width="50%"}
 -   Each year, assess attainment of water quality thresholds
 -   Annual reporting to FDEP, fourth year of [2022-2026 RA period](https://drive.google.com/file/d/18HHMx4U6vHNrFyepEFuoTJ_sEKyTA_gu/view)
--   Today's results include data __through September__
+-   Today's results include data __through October__
 :::
 
 ::: {.column width="50%"}
@@ -245,42 +246,6 @@ show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plot
 \* `r maxyr` Dec based on average from five years prior
 
 ------------------------------------------------------------------------
-
-## MANAGEMENT ACTIONS
-
-* Each bay segment assigned a management action, based on chlorophyll and light attenuation magnitude and duration
-
-![](figure/wqactions.jpg)
-
-------------------------------------------------------------------------
-
-## MANAGEMENT OUTCOMES
-
-```{r}
-#| layout-ncol: 2
-#| fig-height: 5
-#| out-height: 100%
-show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotly = T, height = 450, width = 450)
-show_matrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
-```
-
-\* `r maxyr` Dec based on average from five years prior
-
-------------------------------------------------------------------------
-
-## CHLOROPHYLL ATTAINMENT
-
-```{r}
-show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', partialyr = T, thrs = F)
-```
-
-------------------------------------------------------------------------
-
-## LIGHT ATTENUATION ATTAINMENT
-
-```{r}
-show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = T, thrs = F)
-```
 
 ## PYRODINIUM STATUS
 
@@ -498,87 +463,111 @@ plot_ly() |>
 
 ------------------------------------------------------------------------
 
-## SSOs 2025 by month
+## TAMPA BAY ANNUAL RAINFALL
 
 ```{r}
-toplo <- vols |>
-  filter(yr == maxyr) |>
-  group_by(modt, bay_segment) |>
-  summarise(volest = sum(volest), .groups = 'drop') |>
+# monthly rainfall data from swfwmd 
+# https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
+# file is from the link "USGS watershed"
+download.file(
+  'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825',
+  here('data/swfwmdrainfallto2025.xlsx'),
+  mode = 'wb'
+)
+
+# rain data for relevant TB areas
+raindat <- readxl::excel_sheets(here('data/swfwmdrainfallto2025.xlsx')) %>% 
+  grep('jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec', ., value = TRUE) %>% 
+  tibble(
+    mo = .
+  ) %>% 
+  nest(.by = mo) %>% 
   mutate(
-    volest = volest / 1e6,
-    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'))
+    data = purrr::map(mo, function(mo){
+      
+      read_excel(here('data/swfwmdrainfallto2025.xlsx'), sheet = mo, skip = 1) %>% 
+        filter(Year %in% 1975:maxyr) %>% 
+        select(
+          yr = Year, 
+          tampacoastal_in = `Tampa Bay/Coastal Areas`, # this just a fringe area around the bay, not the watershed
+          hillsborough_in = `Hillsborough River`,
+          alafia_in = `Alafia River`,
+          littlemanatee_in = `Little Manatee River`,
+          manatee_in = `Manatee River`
+        ) %>% 
+        mutate_all(as.numeric)
+      
+    })
+  ) %>% 
+  unnest('data') %>% 
+  # mutate(
+  #   precip_in = rowSums(select(., -mo, -yr), na.rm = TRUE)
+  # ) %>%
+  select(mo, yr, precip_in = tampacoastal_in) %>% 
+  mutate(
+    mo = gsub('\\-usgsbsn$', '', mo),
+    mo = as.numeric(factor(mo,
+                           levels = c('jan', 'feb', 'mar', 'apr', 'may', 'jun',
+                                      'jul', 'aug', 'sep', 'oct', 'nov', 'dec'),
+                           labels = 1:12)
+    ),
+    date = as.Date(paste0(yr, '-', mo, '-01')), 
+    precip_mm = precip_in * 25.4
   )
-tots <- sum(vols$yr == maxyr)
-toplo_wide <- toplo |>
-  pivot_wider(
-    names_from = bay_segment,
-    values_from = volest,
-    values_fill = 0,
-    names_expand = T
+
+toplo <- raindat %>% 
+  filter(yr > 2009) %>%
+  summarise(
+    precip_in = sum(precip_in, na.rm = TRUE), 
+    .by = yr
+  ) |> 
+  mutate(
+    ave = mean(precip_in), 
+    avediff = precip_in - ave
   )
 
-plot_ly() |>
-  add_bars(data = toplo_wide, x = ~modt, y = ~`OTB`, name = "Old Tampa Bay",
-           opacity = 0.7) |>
-  add_bars(data = toplo_wide, x = ~modt, y = ~`HB`, name = "Hillsborough Bay",
-           opacity = 0.7) |>
-  add_bars(data = toplo_wide, x = ~modt, y = ~`MTB`, name = "Middle Tampa Bay",
-           opacity = 0.7) |>
-  add_bars(data = toplo_wide, x = ~modt, y = ~`LTB`, name = "Lower Tampa Bay",
-           opacity = 0.7) |>
-  add_bars(data = toplo_wide, x = ~modt, y = ~`BCB`, name = "Boca Ciega Bay",
-           opacity = 0.7) |>
-  add_bars(data = toplo_wide, x = ~modt, y = ~`MR`, name = "Manatee River",
-           opacity = 0.7) |>
-  add_bars(data = toplo_wide, x = ~modt, y = ~`TCB`, name = "Terra Ceia Bay",
-           opacity = 0.7) |>
-  layout(
-    barmode = "stack",
-    showlegend = TRUE,
-    legend = list(
-      orientation = "h",
-      y = 1.15,
-      x = 0.5,
-      xanchor = "center",
-      traceorder = "reversed"
-    ),
-    xaxis = list(
-      title = "",
-      showgrid = FALSE,
-      zeroline = FALSE
-    ),
-    yaxis = list(
-      title = "Million gallons reported",
-      showgrid = TRUE,
-      gridcolor = "lightgray",
-      zeroline = FALSE
-    ),
-    font = list(
-      size = 14
-    ),
-    annotations = list(
-      x = 1,
-      y = -0.09,
-      text = paste0("Total n = ", tots),
-      showarrow = FALSE,
-      xref = 'paper',
-      yref = 'paper',
-      font = list(size = 12)
-    ),
-    autosize = F,
-    width = 1000,
-    height = 450
-  ) |>
-  config(displayModeBar = F)
-```
 
-------------------------------------------------------------------------
+ave <- mean(toplo$precip_in)
 
-## 2024 SEAGRASS COVERAGE
+p1 <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
+  geom_col(fill = '#004F7E', color = 'black', alpha = 0.8) +
+  geom_hline(yintercept = ave, color = '#5C4A42', linewidth = 1) +
+  theme_minimal(base_size = 14) + 
+  scale_x_continuous(breaks = unique(toplo$yr)) +
+  scale_y_continuous(expand= c(0, 0)) +
+  theme(
+    axis.text.x =  element_blank(),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(), 
+  ) +
+  labs(
+    x = NULL,
+    y = 'Annual rainfall (inches)',
+    # caption = 'Data source: SWFWMD'
+  )
 
-```{r}
-show_seagrasscoverage(seagrass, lastlab = T)
+mxdiff <- max(toplo$avediff)
+p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) + 
+  geom_col(color = 'black', alpha = 0.8) +
+  geom_hline(yintercept = 0, color = '#5C4A42', linewidth = 1) +
+  scale_fill_gradient2(midpoint = 0, low = 'tomato1', mid = 'white', high = 'dodgerblue2') +
+  theme_minimal(base_size = 14) + 
+  scale_x_continuous(breaks = unique(toplo$yr)) +
+  scale_y_continuous(expand= c(0, 0)) +
+  theme(
+    axis.text.x = element_text(angle = 45, size = 10, hjust = 1),
+    panel.grid.minor.x = element_blank(),
+    panel.grid.major.x = element_blank(), 
+    panel.grid.minor.y = element_blank(),
+    legend.position = 'none'
+  ) +
+  labs(
+    x = NULL,
+    y = 'Deviation (inches)',
+    caption = 'Data source: SWFWMD'
+  )
+
+p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
 ```
 
 ------------------------------------------------------------------------
@@ -633,107 +622,6 @@ ggplot(toplo, aes(x = factor(year), y = acres)) +
     y = 'Seagrass Coverage (x1,000 acres)',
     x = NULL,
     color = NULL
-  )
-```
-
-------------------------------------------------------------------------
-
-## 2024 SEAGRASS RESULTS: SEGMENT
-
-* Remainder bay segments relatively stable
-
-```{r}
-#| fig-align: "center"
-#| fig-height: 4.25
-#| fig-width: 9
-toplo <- sgsegest %>%
-  filter(segment %in% c('Boca Ciega Bay', 'Terra Ceia Bay', 'Manatee River')) %>%
-  mutate(acres = acres / 1000) %>%
-  mutate(segment = forcats::fct_drop(segment))
-
-subsegtrgs <- segtrgs %>%
-  filter(segment %in% levels(toplo$segment))
-
-ggplot(toplo, aes(x = factor(year), y = acres)) +
-  geom_bar(fill = '#00806E', stat = 'identity', colour = 'black', width = 0.6) +
-  geom_hline(data = subsegtrgs, aes(yintercept = trgs, color = 'Target')) +
-  scale_color_manual(values = 'red') +
-  facet_wrap(~segment, ncol = 2, scales = 'free') +
-  theme(panel.grid.minor=element_blank(),
-        panel.grid.major=element_blank(),
-        plot.background = element_rect(fill = NA, color = NA),
-        axis.text.y = element_text(colour = 'black'),
-        plot.title = element_text(size = 22, colour = 'black'),
-        legend.text = element_text(size = 16, colour = 'black'),
-        axis.text.x = element_text(colour = 'black', angle = 45, size = 8, hjust = 1),
-        strip.background = element_blank(),
-        strip.text = element_text(hjust = 0, size = 13),
-        legend.position = 'none'
-  ) +
-  labs(
-    y = 'Seagrass Coverage (x1,000 acres)',
-    x = NULL,
-    color = NULL
-  )
-```
-
-------------------------------------------------------------------------
-
-## TARGET ATTAINMENT vs WORST CASE
-
-```{r}
-#| fig-align: "center"
-#| fig-width: 9
-#| fig-height: 5
-levs <- c(levels(sgsegest$segment), 'Total')
-
-totest <- seagrass %>%
-  select(-Hectares) %>%
-  mutate(segment = 'Total') %>%
-  rename(
-    year = Year,
-    acres = Acres
-    ) %>%
-  filter(year == 2024)
-
-toplo <- sgsegest %>%
-  filter(year == 2024) %>%
-  bind_rows(totest) %>%
-  mutate(acres = acres / 1000) %>%
-  pivot_wider(names_from = 'year', values_from = 'acres') %>%
-  bind_rows %>%
-  left_join(segworst, by = 'segment') %>%
-  rename(`1982` = trgs) %>%
-  left_join(segtrgs, by = 'segment') %>%
-  pivot_longer(cols = c(`2024`, `1982`), names_to = 'Year', values_to = 'Acres') %>%
-  mutate(
-    attain = Acres / trgs,
-    segment = factor(segment, levels = levels(segtrgs$segment)),
-    Year = factor(Year, levels = c(1982, 2024), labels = c('1982 - Worst Case', '2024'))
-  )
-
-ggplot(toplo, aes(x = segment, y = attain)) +
-  coord_cartesian(ylim = c(0, 1.3)) +
-  scale_y_continuous(expand = c(0, 0), labels = scales::percent, breaks = c(0, .25, 0.5, 0.75, 1)) +
-  geom_text(aes(group = Year, label = scales::percent(round(attain, 2))), position = position_dodge(width = 0.9), vjust = -0.5, size = 3) +
-  geom_text(data = segtrgs, aes(y = 1.2, label = paste(formatC(1000 * trgs, format = 'd', big.mark = ','), '\nacres'))) +
-  geom_col(position = 'dodge', aes(group = Year, fill = Year), color = 'black') +
-  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 10)) +
-  scale_fill_manual(values = c('grey', '#00806E')) +
-  geom_vline(xintercept = 7.5, linetype = 'dashed') +
-  geom_segment(aes(x = 0.75, xend = 1.25, y = 0.7, yend = 0.54), arrow = arrow(length = unit(0.5, "cm")), size = 2, lineend = 'round', linejoin = 'round', col = 'red') +
-  geom_text(aes(x = 1.5, y = 0.65, label = '2024 OTB is now\nworst case'), size = 3, col = 'red') +
-  theme_minimal() +
-  theme(
-    legend.position = 'bottom',
-    panel.grid.major.x = element_blank(),
-    panel.grid.minor.x = element_blank(),
-    panel.grid.minor.y = element_blank()
-  ) +
-  labs(
-    y = '% Attainment of Target Acreage',
-    fill = NULL,
-    x = NULL
   )
 ```
 
@@ -837,8 +725,8 @@ leaflet(tomap) |>
 ## CONCLUSIONS
 
 ::: {.incremental}
-* All segments provisionally (through September) meet regulatory thresholds, all segments provisionally green for management targets
-* Adaptive capacity of the bay is high coming off dry years
+* All segments provisionally (through October) meet regulatory thresholds, all segments provisionally green for management targets
+* *Pyrodinium* blooms significantly smaller in the last three years
 * OTB still a marginal bay segment, continued seagrass coverage loss, slight uptick in frequency occurrence in 2025
 * Fourth year of [2022 - 2026 RA period](https://docs.google.com/document/d/1e3KpnZFPJNm8TFlpSEfj3fHIa2nc6KfmKsn5LzaEp1g/edit?disco=AAAAaa0p5rc)
 :::
