@@ -45,27 +45,6 @@ totanndat <- rdataload('https://github.com/tbep-tech/load-estimates/raw/refs/hea
   select(year, bay_segment, tn_load, tnhy, hy_load) |> 
   dplyr::filter(bay_segment != 'All Segments (- N. BCB)')
 
-totanndat2224 <- read.csv(here('data/TOTLoadsRASeg2224.csv')) |> 
-  mutate(
-    bay_segment = case_when(
-      BAY_SEG == 1 ~ 'Old Tampa Bay',
-      BAY_SEG == 2 ~ 'Hillsborough Bay',
-      BAY_SEG == 3 ~ 'Middle Tampa Bay',
-      BAY_SEG == 4 ~ 'Lower Tampa Bay',
-      BAY_SEG == 5567 ~ 'Remainder Lower Tampa Bay'
-    )
-  ) |> 
-  select(
-    year = YEAR,
-    bay_segment,
-    tn_load = TN_TONS,
-    tnhy = TN_H2O_RATIO, 
-    hy_load = h2oload10e6m3
-  )
-
-totanndat <- bind_rows(totanndat, totanndat2224) |> 
-  arrange(bay_segment, year)
-
 tnanndat <- rdataload('https://github.com/tbep-tech/load-estimates/raw/refs/heads/main/data/tnanndat.RData') |> 
   dplyr::filter(bay_segment != 'All Segments (- N. BCB)')
 
@@ -138,35 +117,6 @@ mohydat <- rdataload('https://github.com/tbep-tech/load-estimates/raw/refs/heads
   rename(
     hy_load = hy_load_106_m3_mo
   )
-mohydat2224 <- read.csv(here('data/segmonthlyh2o_2224_allsources_allsegs.csv')) |> 
-  filter(!bayseg == 5) |>
-  mutate(
-    bay_segment = case_when(
-      bayseg == 1 ~ 'Old Tampa Bay',
-      bayseg == 2 ~ 'Hillsborough Bay',
-      bayseg == 3 ~ 'Middle Tampa Bay',
-      bayseg == 4 ~ 'Lower Tampa Bay',
-      bayseg %in% c(55, 6, 7) ~ 'Remainder Lower Tampa Bay'
-    )
-  ) |> 
-  select(
-    year = YEAR,
-    month = MONTH,
-    bay_segment, 
-    hy_load = h2oload10e6m3
-  ) |> 
-  summarise(
-    hy_load = sum(hy_load),
-    .by = c(bay_segment, year, month)
-  )
-mohydat <- bind_rows(mohydat, mohydat2224) |> 
-  mutate(
-    bay_segment = factor(bay_segment, levels = levs)
-  ) |> 
-  mutate(
-    date = lubridate::make_date(year, month, '01')
-  ) |> 
-  arrange(bay_segment, date)
 ```
 
 ------------------------------------------------------------------------
