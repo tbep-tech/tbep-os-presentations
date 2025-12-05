@@ -26,6 +26,7 @@ execute:
 #| include: false
 library(knitr)
 library(tbeptools)
+# devtools::load_all('T:/04_STAFF/MARCUS/03_git/tbeptools', helpers = F)
 library(patchwork)
 library(flextable)
 library(tidyverse)
