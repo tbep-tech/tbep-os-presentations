@@ -244,7 +244,7 @@ show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1975, 1998), partialyr = T, plotl
 show_wqmatrix(epcdata, txtsz = NULL, yrrng = c(1999, maxyr), partialyr = T, plotly = T, height = 450, width = 450)
 ```
 
-\* `r maxyr` Dec based on average from five years prior
+\* `r maxyr` Nov, Dec based on average from five years prior
 
 ------------------------------------------------------------------------
 
