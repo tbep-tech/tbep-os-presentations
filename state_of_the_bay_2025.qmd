@@ -35,7 +35,7 @@ library(sf)
 library(ggrepel)
 library(readxl)
 
-maxyr <- 2024
+maxyr <- 2025
 partialyr <- F
 
 # load(file = here('data/sgsegest.RData'))
@@ -62,13 +62,13 @@ load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vo
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
 
-![Management](figure/wq2024prov1.PNG){width="360"}
+![Management](figure/wq2025prov1.PNG){width="360"}
 
 :::
 
 ::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
 
-![Regulatory](figure/wq2024prov2.PNG){width="360"}
+![Regulatory](figure/wq2025prov2.PNG){width="360"}
 
 :::
 
@@ -94,10 +94,10 @@ Management actions defined by both chlorophyll and light attenuation, considers 
 
 ## MANAGEMENT RESULTS
 
-![](figure/wq2024segprov.PNG)
+![](figure/wq2025segprov.PNG)
 
 ::: {.notes}
-Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right.  Annual averages are compared to management targets. Note that chlorophyll targets exceeded for all bay segments except HB, light attenuation targets only exceeded for LTB.  LTB receives "caution" category.
+Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right.  Annual averages are compared to management targets. Note that chlorophyll and light attenuation targets all met.
 :::
 
 ------------------------------------------------------------------------
@@ -107,7 +107,7 @@ Table shows bay segment management outcomes for chlorophyll on the left and ligh
 ::: columns
 ::: {.column width="50%"}
 -   Matrix shows attainment of chlorophyll and light attenuation *targets*
--   All segments in `r maxyr` as "Stay the Course", except LTB as "Caution"
+-   All segments in `r maxyr` as "Stay the Course"
 -   More info at <https://shiny.tbep.org/wq-dash/>
 :::
 
@@ -124,7 +124,7 @@ show_matrixplotly(p, height = 600, width = 300)
 :::
 
 ::: {.notes}
-Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022 and 2023. 
+Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022, 2023, 2025. 
 :::
 
 ------------------------------------------------------------------------
@@ -194,7 +194,7 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 ```
 
 ::: {.notes}
-All bay segments show an increase in chlorophyll from last year due to storms, note different y-axis scales. Solid blue line is bay segment management target. Top dotted line is "large exceedence", +2 standard errors above the target based on historical reference period. Middle dashed line is "small exceedence, + 1 standard error.
+All bay segments show an increase in chlorophyll from last year due to storms, note different y-axis scales. Solid blue line is bay segment management target. Top dotted line is "large exceedence", +2 standard errors above the target based on historical reference period.
 :::
 
 ------------------------------------------------------------------------
@@ -206,7 +206,7 @@ show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', partialyr = F, thrs = F)
 ```
 
 ::: {.notes}
-Map shows annual average chlorophyll at each sample station.  Note high values in OTB, northern part of MTB (possibly from Alafia flooding).  Also note that segment outcomes are based on site averages. 
+Map shows annual average chlorophyll at each sample station.  Note that segment outcomes are based on site averages. 
 :::
 
 ------------------------------------------------------------------------
@@ -236,7 +236,7 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 ```
 
 ::: {.notes}
-Monthly chlorophyll averages are below medians until August - Debbie and then Helene/Milton.  Stays high until December.  All sites in October sampled late October except OTB on Oct. 1 (LTB sampled 10/28 so not sure why October values are lower). 
+Monthly chlorophyll averages... 
 :::
 
 ------------------------------------------------------------------------
@@ -248,7 +248,7 @@ show_sitemap(epcdata, yrsel = maxyr, param = "chla", mosel = c(10))
 ```
 
 ::: {.notes}
-Emphasize locations with very high chlorophyll in October (west OTB, north HB).  
+Emphasize only two locations exceeding.
 :::
 
 ------------------------------------------------------------------------
@@ -280,7 +280,7 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 ```
 
 ::: {.notes}
-Light attenuation also shows an increase in all bay segments in 2024, except OTB possibly because of locations of major inflows into the bay, i.e., light attenuation can be affected by factors besides chlorophyll (e.g., organic matter from storms). Note fixed y-axes.
+Note fixed y-axes.
 :::
 
 ------------------------------------------------------------------------
@@ -292,7 +292,7 @@ show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = F, thrs = F)
 ```
 
 ::: {.notes}
-Map shows annual average light attenuation at each sample station.  Note high values in OTB, LTB.  Interesting that average light attenuation in OTB was still relatively low for potential reasons described in last slide
+Map shows annual average light attenuation at each sample station.
 :::
 
 ------------------------------------------------------------------------
@@ -323,19 +323,7 @@ guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights =
 ```
 
 ::: {.notes}
-Seasonal light attenuation shows similar pattern as chlorophyll, low until storms late summer/fall.  Note fixed y-axis across plots.
-:::
-
-------------------------------------------------------------------------
-
-## OCTOBER LIGHT ATTENUATION
-
-```{r}
-show_sitemap(epcdata, yrsel = maxyr, param = "la", mosel = c(10))
-```
-
-::: {.notes}
-Emphasize locations with high light attenuation in October (HB).  
+Note fixed y-axis across plots.
 :::
 
 ------------------------------------------------------------------------
@@ -347,7 +335,7 @@ Emphasize locations with high light attenuation in October (HB).
 * Details in narrative description...
 
 ::: {.notes}
-Supplementary analysis to understand potential contributions of SSOs to water quality late 2024. It comes with a lot of caveats and also note that SSOs are not the sole driver of water quality but important to consider.
+Supplementary analysis that comes with a lot of caveats and also note that SSOs are not the sole driver of water quality but important to consider.
 :::
 
 ------------------------------------------------------------------------
@@ -444,21 +432,25 @@ Note the high values in 2024 compared to other years but also emphasize baseline
 
 ------------------------------------------------------------------------
 
-## SSOs 2024 by month
+## SSOs 2025 by month
 
 ```{r}
 toplo <- vols |>
-  filter(yr == maxyr) |>
-  group_by(modt, bay_segment) |>
+  group_by(yr, bay_segment) |>
   summarise(volest = sum(volest), .groups = 'drop') |>
-  mutate(volest = volest / 1e6)
-tots <- sum(vols$yr == maxyr)
+  mutate(
+    volest = volest / 1e6,
+    bay_segment = factor(bay_segment, levels = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'MR', 'TCB'))
+  )
+tots <- nrow(vols)
 toplo_wide <- toplo |>
   pivot_wider(
     names_from = bay_segment,
     values_from = volest,
-    values_fill = 0
+    values_fill = 0,
+    names_expand = T
   )
+
 
 plot_ly() |>
   add_bars(data = toplo_wide, x = ~modt, y = ~`OTB`, name = "Old Tampa Bay",
@@ -516,12 +508,12 @@ plot_ly() |>
 ```
 
 ::: {.notes}
-Clear seasonal signal associated with storms, starting in August (Debbie)
+Note single issue, spill all contained on-site.  Possibly related to illicit discharge upstream?
 :::
 
 ------------------------------------------------------------------------
 
-## 2024 SEAGRASS TRANSECT RESULTS
+## 2025 SEAGRASS TRANSECT RESULTS
 
 ```{r}
 #| fig-align: 'center'
@@ -541,7 +533,7 @@ Note increase in Halodule
 
 ------------------------------------------------------------------------
 
-## 2024 SEAGRASS TRANSECT RESULTS
+## 2025 SEAGRASS TRANSECT RESULTS
 
 ```{r}
 width <- 1000
@@ -582,13 +574,12 @@ Mention areal maps forthcoming.  Preliminary look at draft results suggests simi
 
 ## WATER QUALITY TAKE HOME
 
-* All segments provisionally exceed chlorophyll management target except HB, LTB also exceeded light penetration target pushing it to "Caution"
-* All segments provisionally meet regulatory thresholds 
-* Adaptive capacity of the bay is high coming off dry years, reduced with storms
+* All segments provisionally meet chlorophyll and light attenuation management target except HB, LTB also exceeded light penetration target pushing it to "Caution"
+* Adaptive capacity of the bay is high coming off dry years
 * OTB still a marginal bay segment, continued seagrass loss - is this an acceptable condition??
 
 ::: {.notes}
-Take home here is that we're coming off dry years, next year may not be the same given the storm effects.  Do not lose focus on OTB due to disconnect between water quality outcomes and continued seagrass loss. 
+Take home here is that we're coming off dry years.  Do not lose focus on OTB due to disconnect between water quality outcomes and continued seagrass loss. 
 :::
 
 ------------------------------------------------------------------------
@@ -599,7 +590,7 @@ Take home here is that we're coming off dry years, next year may not be the same
 ::: {.column width="50%"}
 -   Nekton index reports on the health of fish and inverts
 -   Responds to water quality and habitat degradation
--   2023 results show all bay segments as caution, except OTB
+-   2024 results show all bay segments as caution, except LTB
 -   More info at <https://shiny.tbep.org/nekton-dash/>
 :::
 
@@ -620,8 +611,6 @@ show_matrixplotly(p, height = 600, width = 300)
 
 ## NEKTON RESULTS
 
--   Most bay segments show recovery from red tide, OTB marginal
-
 ```{r}
 tbniscr <- anlz_tbniscr(fimdata)
 show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
@@ -635,7 +624,7 @@ show_tbniscr(tbniscr, plotly = T, height = 500, width = 1000)
 ::: {.column width="50%"}
 -   Benthic index reports on the health of aquatic organisms in or near the bay bottom
 -   Responds to pollutants that can accumulate in the sediment
--   2023 results similar to previous years, except MTB now fair 
+-   2024 results similar to previous years
 -   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
 :::
 
@@ -654,13 +643,13 @@ show_matrixplotly(p, height = 600, width = 300)
 
 ------------------------------------------------------------------------
 
-## 2024 HABITAT RESTORATION
+## 2025 HABITAT RESTORATION
 
 ![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/curbar.png)
 
 ------------------------------------------------------------------------
 
-## NUMBER OF PROJECTS: 2022-2024
+## NUMBER OF PROJECTS: 2023-2025
 
 ![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/curpie.png)
 

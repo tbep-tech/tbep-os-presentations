@@ -470,14 +470,15 @@ plot_ly() |>
 # monthly rainfall data from swfwmd 
 # https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
 # file is from the link "USGS watershed"
-download.file(
-  'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825',
-  here('data/swfwmdrainfallto2025.xlsx'),
-  mode = 'wb'
-)
+
+# download.file(
+#   'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825',
+#   here('data/swfwmdrainfallto2025.xlsx'), 
+#   mode = 'wb'
+# )
 
 # rain data for relevant TB areas
-raindat <- readxl::excel_sheets(here('data/swfwmdrainfallto2025.xlsx')) %>% 
+raindat <- readxl::excel_sheets(here('data/swfwmdrainfallto2026.xlsx')) %>% 
   grep('jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec', ., value = TRUE) %>% 
   tibble(
     mo = .
@@ -486,7 +487,7 @@ raindat <- readxl::excel_sheets(here('data/swfwmdrainfallto2025.xlsx')) %>%
   mutate(
     data = purrr::map(mo, function(mo){
       
-      read_excel(here('data/swfwmdrainfallto2025.xlsx'), sheet = mo, skip = 1) %>% 
+      read_excel(here('data/swfwmdrainfallto2026.xlsx'), sheet = mo, skip = 1) %>% 
         filter(Year %in% 1975:maxyr) %>% 
         select(
           yr = Year, 
