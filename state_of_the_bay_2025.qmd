@@ -168,6 +168,138 @@ Note historical perspective showing long-term bay recovery. Also note OTB non-at
 
 ------------------------------------------------------------------------
 
+## 2025 ANOMALIES
+
+```{r}
+#| fig-height: 6
+#| fig-width: 10
+epcall <- read_importwq('T:/04_STAFF/MARCUS/03_GIT/wq-static/data-raw/Results_Provisional.xlsx', download_latest = F, all = T)
+dat <- epcall |> 
+  filter(bay_segment == 'OTB') |> 
+  filter(yr > 2015) |> 
+  select(
+    date = SampleTime,
+    epchc_station, 
+    chla_ugl = chla, 
+    secchi_m = sd_m,
+    turb_ntu = `Turbidity_JTU-NTU`,
+    color_pcu = Color_345_F45_PCU
+  ) |> 
+  mutate(
+    mo = lubridate::month(date),
+    yr = lubridate::year(date), 
+    date = as.Date(date),
+    date = floor_date(date, 'month'),
+    turb_ntu = as.numeric(turb_ntu), 
+    color_pcu = as.numeric(color_pcu)
+  ) |> 
+  left_join(stations, by = 'epchc_station') |> 
+  pivot_longer(
+    cols = c(chla_ugl, secchi_m, turb_ntu, color_pcu),
+    names_to = 'var',
+    values_to = 'val'
+  ) |>
+  summarise(
+    val = mean(val, na.rm = T),
+    Latitude = mean(Latitude, na.rm = T),
+    Longitude = mean(Longitude, na.rm = T),
+    .by = c(date, yr, mo, var, epchc_station)
+  ) |> 
+  mutate(
+    lab = case_when(
+      var == 'chla_ugl' ~ 'Chl-a (µg/L)',
+      var == 'secchi_m' ~ 'Secchi (m)',
+      var == 'turb_ntu' ~ 'Turb (NTU)',
+      var == 'color_pcu' ~ 'Color (PCU)'
+    )
+  ) |> 
+  mutate(
+    ave = mean(val, na.rm = T), 
+    .by = c(mo, var)
+  ) |> 
+  mutate(
+    anom = val - ave, 
+    mo = factor(mo, levels = 1:12, labels = month.abb) 
+  )
+
+bridges <- tibble(
+    brdg = c('Gandy', 'HF', 'CC'),
+    Latitude = c(27.880486, 27.922358652608654, 27.965458)
+  )
+
+toplo <- dat |> 
+  filter(yr == 2025) |> 
+  group_nest(lab) |> 
+  mutate(
+    plo = map2(data, lab, ~{
+      ggplot(.x, aes(x = date, y = Latitude, size = abs(anom), fill = anom)) +
+        geom_hline(data = bridges, aes(yintercept = Latitude)) +
+        geom_point(alpha = 1, pch = 21, color = 'grey') +
+        scale_fill_gradient2(
+          midpoint = 0,
+          low = "blue",
+          mid = "white", 
+          high = "red"
+        ) +
+        scale_size(guide = 'none') +
+        scale_x_date(date_labels = '%b', date_breaks = '1 month') +
+        labs(
+          fill = paste('+/-', .y),
+          size = NULL,
+          x = NULL, 
+          y = 'Latitude'
+        ) + 
+        theme_minimal() +
+        theme(
+          panel.grid = element_blank()
+        )
+    })
+  )
+
+toplo$plo[[1]] + toplo$plo[[2]] + toplo$plo[[3]] + toplo$plo[[4]] + plot_layout(ncol = 1, axis_titles = 'collect_y')
+```
+
+------------------------------------------------------------------------
+
+## 2024 ANOMALIES
+
+```{r}
+#| fig-height: 6
+#| fig-width: 10
+toplo <- dat |> 
+  filter(yr == 2024) |> 
+  group_nest(lab) |> 
+  mutate(
+    plo = map2(data, lab, ~{
+      ggplot(.x, aes(x = date, y = Latitude, size = abs(anom), fill = anom)) +
+        geom_hline(data = bridges, aes(yintercept = Latitude)) +
+        geom_point(alpha = 1, pch = 21, color = 'grey') +
+        scale_fill_gradient2(
+          midpoint = 0,
+          low = "blue",
+          mid = "white", 
+          high = "red"
+        ) +
+        scale_size(guide = 'none') +
+        scale_x_date(date_labels = '%b', date_breaks = '1 month') +
+        labs(
+          fill = paste('+/-', .y),
+          size = NULL,
+          x = NULL, 
+          y = 'Latitude'
+        ) + 
+        theme_minimal() +
+        theme(
+          panel.grid = element_blank()
+        )
+    })
+  )
+
+toplo$plo[[1]] + toplo$plo[[2]] + toplo$plo[[3]] + toplo$plo[[4]] + plot_layout(ncol = 1, axis_titles = 'collect_y')
+```
+
+------------------------------------------------------------------------
+
 ## CHLOROPHYLL TRENDS
 
 ```{r}
