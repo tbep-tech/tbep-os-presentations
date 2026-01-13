@@ -814,7 +814,7 @@ show_matrixplotly(p, height = 600, width = 450)
 ```{r}
 #| out-width: 100%
 #| out-height: 600px
-show_fibmatmap(enterodata, yrsel = 2020, areasel = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'))
+show_fibmatmap(enterodata, yrsel = 2025, areasel = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'))
 ```
 :::
 :::
