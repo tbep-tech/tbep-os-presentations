@@ -326,14 +326,6 @@ rainplo_fun()
 
 ------------------------------------------------------------------------
 
-## PYRODINIUM STATUS
-
-```{r}
-pyroplo_fun(yrmin = 2014)
-```
-
-------------------------------------------------------------------------
-
 ## 2025 SEAGRASS TRANSECT RESULTS
 
 ```{r}
@@ -396,6 +388,61 @@ sgfomap_fun(tbeptools::transect, tbeptools::trnpts)
 
 ------------------------------------------------------------------------
 
+## PYRODINIUM STATUS
+
+```{r}
+pyroplo_fun(yrmin = 2014)
+```
+
+------------------------------------------------------------------------
+
+## FIB REPORT CARD
+
+::: columns
+::: {.column width="50%"}
+* Annual summary of Fecal Indicator Bacteria (FIB) data at major inflows to each bay segment
+* Communicates exposure risk associated with fecal contaminants
+* <https://shiny.tbep.org/fib-dash>
+:::
+
+::: {.column width="50%"}
+Likelihood of exceeding threshold of 130 CFU / 100mL (FDEP/FDOH) for *Enterococcus*
+
+* <span style='color:#2DC938'>__A__</span>: < 10%
+* <span style='color:#E9C318'>__B__</span>: 10-30%
+* <span style='color:#EE7600'>__C__</span>: 30-50%
+* <span style='color:#CC3231'>__D__</span>: 50-75%
+* <span style='color:#800080'>__E__</span>: > 75% 
+:::
+:::
+
+------------------------------------------------------------------------
+
+## FIB REPORT CARD
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| fig-width: 5
+#| fig-height: 6
+#| fig-align: "center"
+p <- show_fibmatrix(enterodata, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB')) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 450)
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| out-width: 100%
+#| out-height: 600px
+show_fibmatmap(enterodata, yrsel = 2025, areasel = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'))
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
 ## WATER QUALITY TAKE HOME
 
 * All segments provisionally meet chlorophyll and light attenuation management targets, regulatory thresholds
@@ -454,13 +501,13 @@ tbnimap_fun(2024, tbeptools::fimdata)
 
 ::: {.column width="50%"}
 ```{r}
-#| fig-width: 3
+#| fig-width: 5
 #| fig-height: 6
 #| fig-align: "center"
 tbbiscr <- anlz_tbbiscr(benthicdata)
-p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB')) +
+p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'TCB', 'MR')) +
   theme(axis.text.y = element_text(size = 8))
-show_matrixplotly(p, height = 600, width = 300)
+show_matrixplotly(p, height = 600, width = 500)
 ```
 :::
 :::
@@ -471,53 +518,6 @@ show_matrixplotly(p, height = 600, width = 300)
 #| out-width: 100%
 tbbimap_fun(2024)
 ```
-
-------------------------------------------------------------------------
-
-## FIB REPORT CARD
-
-::: columns
-::: {.column width="50%"}
-* Annual summary of Fecal Indicator Bacteria (FIB) data at major inflows to each bay segment
-* Communicates exposure risk associated with fecal contaminants
-* <https://shiny.tbep.org/fib-dash>
-:::
-
-::: {.column width="50%"}
-Likelihood of exceeding threshold of 130 CFU / 100mL (FDEP/FDOH) for *Enterococcus*
-
-* <span style='color:#2DC938'>__A__</span>: < 10%
-* <span style='color:#E9C318'>__B__</span>: 10-30%
-* <span style='color:#EE7600'>__C__</span>: 30-50%
-* <span style='color:#CC3231'>__D__</span>: 50-75%
-* <span style='color:#800080'>__E__</span>: > 75% 
-:::
-:::
-
-------------------------------------------------------------------------
-
-## FIB REPORT CARD
-
-::: columns
-::: {.column width="50%"}
-```{r}
-#| fig-width: 5
-#| fig-height: 6
-#| fig-align: "center"
-p <- show_fibmatrix(enterodata, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB')) +
-  theme(axis.text.y = element_text(size = 8))
-show_matrixplotly(p, height = 600, width = 450)
-```
-:::
-
-::: {.column width="50%"}
-```{r}
-#| out-width: 100%
-#| out-height: 600px
-show_fibmatmap(enterodata, yrsel = 2025, areasel = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'))
-```
-:::
-:::
 
 ------------------------------------------------------------------------
 
@@ -566,30 +566,44 @@ p
 ------------------------------------------------------------------------
 
 ::: {style="display: flex; justify-content: center; align-items: center; height: 80vh; font-size: 2em; text-align: center;"}
-Identifying priority habitats...
+[Identifying priority habitats...](https://docs.google.com/presentation/d/1DiLWxCjR9I3AspWBHUVcwx3JkPCPiaAd/edit?usp=sharing&ouid=111030724967489561225&rtpof=true&sd=true){target="_blank"}
 :::
 
 ------------------------------------------------------------------------
 
 ## 2026 RESTORATION PRIORITIES
 
-::: {.columns style="display: flex !important; height: 10%;"}
-::: {.column width="90%" style="display: flex; justify-content: center; align-items: top;"}
-Oyster bars, forested freshwater wetlands, coastal uplands
+<br>
+
+::: {.columns style="display: flex !important; height: 5%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Oyster Bars
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Forested Freshwater Wetlands
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Coastal Uplands
 :::
 :::
 
 <br>
 
-::: {.columns style="display: flex !important; height: 50%;"}
-::: {.column width="90" style="display: flex; justify-content: center; align-items: top;"}
-![](figure/ianoyster.png){style="margin-bottom: 2rem;"}
-![](figure/ianwetland.png){style="margin-bottom: 2rem;"}
-![](figure/ianuplands.png)
-:::
+::: {.columns style="display: flex !important; height: 40%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianoyster.png)
 :::
 
-<br>
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianwetland.png)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/iancoastaluplands.png)
+:::
+:::
 
 * Additional info: <https://tbep.org/habitat-master-plan-update>
 
