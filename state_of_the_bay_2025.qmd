@@ -40,10 +40,9 @@ library(leaflet)
 maxyr <- 2025
 partialyr <- F
 
-# load(file = here('data/sgsegest.RData'))
+source(here('R/funcs.R'))
 
 load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RData'))
-load(url('https://github.com/tbep-tech/sso-reporting/raw/refs/heads/main/data/vols.RData'))
 ```
 
 ## WATER QUALITY REPORT CARD
@@ -322,100 +321,7 @@ Note fixed y-axis across plots.
 #   here('data/swfwmdrainfallto2025.xlsx'), 
 #   mode = 'wb'
 # )
-
-# rain data for relevant TB areas
-raindat <- readxl::excel_sheets(here('data/swfwmdrainfallto2026.xlsx')) %>% 
-  grep('jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec', ., value = TRUE) %>% 
-  tibble(
-    mo = .
-  ) %>% 
-  nest(.by = mo) %>% 
-  mutate(
-    data = purrr::map(mo, function(mo){
-      
-      read_excel(here('data/swfwmdrainfallto2026.xlsx'), sheet = mo, skip = 1) %>% 
-        filter(Year %in% 1975:maxyr) %>% 
-        select(
-          yr = Year, 
-          tampacoastal_in = `Tampa Bay/Coastal Areas`, # this just a fringe area around the bay, not the watershed
-          hillsborough_in = `Hillsborough River`,
-          alafia_in = `Alafia River`,
-          littlemanatee_in = `Little Manatee River`,
-          manatee_in = `Manatee River`
-        ) %>% 
-        mutate_all(as.numeric)
-      
-    })
-  ) %>% 
-  unnest('data') %>% 
-  # mutate(
-  #   precip_in = rowSums(select(., -mo, -yr), na.rm = TRUE)
-  # ) %>%
-  select(mo, yr, precip_in = tampacoastal_in) %>% 
-  mutate(
-    mo = gsub('\\-usgsbsn$', '', mo),
-    mo = as.numeric(factor(mo,
-                           levels = c('jan', 'feb', 'mar', 'apr', 'may', 'jun',
-                                      'jul', 'aug', 'sep', 'oct', 'nov', 'dec'),
-                           labels = 1:12)
-    ),
-    date = as.Date(paste0(yr, '-', mo, '-01')), 
-    precip_mm = precip_in * 25.4
-  )
-
-toplo <- raindat %>% 
-  filter(yr > 2009) %>%
-  summarise(
-    precip_in = sum(precip_in, na.rm = TRUE), 
-    .by = yr
-  ) |> 
-  mutate(
-    ave = mean(precip_in), 
-    avediff = precip_in - ave
-  )
-
-
-ave <- mean(toplo$precip_in)
-
-p1 <- ggplot(toplo, aes(x = yr, y = precip_in)) + 
-  geom_col(fill = '#004F7E', color = 'black', alpha = 0.8) +
-  geom_hline(yintercept = ave, color = '#5C4A42', linewidth = 1) +
-  theme_minimal(base_size = 14) + 
-  scale_x_continuous(breaks = unique(toplo$yr)) +
-  scale_y_continuous(expand= c(0, 0)) +
-  theme(
-    axis.text.x =  element_blank(),
-    panel.grid.minor.x = element_blank(),
-    panel.grid.major.x = element_blank(), 
-  ) +
-  labs(
-    x = NULL,
-    y = 'Annual rainfall (inches)',
-    # caption = 'Data source: SWFWMD'
-  )
-
-mxdiff <- max(toplo$avediff)
-p2 <- ggplot(toplo, aes(x = yr, y = avediff, fill = avediff)) + 
-  geom_col(color = 'black', alpha = 0.8) +
-  geom_hline(yintercept = 0, color = '#5C4A42', linewidth = 1) +
-  scale_fill_gradient2(midpoint = 0, low = 'tomato1', mid = 'white', high = 'dodgerblue2') +
-  theme_minimal(base_size = 14) + 
-  scale_x_continuous(breaks = unique(toplo$yr)) +
-  scale_y_continuous(expand= c(0, 0)) +
-  theme(
-    axis.text.x = element_text(angle = 45, size = 10, hjust = 1),
-    panel.grid.minor.x = element_blank(),
-    panel.grid.major.x = element_blank(), 
-    panel.grid.minor.y = element_blank(),
-    legend.position = 'none'
-  ) +
-  labs(
-    x = NULL,
-    y = 'Deviation (inches)',
-    caption = 'Data source: SWFWMD'
-  )
-
-p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
+rainplo_fun()
 ```
 
 ------------------------------------------------------------------------
@@ -423,118 +329,7 @@ p1 + p2 + plot_layout(ncol = 1, heights = c(1, 0.5))
 ## PYRODINIUM STATUS
 
 ```{r}
-yrmin <- 2014
-bridges <- tibble(
-    brdg = c('Gandy', 'HF', 'CC'),
-    Latitude = c(27.880486, 27.922358652608654, 27.965458)
-  ) |> 
-  crossing(
-    yr = seq(yrmin, maxyr)
-  )
-
-# https://f50006a.eos-intl.net/F50006A/OPAC/Details/Record.aspx?BibCode=5635517
-datall <- read.csv('https://f50006a.eos-intl.net/ELIBSQL12_F50006A_Documents/OTBMP_Pyrodinium_Chl_2011-2020_v101922.csv') %>%
-  select(
-    yr = Year,
-    date = Sample_Date,
-    Latitude,
-    Longitude,
-    pyro = P..bahamense.Abundance..cells.L.
-  ) %>%
-  mutate(date = mdy(date))
-
-# 2021 only
-dat2021 <- read.csv(here('data/Pyrodinium_Chl_2021_OTBMP_mbeck.csv')) %>%
-  select(
-    date = Sample_Date,
-    Latitude,
-    Longitude,
-    pyro = Pbahamense..cells.L.
-  ) %>%
-  mutate(
-    date = case_when(
-      grepl('[a-z]', date) ~ dmy(date),
-      T ~ mdy(date)
-    )
-  )
-
-# 2022 only
-dat2022 <- read.csv(here('data/Pyrodinium_Chla_OTBMP_2022.csv')) %>%
-  select(
-    date = Date,
-    Latitude,
-    Longitude,
-    pyro = Pyrodinium..Cells.L.
-  ) %>%
-  mutate(date = mdy(date))
-
-# 2023 only
-dat2023 <- read_excel(here('data/2023 OTB Pyrodinium bahamense abundance data.xlsx')) %>% 
-  select(
-    date = `Sample Date`,
-    Latitude,
-    Longitude,
-    pyro = `Pyrodinium bahamense abundance (cells/L)`
-  ) %>%
-  mutate(date = ymd(date))
-
-# 2024, 2025
-dat2425 <- read_excel(here('data/TB Pyro 2024-2025.12.03.xlsx')) |> 
-  select(
-    date = `Sample Date`,
-    Latitude,
-    Longitude,
-    pyro = `Pyrodinium bahamesnse abundance (cells/L*)`
-  ) %>%
-  mutate(date = ymd(date))
-
-brks <- c(-Inf, 1e4, 1e5, 1e6, Inf)
-labs <- c('No bloom', 'Low', 'Medium', 'High')
-
-dat <- bind_rows(datall, dat2021, dat2022, dat2023, dat2425) %>%
-  mutate(
-    yr = year(date),
-    doy = yday(date),
-    pyro = ifelse(pyro == 0, NA, pyro),
-    pyrocat = cut(pyro, breaks = brks, labels = labs),
-    pyro = pmin(3e6, pyro)
-  )
-
-toplo <- dat %>% 
-  filter(yr >= yrmin)
-
-# doy x-axis breaks and labels
-dts <- seq.Date(as.Date('2023-01-01'), as.Date('2023-10-01'), by = "3 month")
-xbrks <- yday(dts)                       
-xlabs <- format(dts, "%b")
-
-ggplot(subset(toplo, !is.na(pyro)), aes(x = doy, y = Latitude)) +
-  geom_hline(data = bridges, aes(yintercept = Latitude), linetype = 'solid') +
-  geom_point(data = subset(toplo, is.na(pyro)), aes(shape = "No cells"),
-             size = 1, color = "lightgrey") +
-  geom_point(aes(fill = pyrocat, size = pyro), shape = 21, color = 'black') +
-  scale_x_continuous(limits = c(0, 365), breaks = xbrks, labels = xlabs) +
-  scale_fill_viridis_d(guide = "legend", option = 'A', direction = -1, na.value = 'lightgrey') +
-  scale_size_continuous(range = c(1, 5), breaks = c(1e6, 2e6, 3e6), labels = c('1e6', '2e6', '> 3e6')) +
-  facet_wrap(~yr, ncol = 4) +
-  theme_bw() +
-  theme(
-    strip.background = element_blank(),
-    panel.grid = element_blank(),
-    legend.spacing.y = unit(-0.2, "cm")
-  ) +
-  guides(fill = guide_legend(override.aes = list(size = 3), order = 2),
-         size = guide_legend(order = 3),
-         shape = guide_legend(order = 1)) +
-  labs(
-    x = 'Day of Year',
-    shape = NULL,
-    fill = 'Bloom intensity\n',
-    size = 'Cells/L\n',
-    subtitle = expression(paste(italic('P. bahamense'), ' cell counts by location and date in Old Tampa Bay')),
-    caption = 'Data from FWC-FWRI HAB Monitoring Database, solid lines are bridge locations'
-  )
-
+pyroplo_fun(yrmin = 2014)
 ```
 
 ------------------------------------------------------------------------
@@ -596,122 +391,16 @@ subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
 
 ```{r}
 #| out-width: 100%
-# get complete data, fill all species not found with zero
-datcmp <- transect %>%
-  dplyr::filter(var %in% 'Abundance') %>%
-  dplyr::mutate(
-    Savspecies = ifelse(grepl('Caulerpa', Savspecies), 'Caulerpa',
-      ifelse(grepl('^AA', Savspecies), 'AA',
-        ifelse(grepl('^DA', Savspecies), 'DA',
-          ifelse(grepl('Dapis', Savspecies), 'Dapis',
-            ifelse(grepl('Chaetomorpha', Savspecies), 'Chaetomorpha',
-              Savspecies
-            )
-          )
-        )
-      )
-    )
-  ) %>%
-  dplyr::select(Date, Transect, Site, Savspecies, bb = aveval) %>%
-  dplyr::group_by(Date, Transect, Site, Savspecies) %>%
-  dplyr::summarise(bb = mean(bb, na.rm = T), .groups = 'drop') %>%
-  dplyr::ungroup() %>%
-  tidyr::complete(Savspecies, tidyr::nesting(Date, Transect, Site), fill = list(bb = 0))
-
-# make no cover a five for bb if nothing else found
-datcmp <- datcmp %>%
-  dplyr::group_by(Transect, Date, Site) %>%
-  dplyr::mutate(
-    bb = ifelse(Savspecies == 'No Cover', 0, bb),
-    bb = ifelse(sum(bb[!Savspecies %in% 'No Cover']) == 0 & Savspecies == 'No Cover', 5, bb)
-  )
-
-# get avg placements across dates by transect
-plcmnt <- datcmp %>%
-  dplyr::group_by(Date, Transect) %>%
-  dplyr::summarize(cnts = length(unique(Site)), .groups = 'drop') %>%
-  dplyr::group_by(Transect) %>%
-  dplyr::summarize(plcmnt = mean(cnts, na.rm = T), .groups = 'drop')
- 
-tots <- datcmp %>%
-  dplyr::filter(Savspecies %in% c('Halodule', 'Syringodium', 'Thalassia', 'Ruppia', 'Halophila')) %>%
-  dplyr::group_by(Date, Transect, Site) %>%
-  dplyr::summarise(bb = mean(bb), .groups = 'drop') %>%
-  dplyr::mutate(
-    Savspecies = 'total'
-  )
-
-transectoccave <- datcmp %>%
-  dplyr::bind_rows(tots) %>%
-  left_join(plcmnt, by = 'Transect') %>%
-  dplyr::group_by(Date, Transect, Savspecies) %>%
-  dplyr::summarize(
-    foest = sum(bb > 0, na.rm = T) / unique(plcmnt),
-    bbest = sum(bb, na.rm = T) / unique(plcmnt ),
-    .groups = 'drop'
-  )
-
-toplo <- transectoccave |> 
-  ungroup() |> 
-  mutate(
-    yr = lubridate::year(Date)
-  ) |> 
-  filter(Savspecies %in% 'total') |> 
-  filter(yr >= 2024) |> 
-  select(Transect, yr, foest) |> 
-  summarise(
-    foest = mean(foest, na.rm = T), 
-    .by = c(Transect, yr)
-  ) |> 
-  mutate(
-    cnt = n(), 
-    .by = Transect
-  ) |> 
-  filter(cnt == 2) |> 
-  select(-cnt) |> 
-  pivot_wider(
-    names_from = yr, 
-    values_from = foest
-  ) |> 
-  mutate(
-    chg = abs(`2025` - `2024`),
-    sgn = sign(`2025` - `2024`)
-  )
-tomap <- inner_join(trnpts, toplo, by = c('TRAN_ID' = 'Transect')) |> 
-  select(TRAN_ID, chg, sgn, '2024', '2025')
-
-# make leaflet map with points sized by change and colored by sign
-# add bay segment lines from tbseglines
-leaflet(tomap) |> 
-  addProviderTiles(providers$CartoDB.Positron) |> 
-  addPolylines(data = tbseglines, color = 'blue', weight = 2, opacity = 0.5) |>
-  # addCircleMarkers(
-  #   radius = ~ scales::rescale(chg, to = c(5, 15)),
-  #   color = ~ ifelse(sgn > 0, '#2DC938', '#CC3231'),
-  #   stroke = TRUE,
-  #   weight = 1,
-  #   fillOpacity = 0.8,
-  #   label = ~ lapply(paste0('Transect: ', TRAN_ID, '<br>',
-  #                   '2024 F.O.: ', scales::percent(`2024`, accuracy = 0.1), '<br>',
-  #                   '2025 F.O.: ', scales::percent(`2025`, accuracy = 0.1), '<br>',
-  #                   'Change: ', ifelse(sgn > 0, '+', ''), scales::percent(`2025` - `2024`, accuracy = 0.1)), htmltools::HTML)
-  # ) |> 
-  addLegend(
-    position = 'bottomright',
-    colors = c('#2DC938', '#CC3231'),
-    labels = c('Increase', 'Decrease'),
-    title = 'Frequency of Occurrence Change (2024 - 2025)'
-  )
+sgfomap_fun(tbeptools::transect, tbeptools::trnpts)
 ```
-
 
 ------------------------------------------------------------------------
 
 ## WATER QUALITY TAKE HOME
 
 * All segments provisionally meet chlorophyll and light attenuation management targets, regulatory thresholds
-* Adaptive capacity of the bay is high coming off dry years
-* OTB still a marginal bay segment, continued seagrass loss - is this an acceptable condition??
+* OTB light attenuation suggests separate trend from chlorophyll-a
+* 2025 another dry year...
 
 ::: {.notes}
 Take home here is that we're coming off dry years.  Do not lose focus on OTB due to disconnect between water quality outcomes and continued seagrass loss. 
@@ -748,92 +437,7 @@ show_matrixplotly(p, height = 600, width = 300)
 
 ```{r}
 #| out-width: 100%
-yr <- 2024
-tbniscr <- anlz_tbniscr(fimdata)
-avedat <- tbeptools::anlz_tbniave(tbniscr) 
-data('fimstations', package = 'tbeptools')
-data('tbseg', package = 'tbeptools')
-perc <- c(32, 46)
-cols <- c('#CC3231', '#E9C318', '#2DC938')
-
-tbniyrs <- tbniscr %>%
-  dplyr::select(Reference, Year, TBNI_Score, dplyr::matches('Score')) %>% 
-  tidyr::gather('var', 'val', -Reference, -Year) %>% 
-  dplyr::group_by(Reference, Year, var) %>% 
-  dplyr::summarise(val = mean(val, na.rm = T)) %>% 
-  tidyr::spread(var, val) %>% 
-  dplyr::ungroup() %>% 
-  dplyr::mutate(
-    Action = findInterval(TBNI_Score, perc),
-    outcome = factor(Action, levels = c('0', '1', '2'), labels = c('red', 'yellow', 'green')),
-    outcome = as.character(outcome),
-    Action = factor(Action, levels = c('0', '1', '2'), labels = c('On Alert', 'Caution', 'Stay the Course'))
-  )
-
-# fimstations, clip by segment extents
-tbnistations <- fimstations %>% 
-  dplyr::left_join(tbniscr, by = 'Reference') %>% 
-  dplyr::select(Reference, Year, Month, TBNI_Score, NumTaxa, BenthicTaxa, TaxaSelect, NumGuilds, Shannon) %>% 
-  dplyr::mutate(
-    Action = findInterval(TBNI_Score, perc),
-    outcome = factor(Action, levels = c('0', '1', '2'), labels = c('red', 'yellow', 'green')),
-    outcome = as.character(outcome),
-    Action = factor(Action, levels = c('0', '1', '2'), labels = c('On Alert', 'Caution', 'Stay the Course'))
-  )
-
-toplo <- tbniyrs %>% 
-    dplyr::filter(Year %in% yr) %>% 
-    dplyr::select(Reference, TBNI_Score, Action, outcome) %>% 
-    dplyr::right_join(fimstations, ., by = 'Reference')  %>% 
-    dplyr::mutate(
-      outcome = dplyr::case_when(
-        outcome == 'green' ~ '#2DC938', 
-        outcome == 'yellow' ~ '#E9C318', 
-        outcome == 'red' ~ '#CC3231'
-      )
-    )
-
-# segment averages
-attyr <- avedat %>% 
-  dplyr::filter(Year %in% yr) %>% 
-  dplyr::left_join(tbseg, ., by = 'bay_segment') %>% 
-  dplyr::mutate(
-    outcome = dplyr::case_when(
-      outcome == 'green' ~ '#2DC938', 
-      outcome == 'yellow' ~ '#E9C318', 
-      outcome == 'red' ~ '#CC3231'
-    )
-  )
-
-  # map with custom legends
-tbeptools::util_map(attyr, minimap = NULL) %>%
-    leaflet::clearMarkers() %>% 
-    leafem::removeMouseCoordinates() %>%
-    leaflet::addPolygons(
-      data = attyr, 
-      stroke = T, 
-      color = 'grey', 
-      weight = 1, 
-      layerId = ~long_name, 
-      fillColor = ~outcome, 
-      fillOpacity = 0.3,
-      label = ~paste0(bay_segment, ': ', long_name, '\nTBNI: ', Segment_TBNI, '\nAction: ', Action), 
-      labelOptions = leaflet::labelOptions(style = list("white-space" = "pre"))
-    ) %>% 
-    leaflet::addCircleMarkers(
-      data = toplo, 
-      layerId = ~Reference,
-      stroke = TRUE,
-      color = 'black',
-      fill = TRUE,
-      fillColor = ~outcome,
-      weight = 1,
-      fillOpacity = 1,
-      radius= 4,#~scales::rescale(val, from = scls, to = c(5, 20)),
-      label = ~paste0('Site: ', Reference, '\nTBNI: ', round(TBNI_Score, 1), '\nAction: ', Action),
-      labelOptions = leaflet::labelOptions(style = list("white-space" = "pre"))
-    ) %>% 
-    leaflet::addLegend("topright", labels = c("Stay the Course", "Caution", "On Alert"), colors = rev(cols), title = "Bay segment/site <br>matrix outcomes", opacity = 1)
+tbnimap_fun(2024, tbeptools::fimdata)
 ```
 
 ------------------------------------------------------------------------
@@ -860,6 +464,13 @@ show_matrixplotly(p, height = 600, width = 300)
 ```
 :::
 :::
+
+## 2024 BENTHIC RESULTS
+
+```{r}
+#| out-width: 100%
+tbbimap_fun(2024)
+```
 
 ------------------------------------------------------------------------
 
@@ -954,44 +565,27 @@ p
 
 ------------------------------------------------------------------------
 
-## 
-
+::: {style="display: flex; justify-content: center; align-items: center; height: 80vh; font-size: 2em; text-align: center;"}
 Identifying priority habitats...
+:::
 
 ------------------------------------------------------------------------
 
-## FOCUSING RESTORATION EFFORT
+## 2026 RESTORATION PRIORITIES
 
-::: {.columns style="display: flex !important; height: 5%;"}
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-Seagrass, salt marsh, freshwater wetlands
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-Oyster bars, uplands (coastal/non-coastal)
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-Mangroves
+::: {.columns style="display: flex !important; height: 10%;"}
+::: {.column width="90%" style="display: flex; justify-content: center; align-items: top;"}
+Oyster bars, forested freshwater wetlands, coastal uplands
 :::
 :::
 
 <br>
 
-::: {.columns style="display: flex !important; height: 20%;"}
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-![](figure/ianseagrass.png)
-![](figure/iansaltmarsh.png)
-![](figure/ianwetland.png)
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-![](figure/ianoyster.png)
+::: {.columns style="display: flex !important; height: 50%;"}
+::: {.column width="90" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianoyster.png){style="margin-bottom: 2rem;"}
+![](figure/ianwetland.png){style="margin-bottom: 2rem;"}
 ![](figure/ianuplands.png)
-:::
-
-::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
-![](figure/ianmangrove.png)
 :::
 :::
 
@@ -1014,7 +608,6 @@ Marcus Beck, <mbeck@tbep.org>
 Kerry Flaherty-Walia, <kfwalia@tbep.org>
 
 ------------------------------------------------------------------------
-
 
 ## 2025 OTB ANOMALIES
 
