@@ -1,0 +1,488 @@
+---
+title: "2025 STATE OF THE BAY"
+author: 
+   - name: Dr. Marcus Beck, <mbeck@tbep.org>, Kerry Flaherty-Walia <kfwalia@tbep.org>
+institute: "Tampa Bay Estuary Program"
+date: "February, 2026"
+date-format: "MMM, YYYY"
+format:
+  revealjs:
+    logo: figure/TBEP_logo.png
+    transition: fade
+    footer: "Tampa Bay Estuary Program 2025 State of the Bay"
+    theme: styles.scss
+    link-external-icon: true
+    linkcolor: "#00806E"
+    link-external-newwindow: true
+execute:
+  echo: false
+  fig-align: "center"
+---
+
+```{r}
+#| include: false
+library(knitr)
+library(tbeptools)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(here)
+library(ggplot2)
+library(lubridate)
+library(tidyr)
+library(plotly)
+library(sf)
+library(ggrepel)
+library(readxl)
+library(purrr)
+library(leaflet)
+
+maxyr <- 2025
+partialyr <- F
+
+source(here('R/funcs.R'))
+
+load(file = url('https://github.com/tbep-tech/wq-dash/raw/master/data/epcdata.RData'))
+```
+
+## WATER QUALITY REPORT CARD
+
+<https://tbep-tech.github.io/wq-static/wq.pdf>
+
+::: {.columns style="display: flex !important; height: 80%;"}
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+
+![Management](figure/wq2025prov1.png){width="360"}
+
+:::
+
+::: {.column width="50%" style="display: flex; justify-content: center; align-items: center;"}
+
+![Regulatory](figure/wq2025prov2.png){width="360"}
+
+:::
+
+:::
+
+::: {.notes}
+Two sides to report card, first side showing management outcomes is relevant to TAC, second side relevant to NMC.
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT ACTIONS
+
+-   Each bay segment assigned a management action
+
+![](figure/wqactions.jpg)
+
+::: {.notes}
+Management actions defined by both chlorophyll and light attenuation, considers magnitude of exceedance for each year above targets and duration of exceedence from previous four years.
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT RESULTS
+
+![](figure/wq2025segprov.png)
+
+::: {.notes}
+Table shows bay segment management outcomes for chlorophyll on the left and light attenuation on the right.  Annual averages are compared to management targets. Note that chlorophyll and light attenuation targets all met.
+:::
+
+------------------------------------------------------------------------
+
+## MANAGEMENT OUTCOMES
+
+::: columns
+::: {.column width="50%"}
+-   Matrix shows attainment of chlorophyll and light attenuation *targets*
+-   All segments in `r maxyr` as "Stay the Course"
+-   More info at <https://shiny.tbep.org/wq-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+p <- show_matrix(epcdata, txtsz = NULL, yrrng = c(1975, maxyr), partialyr = partialyr, historic = T) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+::: {.notes}
+Note historical perspective showing long-term bay recovery. Also note OTB as "caution" from 2015 to 2021, but dry years in 2022, 2023, 2025. 
+:::
+
+------------------------------------------------------------------------
+
+## CHLOROPHYLL TRENDS
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(colour = txtcol, angle = 0, size = 12, hjust = 0.5),
+    legend.position = 'top'
+  )
+sclx <- scale_x_continuous(breaks = seq(1975, maxyr, by = 5))
+
+p1 <- show_thrplot(epcdata, bay_segment = "OTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p2 <- show_thrplot(epcdata, bay_segment = "HB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p3 <- show_thrplot(epcdata, bay_segment = "MTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx + labs(caption = NULL)
+p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, partialyr = partialyr) + sclx
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+```
+
+::: {.notes}
+All bay segments show an increase in chlorophyll from last year due to storms, note different y-axis scales. Solid blue line is bay segment management target. Top dotted line is "large exceedence", +2 standard errors above the target based on historical reference period.
+:::
+
+------------------------------------------------------------------------
+
+## `r maxyr` CHLOROPHYLL
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'chla', partialyr = F, thrs = F)
+```
+
+::: {.notes}
+Map shows annual average chlorophyll at each sample station.  Note that segment outcomes are based on site averages. 
+:::
+
+------------------------------------------------------------------------
+
+## SEASONAL CHLOROPHYLL
+
+```{r}
+#| fig-height: 6
+yrrng <- c(1975, maxyr)
+txtcol <- 'black'
+thrthm <- theme(
+    plot.background = element_rect(fill = NA, color = NA),
+    axis.text.y = element_text(colour = txtcol, size = 12),
+    axis.title = element_blank(),
+    plot.title = element_text(size = 15, colour = txtcol),
+    legend.text = element_text(size = 12, colour = txtcol),
+    axis.text.x = element_text(size = 10, colour = txtcol, angle = 0, hjust = 0.5),
+    legend.position = 'top'
+  )
+
+pts <- F
+p1 <- show_boxplot(epcdata, bay_segment = "OTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = pts)
+p2 <- show_boxplot(epcdata, bay_segment = "HB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = pts)
+p3 <- show_boxplot(epcdata, bay_segment = "MTB", yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = pts)
+p4 <- show_boxplot(epcdata, bay_segment = "LTB",  yrrng = yrrng, yrsel = maxyr, partialyr = partialyr, points = pts)
+
+guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
+```
+
+::: {.notes}
+Monthly chlorophyll averages... 
+:::
+
+------------------------------------------------------------------------
+
+## `r maxyr` LIGHT ATTENUATION
+
+```{r}
+show_sitesegmap(epcdata, yrsel = maxyr, param = 'la', partialyr = F, thrs = F)
+```
+
+::: {.notes}
+Map shows annual average light attenuation at each sample station.
+:::
+
+------------------------------------------------------------------------
+
+## TAMPA BAY ANNUAL RAINFALL
+
+```{r}
+# monthly rainfall data from swfwmd 
+# https://www.swfwmd.state.fl.us/resources/data-maps/rainfall-summary-data-region
+# file is from the link "USGS watershed"
+
+# download.file(
+#   'https://www4.swfwmd.state.fl.us/RDDataImages/surf.xlsx?_ga=2.186665249.868698214.1705929229-785009494.1704644825',
+#   here('data/swfwmdrainfallto2025.xlsx'), 
+#   mode = 'wb'
+# )
+rainplo_fun()
+```
+
+------------------------------------------------------------------------
+
+## 2025 SEAGRASS TRANSECT RESULTS
+
+```{r}
+#| fig-align: 'center'
+#| fig-width: 9
+#| fig-height: 4
+transectocc <- anlz_transectocc(transect)
+spp <- c("Halodule", "Syringodium", "Thalassia")
+show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'), species = spp, plotly = T, width = 1000, height = 450)
+```
+
+* Similar as last year, but species and bay segment differences
+* More info at <https://shiny.tbep.org/seagrasstransect-dash/>
+
+::: {.notes}
+Note increase in Halodule
+:::
+
+------------------------------------------------------------------------
+
+## 2025 SEAGRASS TRANSECT RESULTS
+
+```{r}
+width <- 1000
+height <- 550
+p1 <- show_transectavespp(transectocc, bay_segment = c('OTB'), species = spp, plotly = T, width = width, height = height)
+p2 <- show_transectavespp(transectocc, bay_segment = c('HB'), species = spp, plotly = T, width = width, height = height)
+p3 <- show_transectavespp(transectocc, bay_segment = c('MTB'), species = spp, plotly = T, width = width, height = height)
+p4 <- show_transectavespp(transectocc, bay_segment = c('LTB', 'BCB'), species = spp, plotly = T, width = width, height = height)
+
+# # only show legend for the first plot, but legend group still works
+for(i in 1:4){
+  p2$x$data[[i]]$showlegend <- F
+  p3$x$data[[i]]$showlegend <- F
+  p4$x$data[[i]]$showlegend <- F
+}
+
+subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
+  layout(
+    title = NA,
+    annotations = list(
+      list(x = 0.2 , y = 1.05, text = "OTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.77 , y = 1.05, text = "HB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.2 , y = 0.5, text = "MTB", showarrow = F, xref='paper', yref='paper'),
+      list(x = 0.8 , y = 0.5, text = "LTB/BCB", showarrow = F, xref='paper', yref='paper')
+    ),
+    yaxis = list(range = c(0, 100)),
+    yaxis2 = list(range = c(0, 100))
+  )
+```
+
+------------------------------------------------------------------------
+
+## PYRODINIUM STATUS
+
+```{r}
+pyroplo_fun(yrmin = 2014)
+```
+
+------------------------------------------------------------------------
+
+## FIB REPORT CARD
+
+::: columns
+::: {.column width="50%"}
+* Annual summary of Fecal Indicator Bacteria (FIB) data at major inflows to each bay segment
+* Communicates exposure risk associated with fecal contaminants
+* <https://shiny.tbep.org/fib-dash>
+:::
+
+::: {.column width="50%"}
+Likelihood of exceeding threshold of 130 CFU / 100mL (FDEP/FDOH) for *Enterococcus*
+
+* <span style='color:#2DC938'>__A__</span>: < 10%
+* <span style='color:#E9C318'>__B__</span>: 10-30%
+* <span style='color:#EE7600'>__C__</span>: 30-50%
+* <span style='color:#CC3231'>__D__</span>: 50-75%
+* <span style='color:#800080'>__E__</span>: > 75% 
+:::
+:::
+
+------------------------------------------------------------------------
+
+## FIB REPORT CARD
+
+::: columns
+::: {.column width="50%"}
+```{r}
+#| fig-width: 5
+#| fig-height: 6
+#| fig-align: "center"
+p <- show_fibmatrix(enterodata, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB')) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 450)
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| out-width: 100%
+#| out-height: 600px
+show_fibmatmap(enterodata, yrsel = 2025, areasel = c('OTB', 'HB', 'MTB', 'LTB', 'BCB'))
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## WATER QUALITY TAKE HOME
+
+* All segments provisionally meet chlorophyll and light attenuation management targets, regulatory thresholds
+* OTB light attenuation suggests separate trend from chlorophyll-a
+* 2025 another dry year...
+
+::: {.notes}
+Take home here is that we're coming off dry years.  Do not lose focus on OTB due to disconnect between water quality outcomes and continued seagrass loss. 
+:::
+
+------------------------------------------------------------------------
+
+## NEKTON RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Nekton index reports on the health of fish and inverts
+-   Responds to water quality and habitat degradation
+-   2024 results show all bay segments as caution, except LTB
+-   More info at <https://shiny.tbep.org/nekton-dash/>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-height: 6
+#| fig-width: 3
+#| fig-align: "center"
+tbniscr <- anlz_tbniscr(fimdata)
+p <- show_tbnimatrix(tbniscr, txtsz = NULL) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 300)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## BENTHIC RESULTS
+
+::: columns
+::: {.column width="50%"}
+-   Benthic index reports on the health of aquatic organisms in or near the bay bottom
+-   Responds to pollutants that can accumulate in the sediment
+-   2024 results similar to previous years
+-   More info at <https://tbep-tech.github.io/tbeptools/articles/tbbi>
+:::
+
+::: {.column width="50%"}
+```{r}
+#| fig-width: 5
+#| fig-height: 6
+#| fig-align: "center"
+tbbiscr <- anlz_tbbiscr(benthicdata)
+p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB', 'TCB', 'MR')) +
+  theme(axis.text.y = element_text(size = 8))
+show_matrixplotly(p, height = 600, width = 500)
+```
+:::
+:::
+
+------------------------------------------------------------------------
+
+## INVASIVE SPECIES DASHBOARD
+
+::: columns
+::: {.column width="50%"}
+* Newly completed dashboard
+* Shows invasive species observations from USGS/iNaturalist
+* Compares with landscape ranked by ecological value (FLAM)
+* Link and report card forthcoming
+:::
+
+::: {.column width="50%"}
+![](figure/invasivedash.png)
+:::
+:::
+
+------------------------------------------------------------------------
+
+## 2025 HABITAT RESTORATION
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/curbar.png)
+
+------------------------------------------------------------------------
+
+## NUMBER OF PROJECTS OVER TIME
+
+![](https://github.com/tbep-tech/habitat-report-card/raw/main/docs/figs/totalhmp.png)
+
+------------------------------------------------------------------------
+
+## HABITAT MASTER PLAN PROGRESS
+
+```{r}
+p1 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = 'Subtidal', twocol = T, ycollapse = T, xang = 25)
+p2 <- show_hmpreport(acres = acres, subtacres = subtacres, hmptrgs = hmptrgs, typ = 'targets',
+                     strata = c('Intertidal', 'Supratidal'), totintertid = F, ycollapse = T, twocol = T, xang = 25)
+
+p <- p1 + p2 + plot_layout(ncol = 2, guides = 'collect', widths = c(0.6, 1)) & labs(title = NULL)
+
+p
+```
+
+------------------------------------------------------------------------
+
+## 2026 RESTORATION PRIORITIES
+
+<br>
+
+::: {.columns style="display: flex !important; height: 5%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Oyster Bars
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Forested Freshwater Wetlands
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: center;"}
+Coastal Uplands
+:::
+:::
+
+<br>
+
+::: {.columns style="display: flex !important; height: 40%;"}
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianoyster.png)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/ianwetland.png)
+:::
+
+::: {.column width="33%" style="display: flex; justify-content: center; align-items: top;"}
+![](figure/iancoastaluplands.png)
+:::
+:::
+
+* Additional info: <https://tbep.org/habitat-master-plan-update>
+
+------------------------------------------------------------------------
+
+##
+
+<br>
+
+### Questions??
+
+<br>
+
+Marcus Beck, <mbeck@tbep.org>
+
+Kerry Flaherty-Walia, <kfwalia@tbep.org>
