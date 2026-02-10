@@ -145,6 +145,10 @@ p4 <- show_thrplot(epcdata, bay_segment = "LTB", thr = "chla", yrrng = yrrng, pa
 guide_area() / (p1 + p2) / (p3 + p4) + plot_layout(guides = 'collect', heights = unit(c(1, 1, 1), c('cm', 'null', 'null'))) & thrthm
 ```
 
+::: {.notes}
+All bay segments show an increase in chlorophyll from last year due to storms, note different y-axis scales. Solid blue line is bay segment management target. Top dotted line is "large exceedence", +2 standard errors above the target based on historical reference period.
+:::
+
 ------------------------------------------------------------------------
 
 ## `r maxyr` CHLOROPHYLL
@@ -237,39 +241,6 @@ show_transectavespp(transectocc, bay_segment = c('OTB', 'HB', 'MTB', 'LTB', 'BCB
 ::: {.notes}
 Note increase in Halodule
 :::
-
-------------------------------------------------------------------------
-
-## 2025 SEAGRASS TRANSECT RESULTS
-
-```{r}
-width <- 1000
-height <- 550
-p1 <- show_transectavespp(transectocc, bay_segment = c('OTB'), species = spp, plotly = T, width = width, height = height)
-p2 <- show_transectavespp(transectocc, bay_segment = c('HB'), species = spp, plotly = T, width = width, height = height)
-p3 <- show_transectavespp(transectocc, bay_segment = c('MTB'), species = spp, plotly = T, width = width, height = height)
-p4 <- show_transectavespp(transectocc, bay_segment = c('LTB', 'BCB'), species = spp, plotly = T, width = width, height = height)
-
-# # only show legend for the first plot, but legend group still works
-for(i in 1:4){
-  p2$x$data[[i]]$showlegend <- F
-  p3$x$data[[i]]$showlegend <- F
-  p4$x$data[[i]]$showlegend <- F
-}
-
-subplot(p1, p2, p3, p4, nrows = 2, shareX = T, shareY = T) %>%
-  layout(
-    title = NA,
-    annotations = list(
-      list(x = 0.2 , y = 1.05, text = "OTB", showarrow = F, xref='paper', yref='paper'),
-      list(x = 0.77 , y = 1.05, text = "HB", showarrow = F, xref='paper', yref='paper'),
-      list(x = 0.2 , y = 0.5, text = "MTB", showarrow = F, xref='paper', yref='paper'),
-      list(x = 0.8 , y = 0.5, text = "LTB/BCB", showarrow = F, xref='paper', yref='paper')
-    ),
-    yaxis = list(range = c(0, 100)),
-    yaxis2 = list(range = c(0, 100))
-  )
-```
 
 ------------------------------------------------------------------------
 
@@ -385,23 +356,6 @@ p <- show_tbbimatrix(tbbiscr, txtsz = NULL, bay_segment = c('OTB', 'HB', 'MTB', 
   theme(axis.text.y = element_text(size = 8))
 show_matrixplotly(p, height = 600, width = 500)
 ```
-:::
-:::
-
-------------------------------------------------------------------------
-
-## INVASIVE SPECIES DASHBOARD
-
-::: columns
-::: {.column width="50%"}
-* Newly completed dashboard
-* Shows invasive species observations from USGS/iNaturalist
-* Compares with landscape ranked by ecological value (FLAM)
-* Link and report card forthcoming
-:::
-
-::: {.column width="50%"}
-![](figure/invasivedash.png)
 :::
 :::
 
